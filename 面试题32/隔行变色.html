@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        #list li{
+            width: 600px;
+            margin: 10px 0;
+            list-style: none;
+            border:1px dashed #ccc;
+            line-height: 30px;
+            font-size: 12px;
+            padding-left: 10px;
+        }
+        .bg0{
+            background-color: pink;
+        }
+        .bg1{
+            background-color: palegreen;
+        }
+        .bg2{
+            background-color: red;
+        }
+
+    </style>
+</head>
+<body>
+    <ul id="list">
+        <li  >1、写一个完整的隔行变色效果html文档</li>
+        <li >2、定义函数的有哪些方式</li>
+        <li>3、函数声明和函数表达式的区别</li>
+        <li >4、函数有没有重载</li>
+        <li >5、写一个方法sum来实现任意数求和的功能</li>
+    </ul>
+</body>
+</html>
+<script>
+    //像css里面说的那个:hover选择器
+    //onmouseover: null 鼠标划过时时候进行具体的操作
+    //onmouseout: null  鼠标划出的时候进行具体的操作
+    var oUl = document.getElementById("list");
+    var oLis = oUl.getElementsByTagName("li");
+    //console.dir(oLis[0]);
+   for(var  i = 0;i<5;i++){
+        //两种情况:偶数的索引类名变成bg0,奇数的索引类名变成bg1
+        //i ->0 ,1,2,3,4
+       oLis[i].index = i;//循环时就把索引保存在当前这个元素的自定义属性
+        if(i%2==0){
+            oLis[i].className = "bg0";
+        }else{
+            oLis[i].className = "bg1";
+        }
+        oLis[i].onmouseover  = function(){
+            this.className ="bg2";//this表示你当前划过的那个元素
+        }
+        oLis[i].onmouseout = function(){
+            var n = this.index //目的就是为了循环结束的时候还能获取到每个元素的索引
+            //oLis[i].className = "bg1";这时i已经变成5了,不能在这样写。
+            this.className = (n%2==0? "bg0" :"bg1");
+        }
+   }
+
+
+
+
+
+
+
+</script>

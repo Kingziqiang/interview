@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题32答案</title>    
+</head>
+<body>
+<h1>32 写一个完整的隔行变色效果html文档？定义函数的有哪些方式？函数声明和函数表达式的区别？函数有没有重载？写一个方法sum来实现任意数求和的功能？</h1>
+<pre>
+  一、写一个完整的隔行变色效果html文档     
+      参见"面试题32/隔行变色（划过高亮）.html"
+
+  二、定义函数的有哪些方式?
+       1 函数声明
+         function sum(num1,num2){
+             return num1+num2;
+         }
+       2 函数表达式
+         var sum = function(num1,num2){
+             return num1+num2;
+         }
+       3 构造函数
+         最后一个参数被看成函数体，其他参数被做函数的参数。
+         var sum = new Function("num1","num2","return num1+num2");
+         不推荐使用构造函数定义函数，这样做会导致解析两次代码影响性能：第一次解析常规ECMAScript代码，第二次解析传入构造函数中的字符串。
+         
+  三、函数声明和函数表达式的区别
+       1 函数声明
+         解析器会率先读取函数声明，使其在在执行任何代码之前可用。
+         console.log(sum);//输出function sum(num1,num2){  return num1+num2;  }
+         sum(1,2); //返回的结果为3；
+         function sum(num1,num2){
+             return num1+num2;
+         }
+         执行过程：
+         1.1 Javascript引擎在第一遍会声明函数将其放到源代码树的顶部。
+             function sum(num1,num2){
+                  return num1+num2;
+            }
+         1.2 Javascript引擎在第二遍按照代码书顺序执行代码
+          function sum(num1,num2){ //函数声明被提升了代码树的顶部
+             return num1+num2;
+         }
+         //除了函数声明被提升到了带啊顶部，其余部分代码按顺序执行。
+         console.log(sum); //因为函数声明被提升到了这句话前面，所以sum已经存在且被声明为一个函数。
+         sum(1,2); //正常执行函数，返回值为3.
+       2 函数表达式。
+         console.log(sum);//输出undefined
+         sum(1,2); //程序执行到这行报错 Uncaught TypeError: sum is not a function(…)
+         var sum = function(num1,num2){
+             return num1+num2;
+         }
+         执行过程：
+         2.1 Javascript引擎在第一遍会声明变量提升变量
+           var sum
+         2.2 Javascript引擎在第二遍会按顺序执行代码
+           var sum; //声明了一个sum变量，变量声明语句var sum提升到顶部
+           console.log(sum);//undefined， 该行并没有报错，因为sum已经声明过，但是没有赋值。
+           sum(1,2); //程序执行到这行报错提示不是一个函数，sum此时还未被赋值默认为undefined,执行undefined(1,2)肯定会报错。
+           sum = function(num1,num2){ //执行到这句才开始将函数赋值给sum。
+             return num1+num2;
+          }
+
+  四、函数中有没有重载
+      其他后台面向对象编程语言如java中有重载，但是js中没有重载。
+      重载，就是函数或者方法有同样的名称，但是参数列表不相同的情形，这样的同名不同参数的函数或者方法之间，互相称之为重载函数或者方法。
+      而js中如果存在同名方法，后面的覆盖前面的同名方法。
+      function fn1(){
+          return 1;
+      }
+      function fn1(){
+          return 2;
+      }
+      console.log(fn1());//输出2，说明后面的方面覆盖了前面的同名方法，js中同名方法不能共存所以js中没有重载。
+
+  五、写一个方法sum来实现任意数求和的功能？
+     1 通常写法：
+       function sum(){
+	        var total = null;
+	        for(var i = 0;i<arguments.length;i++){            
+	            var cur = Number(arguments[i]);
+	            if(cur)){//如果是有效数字，才进行求和
+	                total += cur;
+	            }  
+	        }
+	        return total;
+       }
+       sum(1,2,3,4,5); //返回15
+       sum(1,"cxh",2,{name:"zhangsan"}); //返回3
+     2 三元运算符写法
+	     function sum(){    
+	        var total = null;
+	        for(var i = 0;i<arguments.length;i++){ 
+	            var cur = Number(arguments[i]);             
+	            cur?total += cur:null;
+	        };
+	        return total;
+	     }
+	     sum(1,2,3,4,5); //返回15
+	     sum(1,"cxh",2,{name:"zhangsan"}); //返回3
+</pre>
+
+</body>
+</html>

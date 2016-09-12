@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>2 js基础课第1周第1天第2节</title>    
+</head>
+<body>
+<h1>js1.1.2 js的命名规范？关键字有哪些？保留字有哪些 ？如何定义全局变量和局部（私有）变量？Js在页面中输出信息的方法有哪些？</h1>
+<pre>
+  一、js命名规范：
+     1、第一个字符必须是一个字母、下划线（—_）或一个美元符号($);
+     2、其他字符可以是字母、下划线、美元符号或数字。
+     3、标识符中的字母也可以包含扩展的ASCII或Unicode字母字符，但不推荐这样做。
+     4、按照惯例，ECMAScript标识符采用驼峰大小写格式，也就是第一个字母小写，剩下的每个单词的首字母大写。比如myCar.
+     5、不能把关键字、保留字、true、false和null用作标识符。
+  二、关键字和保留字
+     1 关键字
+       if else 
+       switch case break default   
+       do while continue for in    
+       delete var new void function this return with
+       typeof instanceof    
+       try catch throw finally   
+       ECMA- 
+     2 保留字
+       boolean enum byte char short int long float double const 
+       extends abstract class super static final public private protected
+       implements interface
+       import export package 
+       native sychronized transient volatile goto
+       throws debugger
+       ECMA-262第5版非严格模式下的保留字缩减为：
+                enum const   extends super class  import export
+       ECMA-262第5版严格模式下对保留字的限制：
+                package implments interface  public private protected static
+       ECMA-262第5版严格模式下新增保留字：let yield  
+  三、全局变量和局部变量
+      1  全局变量
+        在函数外部通过var操作符定义: var a;或者var a=1; //a是全局变量
+        在函数外部直接给变量名赋值：b = 2; //b是全局变量
+        在函数内部直接给变量赋值(函数的形参中不含同名变量，变量名前不带var操作符)：
+           funtion globalVar(){
+               c=3; //c是全局变量
+           }                            
+      2  局部变量
+         函数的形参或者函数体内通过var操作符定义的变量
+           funtion globalVar(d){ //d是局部变量，只能在函数内部可以访问
+               var e = 4; //e是局部变量，只能在函数内部可以访问
+           } 
+  四、Js在页面中输出信息的方法
+      1  页面弹出框
+         alert("消息弹出窗");//alert() 方法用于显示带有一条指定消息和一个 OK 按钮的警告框。
+         confirm("确认弹出框");//confirm() 方法用于显示一个带有指定消息和 OK 及取消按钮的对话框。
+         confirm方法的返回值：如果用户点击确定按钮，则 confirm() 返回 true。如果点击取消按钮，则 confirm() 返回 false。
+         prompt("提示输入信息","输入框中的默认文本"); //prompt() 方法用于显示可提示用户进行输入的对话框。
+         promot方法的返回值：如果用户单击提示框的取消按钮，则返回 null。如果用户单击确认按钮，则返回输入字段当前显示的文本。
+      2  控制台输出信息
+         console.log("普通信息");
+         console.info("提示类信息");//控制台输出的信息前有蓝色图标
+         console.error("错误信息");//控制台输出的信息前有红色图标
+         console.warn("警示信息");//控制台输出的信息前有黄色图标
+         console.dir("详细输出DOM节点结构信息");//直接将该DOM结点以DOM树的结构进行输出，与在元素审查时看到的结构是一致的。
+         .....此处省略了很多cosole的方法，以后再详细研究。
+      3 在页面中添加元素
+     document.write("在页面中显示出来");
+      4 向页面中指定元素标签中添加内容
+     <div id="div1"></div>
+	var oDiv=document.getElementByIdx_x("div1");
+	oDiv.innerHTML="<a href='#'>通过innerHTML添加是可以被识别的标签元素</a>>";//innerHTML既可以是文字也可是html标签(标签是可以识别的)
+	oDiv.innerText="<a href='#'>通过innerText添加不能识别标签元素，被当做普通字符串文本在页面中显示。</a>>";//innerText只能是添加文字
+	
+</pre>
+
+</body>
+</html>

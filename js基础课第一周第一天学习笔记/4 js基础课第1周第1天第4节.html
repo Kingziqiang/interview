@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>4 js基础课第1周第1天第4节</title>    
+</head>
+<body>
+<h1>js1.1.4 如何创建对象？如何操作对象的属性（增删改查）？每种语句的语法规则？</h1>
+<pre>
+  一、创建对象：
+      创建Object实例的方式一共有两种：
+      1 使用new操作符后跟Object构造函数。
+        var person = new Object();
+        person.name = "bill";
+        person.age = 22; 
+      2 使用对象字面量表示法
+        var person = {name:"bill",age:22}；//键与值之间要用分号分隔，不同的属性之间要用分号隔开。
+
+  二、操作对象的属性
+     1 添加属性(增)
+       var person = {};
+       person.name = "bill";
+       person["age"] = 22;
+       执行上述操作后person对象的值变成  {name: "bill", age: 22}
+     2 删除属性
+       2.1 假删除
+           person.age = null; 或者 person["age"] = null;
+           执行上述操作后person对象的值变成  {name: "bill", age: null}
+       2.2 真删除
+           delete person.age; 或者 delete person["age"];
+           执行上述操作后person对象的值变成 {name: "bill"}
+     3 修改属性
+        person.age=23; 或者 person["age"]=23;
+        执行上述操作后person对象的值变成  {name: "bill", age: 23}
+     4 获取属性(查)
+       var myName = "name";
+       var name1 = person.name;//person.name的值为bill
+       var name2 = person["name"]; //person["name"]的值为bill
+       var name3 = person[myName];//等价于person["name"]的值为bill
+       var name4 = person[name]; //等价于person[undefined]的值为undefined，因为name变量未定义，name的值为undefined，
+       var name5 = person["myName"];//person["myName"]的值为undefined，因为person对象上不存在名为myName的属性。
+         
+  三、语句
+      1 if 语句
+        1.1 if 
+           步骤：判断if条件是否成立，如果成立则执行if{...}内的语句,如果不成立则什么也不做。
+           var i=3;
+           //if(i>0) i--; //单行语句可以省略大括号{}，但是不推荐这样做。
+           if(i>0){//如果i大于0，则i自减。
+              i--;
+           }
+        1.2 if else
+           步骤：判断if条件是否成立，如果成立则执行if{...}内的语句则忽略后面的else语句。如果不成立则执行else{...}内的语句。
+           if(i>0){//如果i大于0则i自减，否则i自增。
+           	  i--;
+           }else{
+           	  i++;
+           }
+        1.3 if  else if  else
+           步骤：判断if条件是否成立，如果成立则执行if{...}内的语句,忽略后面的else if和else语句。如果if不成立则判断else if条件，如果else if条件成立则执行else if{...}内的语句并忽略后面的else语句，如果else if不成立则执行else{...}内的语句。
+           i(i<0){
+              console.log("i是负数")；
+           }else if(i===0){
+           	  console.log("i等于0")；
+           }else{
+           	  console.log("i是正数")；
+           }
+     2 do-while语句
+       do-while语句是前测循环语句，循环体内的语句至少被执行依1次，然后在判断while里的条件。
+       执行步骤：step1、执行do{...}内的语句。step2、判断while中的条件是否成立，如果不成立则停止循环. step3 如果while中的条件成立，则依次执行step1和step2. 直到while中的条件不成立为止。
+       var i=3;
+       do{
+       	  i--;
+       }while(i>0);  //循环一共执行3次,最终i的值变为0
+       var j=-10;
+       do{
+       	  j--;
+       }while(j>0);  //循环一共执行1次, j的值变为-11；
+     3 while语句
+       while语句是后测循环语句，如果一次判断while条件就不成立，则循环体内的代码有可能永远不会被执行。
+       步骤：先判断while条件内的语句，如果成立执行while(...){...}循环体内的代码，如果while条件不成立，则什么也不做。
+       i=3;
+       while(i>0){
+          i--;
+       }//循环一共执行3次，最终i的值变为0.
+       j=-10;
+       while(j>0){
+          j--;
+       }//循环条件不成立循环永远不会被执行，最终j的值保持不变仍为初始值-10.
+       结论：当循环条件成立时，do while和while循环的功能一样，执行次数和最终结果一样。 当循环条件不成立是，do while被执行了一次，而while永远 不被执行。
+     4 for语句
+       for语句也是一种前测试循环语句。可以初始化变量，定义循环后要执行的代码。
+       执行顺序：step1->step2->step3->step4, 循环往复，直到step2的条件不成立结束循环。
+       var sum=0;
+       for(var i=1/*step1*/;i<=10/*step2*/;i++/*step4*/){
+           sum+=i; //step3
+       }
+       //把for循环换成while循环格式。
+       var i=1;
+       for(;i<=10;){
+          sum+=i;
+       }
+       //无限循环
+       for(;;){
+          console.log("1");
+       }
+    5 for in语句
+      var obj={name:"zhangsan",age:15};
+      for(var key in obj){
+          console.log(key,obj[key]); //每次执行循环时，会将obj的一个属性名复制给变量key。
+          //obj["key"]或者obj.key不存在。
+      }
+    6 label语句
+      var count =0;
+      lable:for(var i=0;i<2;i++){//外层循环执行了2次
+          for(var j=0;j<2;j++){
+              if(j==1){
+                 break; //默认跳出break语句直接所属的循环即最内层循环
+               }
+              count++;//当i=0&j=0是执行第1次累加count变为1，当i=0&j=1时满足条件执行break跳出最内层循环，执行i++使i的值变为1，继续下一轮最外层循环。当i=1&j=0时执行第2次累加count变为2.当i=1&j=1时满足条件执行break跳出最内层循环，执行i++使i的值变为2，最外层循环不满足i<2，结束整个循环。
+          }
+      }
+      console.log(count); //count的值为2。
+
+      var num =0;
+      label:for(var i=0;i<2;i++){//外层循环执行了1次
+          for(var j=0;j<2;j++){
+              if(j==1){
+                 break label;//跳出label标签标识处的循环即最外层循环
+              } 
+              num++;//当i=0&j=0是执行第1次累加count变为1，当i=0&j=1时满足条件执行break label跳出最外层循环，整个循环结束。
+          }
+      }
+      console.log(num); //num的值为1。
+   7 break和continue
+     //如果条件满足，break跳出整个循环，break后面的语句不再执行
+     for(var i=0;i<10;i++){
+        if(i==3){
+           break;
+        }
+        console.log(i);//输出 0 1 2
+     };
+     console.log(i);//输出2，break语句结束循环后，不再执行i++。
+     //如果条件满足，continue跳出本次循环，继续下一轮循环。
+     for(var j=0;j<10;j++){
+        if(j==3){
+           continue;
+        }
+         console.log(j);//输出 0 1 2 4 5 6 7 8 9
+     };
+     console.log(i);//输出10，continue跳出本次循环后，继续执行i++.
+  8 with
+    with语句可以将代码的作用域设置到一个特定的对象中，讲话多次编写同一个对象的工作。
+    <div id="div1" style="background-color:red;width:200px;height:200px"></div>
+    oDiv=document.getElementById("div1");
+    //如果需要修改backgroundColor、with、height样式的值，通常我们采用如下做法：
+    /*
+       oDiv.style.backgroundColor="blue";
+       oDiv.style.width="500px";
+       oDiv.style.height="300px";
+    */
+    //上述注释中的语句用with简化成下列代码。
+    //backgroundColor首先被认为是一个局部变量，如果在局部环境中没有var backgroundColor这样的声明，则在with(...)内找，在oDiv.Style上查找backgroundColor。
+    //
+    with(oDiv.style){
+       backgroundColor="blue"; //等价于oDiv.style.backgroundColor="blue"; 
+       width="500px";//等价于oDiv.style.width="500px";
+       var height="300px";//仅仅是给一个局部变量height赋值而已，而oDiv.style.height仍然保持不变为初始值200px，不会被修改为300px。       
+    }
+  9 switch
+    9.1 switch的条件可以是任何数据类型，case条件和switch条件作严格等===比较。
+    var str="1";
+    switch(str){
+       case 1:
+         console.log("数字1");
+         break;
+       case "1":
+         console.log("字符串1");
+       default:
+         console.log("既不是数字1也不是字符串1");
+    }
+    9.2 通过为每个case后面都添加一个break语句，可以避免执行多个case代码的情况。
+    var i=1;
+    var week;
+    switch(i){
+       case 0:
+         week="周日";
+         break;
+       case 1:
+         week="周一";
+         break;
+       case 2:
+         week="周二";
+         break;
+       case 3:
+         week="周三";
+         break;
+       case 4:
+         week="周四";
+         break;
+       case 5:
+         week="周五";
+         break;
+       case 6:
+         week="周六";
+         break;
+       default:
+         week="无效的星期数"；
+    }
+    9.3 如果刻意要合并多重情况，则可以省略break.
+    var month=5;
+    var year=2016;
+    var day;
+    switch(month){
+       case 1:
+       case 3:
+       case 5:
+       case 7:
+       case 8:
+       case 10:
+       case 12:
+         day="31天";
+         break;
+       case 4:
+       case 6:
+       case 9:
+       case 11:
+         month="30天";
+         break;
+       case 2:
+         if((year%4==0&&year%100!=0)||year%400==0){
+            day ="29天"; //闰年29天,年份2016能够被4整除但不能被100整除所以是闰年，2000能被400整除也是闰年。
+         }else{
+            day ="28天"；//平年28天，2100年能被4整除也能被100整除所以是平年，2123不能被4整除也是平年。
+         }
+         break;       
+       default:
+         week="无效的月份"；
+    }
+
+</pre>
+
+</body>
+</html>

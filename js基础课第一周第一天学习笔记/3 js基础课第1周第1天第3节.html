@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>3 js基础课第1周第1天第3节</title>    
+</head>
+<body>
+<h1>js1.1.3 数据类型的分类？基本数据类型和引用类型的特点？如何检测数据类型？其他数据类型转换成Boolean类型的规律？其他数据类型转换为Number类型的规律？其他数据类型转换为String类的规律？</h1>
+<pre>
+  一、数据类型的分类：
+      ECMAScript第5版中js一共6种数据类型。
+      5种基本数类型：Undefined  Null Boolean Number String
+      1种引用数据类型：Object
+      es6（ECMAScript6的缩写，ECMAScript2015）新增了第7种数据类型(第6种基本数据类型）：Symbols
+  二、基本数据类型和引用数据类型的特点？
+     1 基本数据类型
+       基本数据类型按值访问的，因为可以操作保存在变量中的实际的值。
+     2 引用类型的值时按引用访问的，在操作对象时是加上是在操作对象的引用而不是实际的对象。
+       引用类型的值是保存在内存中的对象。与其他语言不同，JavaScript不允许直接访问内存中的位置，也就是说不能直接操作对象的内存空间。      
+  三、如何检测数据类型
+      1 typeof 检测数据类型的运算符
+      2. typeof 检测数据类型:共七种
+       "string"  "number" "boolean" "undefined" "object" "function"  "symbol"
+	    console.log("<-- 2 typeof 检测数据类型: -->");
+	    console.log('typeof "foo" = '+typeof "foo");//"string"
+	    console.log('typeof 1 = '+typeof 1);//"number"
+	    console.log('typeof true = '+typeof true);//"boolean"
+	    console.log('typeof undefined = '+typeof undefined);//"undefined"
+	    console.log('typeof null= '+typeof null);//"object"
+	    console.log('typeof [] = '+typeof []);//"object"
+	    console.log('typeof {} = '+typeof {});//"object"
+	    console.log('typeof /abc/g = '+typeof /abc/g);//"object"
+	    console.log('typeof new Function() = '+typeof new Function());//"function"
+	    console.log('typeof typeof Symbol() = '+typeof Symbol());//"symbol"
+      2 instanceof 
+      3 constructor
+      4 Object.prototype.toString.call() 
+  四、其他数据类型转换成Boolean类型的规律
+      1 其他数据类型只5有种情况为false: 0 NaN null undefined ""(空字符串，字符串中间没有空格)
+      2 注意" "(字符串中间有空格) [] {} 转换为boolean类型结果为ture
+  五、其他数据类型转换为Number类型的规律 
+      1 如果是Boolean值，true和false将分别被转换为1和0.
+        Nubmer(true)===1; Number(false)===0;
+      2 如果是数字值，只是简单的传入和返回。
+      3 如果是null，返回0.
+        Number(null)===0;
+      4 如果是undefined，返回NaN.
+        Number(undefined)===NaN
+      5 如果是字符串，遵循下列规则：
+        5.1 如果字符串中只包含数字，则将其转换为十进制。
+            Number("123")===123
+            Number("011")===11  //前导0被忽略了
+            Number("+12")===12  //前面的正号被忽略了
+            Number("-13")===-13
+        5.2 如果字符串中国包含有效的浮点格式，则将其转换成对应的浮点值。
+            Number("1.1")===1.1
+            Number("01.1")===1.1  //前导0被忽略了
+            Number("+1.2")===1.2  //前面的正号被忽略了
+            Number("-1.3")===-1.3 
+        5.3 如果字符串中国包含有效的十六进制格式，则将其转换为相同大小的十进制。
+            Number("0xf")===15 // 十六进制数以0x开头。每位数字的取值范围为0~15 用字母A~F代表10~15
+        5.4 如果字符串是空的(不包含任何字符)，则将其转换为0。
+            Number("")===0 
+            Number(" ")===0 //只包含空格时也转换为0
+        5.5 如果字符串中包含除上述格式之外的字符，则将其转换为NaN.
+            Number("1a")===NaN
+        5.6 parseInt()将字符串转换成整数的规律：
+            5.6.1 第一个字符不是数字，则返回NaN
+                  parseInt("") 返回值为 NaN
+                  parseInt("a") 返回值为 NaN
+            5.6.2 第一个字符是数字，则继续解析第二个数字直到遇到非数字，如果全部为数字字符则解析全部字符。
+                  parseInt("1a") 返回值为 1
+                  parseInt("2.2b") 返回值为 2 //因为parseInt只解析整数数字字符，不解析小数点。
+                  parseInt("3") 返回值为 3
+                  parseInt("4.4") 返回值为 4
+                  parseInt("012") 返回值为 12 // 如果第一个数字是0，旧版本浏览器会转化成八进制，新版本浏览器会忽略前导0
+                  parseInt("0xA") 返回值为 10 // 十六进制数以0x开头。每位数字的取值范围为0~15 用字母A~F代表10~15
+            5.6.3 parseInt的第二个参数代表进制
+                  parseInt("10",2) 返回值为2 //按二进制解析
+                  parseInt("10",8) 返回值为8 //按八进制解析
+                  parseInt("10",10) 返回值为10 //按十进制解析
+                  parseInt("10",16) 返回值为16 //按十六进制解析
+                  parseInt("10",17) 返回值为17  //自定义，逢17进1
+        5.7 parseFloat()将字符串转换成整数的规律：
+            5.7.1 第一个字符不是数字，则返回NaN
+                  parseFloat("") 返回值为 NaN
+                  parseFloat("a") 返回值为 NaN
+            5.7.2 第一个字符是数字，则继续解析第二个数字直到遇到非有效浮点数字，如果全部为有效浮点数字符则解析全部字符。
+                  parseFloat("1a") 返回值为 1
+                  parseFloat("2.2b") 返回值为 2.2 
+                  parseFloat("3") 返回值为 3
+                  parseFloat("4.4") 返回值为 4.4
+                  parseFloat("5.5.5") 返回值为 5.5//第二个点及其后的字符无效
+                  parseFloat("012") 返回值为 12 // 忽略前导0
+                  parseFloat("0xA") 返回值为 0 // 十六进制数以0x开头。十进制始终会转换成0
+       6 如果是对象，遵循下列规则：
+         6.1 如果是对象，则调用对象的valueOf()方法，然后依照前面的规则转为返回的值。
+             6.1.1 大部分情况下对象类型的valueOf方法会返回对象本身：
+	             ({}).valueOf() 返回值为 {} 
+	             document.valueOf() 返回值为 document
+	             Math.valueOf() 返回值为 Math
+	             ([]).valueOf() 返回值为 []
+	             (function a(){}).valueOf()  返回值为function a(){}
+	             (/\d/).valueOf() 返回值为/\d/
+	             Date.valueOf() 返回值为 Date
+	             Error.valueOf() 返回值为 Error
+	             (new Error).valueOf() 返回值为 Error
+             6.1.2 例外：
+	             虽然 new Date() 返回值为当前时间对象 Sat May 21 2016 08:36:19 GMT+0800 (中国标准时间)
+	             (new Date()).valueOf() 返回值当前时间戳 1463790979243 //时间戳就是从1970年1月1日0时0分0秒到当前时间点的毫秒数。
+         6.2 如果6.1中的转换的结果是NaN,则调用对象的toString()方法，然后再次依照前面的规则转换返回的字符串值。
+             6.2.1 Object对象类型toString()方法会返回"[object ***]"格式
+	             ({}).toString() 返回值为 "[object Object]"  //js中对象返回值为"[object Object]" 
+	             document.toString 返回值为 "[object HTMLDocument]" //HTML元素 DOM对象 返回值为"[object HTML***]" 
+	             Math.toString() 返回值为 "[object Math]"
+             6.2.2 Function、RegExp类等的toString()方法相当于把原的对象直接用一对引号包裹。	             
+	             (function a(){}).toString() 返回值为 "function a(){}" //函数返回值为代码字符串
+	             (/\d/).toString() 返回值为"/\d/" //正则返回值为正则字符串
+             6.2.3 Array类的toString()方法，将原数组两边的中括号换成引号。
+	             [1,2,3].toString() 返回值为"1,2,3"
+	             [1].toString() 返回值为"1"
+	             [].toString() 返回值为""
+	         6.2.4 Date类
+	             Date.toString() 返回值为  "function Date() { [native code] }"
+	             (new Date).toString() 返回值为 "Sun May 22 2016 05:00:49 GMT+0800 (中国标准时间)"
+	         6.2.5 Error类
+	             Error.toString() 返回值为  "function Error() { [native code] }"
+                 (new Error).toString() 返回值为 "Error"
+	     6.3  下面不是全部的情况，但一定遵循下列步骤：
+	            第1步，首先用valueOf()转换。如果valueOf()的返回值可以转换成有效数字返回有效数字则不再进行下一步。
+	            第2步  如果valueOf()的返回值不能转换成有效数字，才用toString()转换。如果toString()的返回值可以转换成有效数字则返回有效数字，则不再进行下一步。
+	            第3步 如果valueOf()和toString的返回值均不能转换成有效数字，则返回NaN.
+	        6.3.1 valueOf()和toString()的返回值都不能转换成有效数字，则返回NaN
+	             Number({}) 返回值为 NaN
+	             Number(document) 返回值为 NaN
+	             Number(Math) 返回值为 NaN
+	             Number(Date) 返回值为 NaN
+	             Number(Error) 返回值为 NaN
+	             Number(new Error) 返回值为 NaN
+	             Number(function a(){}) 返回值为 NaN
+	             Number(/\d/) 返回值为 NaN
+	             Number([1,2,3]) 返回值为 NaN
+	        6.3.2 valueOf()的返回值不能转换为有效数字，但是toString()方法的返回值能转换为有效数字，则返回有效数字。
+	             Number([]) 返回值为 0
+	             Number([1]) 返回值为 1
+            6.3.3 valueOf()的返回值可以转换为有效数字则直接返回有效数字，忽略toString()方法的返回值。
+                 Number(new Date()) 返回值为1463790979243
+  六、其他数据类型转换为String类的规律
+         1 如果值有toString()方法，则调用该方法，并返回相应的结果
+             详见6.2已总结
+         2 如果值是null,则返回"null"
+         3 如果值是undefined,怎返回"undefined"
+</pre>
+
+</body>
+</html>

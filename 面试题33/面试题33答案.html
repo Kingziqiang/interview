@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题33答案</title>    
+</head>
+<body>
+<h1>33 写一个对象排序方法，可以按对象的属性排序？举例说说函数内部属性arguments和argument.callee的用法？arguments.caller和函数名.caller有啥区别？函数内部属性this的规则？写一个选项卡案例？</h1>
+<pre>
+  一、写一个对象排序方法，可以按对象的属性排序？   
+      1 数组sort方法的默认排序规则：
+        1.1 0~9之间的整数去掉前导0，按照数字从小到大排序
+           [02,1,4].sort();//返回结果[1,2,4],去掉了2的前导0，按照数字从小到大排序。
+        1.2 大于等于10的整数，首先去掉前导0，按位数从左到右依次比较，如果第一位不同，则只比较第一位大小，如果第一位相同，则比较第二位大小，依次类推。          
+           [08,3,13,12,5,24,43].sort();//返回结果[12,13,24,3,43,5,8],去掉8的前导0，比较最高位（即第一位）数字，1最小，但12和13的最高位都为1，则继续比较第二为，2比3小，所以12排在13前面，后面最高位从小到大依次是24,3,43,5,8.
+        1.3 负数和浮点数遵循上述两条规则，比较大小时直接忽略负号和小数点，去掉整数的前导0，但不会去掉也不会忽略小数点前面的0
+           [-08,-3,-1.3,-1.2,-0.5,-24,-4.3].sort();//返回结果[-0.5, -1.2, -1.3, -24, -3, -4.3, -8]
+        1.4 数字永远排在字母前面
+           ["9999","a"].sort();//["9999","a"]. 因为在ascii码表中，9排在a的前面。
+        1.5 大写字母永远排在小写字母前面
+           ["a","A"].sort();//["A","a"]  因为ascii码表中，大写字母全部排在小写字母前面
+           ["a","Z"].sort();//["Z","a"]  因为ascii码表中，大写字母全部排在小写字母前面
+           ["z","Z"].sort();//["Z","z"]  因为ascii码表中，大写字母全部排在小写字母前面
+        1.6 true false null undefined 被转换成字符串"true","false","null","undefined"比较
+           [true,false].sort();//[false,true]  因为f字母排在t字母的前面
+           [true,null].sort();//[null,true]  因为n字母排在t字母的前面
+           [false,null].sort();//[false,null]  因为f字母排在n字母的前面
+           [true,undefined].sort();//[true,undefined]  因为t字母排在u字母的前面
+           [true,"zhong"].sort();;//[true,undefined]  因为t字母排在z字母的前面
+           [true,"guo"].sort();//[null,true]  因为n字母排在t字母的前面
+        1.7 对象类型，调用toString()方法将对象转换成字符串，然后再遵循上述规则进行比较。
+           参见面试题28答案6.2
+           1.7.1 Object对象类型toString()方法会返回"[object ***]"格式
+	             ({}).toString() 返回值为 "[object Object]"  //js中对象返回值为"[object Object]" 
+	             document.toString 返回值为 "[object HTMLDocument]" //HTML元素 DOM对象 返回值为"[object HTML***]" 
+	             Math.toString() 返回值为 "[object Math]"
+             [{},document].sort();//返回值为[document,{}]，因为"[object HTMLDocument]"中字母H在"[object Object]"中字母O前面，所以document文档对象在{}对象前面.
+             [{},Math].sort();//返回值为[document,{}]，因为"[object Math]"中字母M在"[object Object]"中字母O前面，所以Math内置对象在{}对象前面.
+           1.7.2  Function、RegExp类等的toString()方法相当于把原的对象直接用一对引号包裹。	             
+	             (function a(){}).toString() 返回值为 "function a(){}" //函数返回值为代码字符串
+	             (/\d/).toString() 返回值为"/\d/" //正则返回值为正则字符串
+	         [function a(){},/\d/].sort();//返回值为 [/\d/, function a(){}]查询ascii码表"/\d/" 中"/"的ascii十进制ascii码值为47,"function a(){}"中"f"的十进制ascii码值102，所以/\d/小于function a(){}；
+             [function a(){},{}].sort();//返回值为 [{},function a(){}], 因为第一位字符不同则比较第一位，"[object Object]"中左方括号[的十进制ascii值时91,f的十进制ascii码值时102。
+           1.7.3 Array类的toString()方法，将原数组两边的中括号换成引号。
+	             [1,2,3].toString() 返回值为"1,2,3"
+	             [1].toString() 返回值为"1"
+	             [].toString() 返回值为""
+	         [[2,3],[3,1]].sort();//返回值为 [[2,3],[3,1]]，因为字符串"2,3"排在字符串"3,1"前面
+	       1.7.4 Date类
+	             Date.toString() 返回值为  "function Date() { [native code] }"
+	             (new Date).toString() 返回值为 "Sun May 22 2016 05:00:49 GMT+0800 (中国标准时间)"
+	          [Date,new Date].sort();//返回值[Sun May 22 2016 05:00:49 GMT+0800 (中国标准时间), Date]，因为"Sun May 22 2016 05:00:49 GMT+0800 (中国标准时间)"的首位字符"S"排在 "function Date() { [native code] }"中的首位字符"f"前面。所有大写字母都比小写字母小。
+	       1.7.5 Error类
+	             Error.toString() 返回值为  "function Error() { [native code] }"
+                 (new Error).toString() 返回值为 "Error"
+              [Error,new Error].sort();//返回值[Error, new Error]，因为"Error"的首位字符"E"排在 "function Error() { [native code] }"中的首位字符"f"前面。所有大写字母都比小写字母小。
+      2 给sort方法添加回调方法，使得数组汇总大于10的整数能够按数字大小进行排序。        
+        2.1 从小到大排序
+            var arr=[08,3,13,12,5,24,43]
+            arr.sort(function(a,b){
+                return a-b; //当a-b>0时，即a>b时，数组的前一项大于后一项时交换顺序
+            });
+            排序后arr变成：[3, 5, 8, 12, 13, 24, 43]
+        2.2 从大到小排序
+            var arr=[08,3,13,12,5,24,43]
+            arr.sort(function(a,b){
+                return b-a; //当b-a>0是，即b>a时，数组的后一项大于前一项时交换顺序
+            });
+            排序后arr变成：[43, 24, 13, 12, 8, 5, 3]
+        2.3 不排序，反转数组
+            var arr=[08,3,13,12,5,24,43]
+            arr.sort(function(a,b){
+                return 1; //恒大于0，即每轮都需要交换位置
+            });
+            反转后arr变成：[43, 24, 5, 12, 13, 3, 8]
+      3 按对象的属性排序。
+        3.1 默认排序,保持原来的位置不变
+           参考本页1.7.1,因为所有普通对象的toString方法都返回相同的值"[object Object]"，所以不需要交换位置。
+           var arr = [{name:"zhangsan",arg:21},{name:"lisi",age:27}];
+           arr.sort();//返回的结果任然为arr1,[{name:"zhangsan",arg:21},{name:"lisi",age:27}]          
+        3.2 按name属性排序
+            var arr = [{name:"zhangsan",arg:21},{name:"lisi",age:27}];
+	        function oComparision(pro){
+	            return function(obj1,obj2){
+	                return obj1[pro]-obj2[pro];
+	            }
+	        };
+            arr.sort(oComparision("name"));//返回结果为[{name:"lisi",age:27},{name:"zhangsan",arg:21}]，按名字从小到大派讯
+        3.3 按age属性排序
+           var arr = [{name:"zhangsan",arg:21},{name:"lisi",age:27}];	       
+           arr.sort(oComparision("name"));//返回结果为[{name:"zhangsan",arg:21},{name:"lisi",age:27}];，按年龄从小到大排序
+
+  二、举例说说函数内部属性arguments和argument.callee的用法？
+       1 arguments
+         arguments是一个类数组对象，保存传入函数的的所有参数。
+         1.1 arguments具有length属性
+            function sum(){    
+		        var total = null;
+		        for(var i = 0;i<arguments.length;i++){ 
+		            var cur = Number(arguments[i]);             
+		            cur?total += cur:null;
+		        };
+		        return total;
+	         }
+		     sum(1,2,3,4,5); //返回15
+		     sum(1,"cxh",2,{name:"zhangsan"}); //返回3  
+		 1.2 arguments是类数组不能直接调用Array的方法，但是可以转换成数组。		    
+		    1.2.1 arguments直接调用数组的方法会报错
+		        function argSort(){    			        
+			        return arguments.sort();
+	           }
+		       argSort(5,2,1,8,3); //报错，类数组及其原型链上不存在sort方法，所以args.sort未定义为undefined，undefined不是个方法。 Uncaught TypeError: args.sort is not a function(…)
+		    1.2.2 arguments转换成数组后可以直接调用数组的方法
+		        function argSort(){ //实现一个将函数的参数按照从小到大的顺序排序的功能   			      
+			        return [].slice.apply(arguments).sort();////先将类数组arguments转换成数组，然后再调用数组的排序方法sort
+	           }
+		       argSort(5,2,1,8,3); //返回值为[1, 2, 3, 5, 8]，[].slice.apply(arguments)将类数组转换成数组。
+		    1.2.3 将类数组arguments转换成数组的通用兼容写法
+		       function argSort(){ //实现一个将函数的参数按照从小到大的顺序排序的功能     			      
+			        return toArray(arguments).sort();//先将类数组arguments转换成数组，然后再调用数组原型上的排序方法
+	           }
+		       argSort(5,2,1,8,3); //返回值为[1, 2, 3, 5, 8]，toArray(arguments)将类数组arguments转换成数组。
+		       //将类数组转换成数组的通用兼容写法
+		       function toArray(args){
+                   try{
+                       return Array.prototype.slice.call(args);
+                   } catch(e){
+	                   var arr = [];
+	                   for(var i = 0,len = args.length; i < len; i++){             
+	                       arr[i] = args[i];  
+	                   }
+	                  return arr;
+                  }
+               }
+       2 arguments.callee
+         arguments.callee是一个指针，指向拥有这个arguments对象的函数。在严格模式下访问arguments.callee会导致错误。
+         arguments.callee主要应用场景是递归，作用是消除函数名与函数体的紧密耦合，已学过的常见递归场景有：
+         2.1 数学中的递归
+             比如求阶乘法：n!
+             function factorial(n){
+                 if(n>1){
+                     return num*arguments.callee(n-1);
+                 }
+                 return 1;
+             }
+         2.2 定时器setTimeout的递归写法
+            <body>
+                <div id="timeBox"></div>
+            </body>
+            <script type="text/javascript">
+                 var timeBox = document.getElementById("timeBox");
+                 //2.2.1 用window.setInterval方法,表示每隔1000毫秒=1秒，执行一次show方法，即让timeBox内容更新为当前最新时间。
+                 function show() {
+                     timeBox.innerHTML = new Date;
+                 }                 
+                 window.setInterval(show, 1000);
+                 //2.2.2 用windows.setTimeout方法等价替换window.setInterval方法
+                 function show() {
+                     timeBox.innerHTML = new Date;
+                     window.setTimeout(show, 1000);
+                 }
+                 //2.2.3 用argments.callee等价替换上述方式
+                  function show() {
+                     timeBox.innerHTML = new Date;
+                     window.setTimeout(arguments.callee, 1000);
+                 }
+            </script>
+        2.3 函数中使用当前函数名或者函数的引用
+             function outer(){
+                 innner();
+             }
+             function inner(){
+                 alert(arguments.callee.caller); //函数inner中使用当前函数的引用inner，可以用arguments.callee替换，消除紧耦合。
+             }
+             outter();
+
+  三、arguments.caller和函数名.caller有啥区别
+       1 arguments.caller
+         arguments.caller是EcmaScript5定义的新属性，在严格模式下访问会导致错误，在非严格模式下arguments.caller始终为undefined.
+         定义arguments.caller的目的是为了分清它和函数名.caller的区别
+       2 函数名.caller(等价于arguments.callee.caller）。
+         函数名.caller保存着调用当前函数的函数的引用。在严格模式下，不能为函数名.caller赋值，否则会导致错误。
+         2.1 在全局作用域中调用当前函数，函数名.caller的值为null.
+             function fn(){
+                 alert(fn.caller); //弹出值为null
+             }
+             fn();//fn.caller所属的当前函数为fn，在全局作用域中调用fn，所以fn.caller的值为null
+         2.2 在外部函数中调用当前函数，函数名.caller的值为调用当前函数的外部函数。
+             function outer(){
+                 innner();
+             }
+             function inner(){
+                 alert(inner.caller); //返回outter的引用,当前函数是inner，调用当前函数的函数是outer
+             }
+             outter();
+  四、函数内部属性this的规则
+      this是谁和函数在哪定义和执行的没有任何的关系
+      1、自执行函数中的this永远是window
+         ;(function fn1(){
+              console.log(this);//输出window
+         })();
+      2、给元素的事件绑定方法，当触发事件执行方法的时候，方法中的this是当前的元素
+            <body>
+                <div id="div1"></div>
+            </body>
+            <script type="text/javascript">
+                 var oDiv = document.getElementById("div1");
+                 oDiv.onclick=function(){
+                 	console.log(this);   //输出oDiv元素对象
+                 }         
+            </script>
+      3、函数执行，我们看函数名前面是否有"."，有的话，"."前面是谁this就是谁，没有的话this就是window
+            function fn3(){
+                console.log(this);
+            }
+            fn3();//前面没有.  输出的this值为window
+            obj={name:"cxh"}
+            obj.fn =fn3;
+            obj.fn();//函数前面有. 输出的this值为obj
+      4、在构造函数模式类中出现的this.xxx=xxx中的this是当前类的一个实例
+           function Person(name,age){
+               this.name = name;
+               this.age = age;
+               console.log(this);
+           }
+           person1 = new Person("zhangsan",21); //构造函数中的this是当前类Person的一个实例person1
+           person2 = new Person("lisi",27); //构造函数中的this是当前类Person的一个实例person2
+      5、我们使用call和apply方法的第一个参数可以任意的修改this的指向
+           function fn5(){
+              console.log(this);
+           }
+           fn5();//前面没有.  输出的this值为window
+           fn5.call({name:"cxh"});//执行fn5，输出的this值为call方法的第一个参数{name:"cxh"}
+           fn5.apply(document);//执行fn5，输出的this值为call方法的第一个参数document
+  五、写一个选项卡？
+      参见"面试题33/选项卡.html"
+</pre>
+
+</body>
+</html>

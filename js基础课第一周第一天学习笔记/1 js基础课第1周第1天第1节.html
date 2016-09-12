@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>1 js基础课第1周第1天第1节</title>
+    <style type="text/css">
+        /*内嵌式引入我们的样式*/
+        #div1 {
+            /*#div1就是把id为div1的元素设置样式 ID选择器*/
+            background: yellow;
+        }
+    </style>
+    <!--外链式引入我们的样式-->
+    <link type="text/css" rel="stylesheet" href="test.css"/>
+</head>
+<body>
+<h1>js1.1.1 引入css的方式有哪些？引入js的方式有哪些，外链式引入js文件时script标签之间的js代码是否有效？浏览器加载和渲染html的顺序?</h1>
+<pre>
+  一、引入css的方式：
+  在HTML中引入CSS的方法主要有四种，它们分别是行内式、内嵌式、链接式和导入式。
+    1.行内式:行内式是在标记的style属性中设定CSS样式。这种方式没有体现出CSS的优势，不推荐使用。
+    2.嵌入式:嵌入式是将CSS样式集中写在网页的<head></head>标签对的<style></style>标签对中。格式如下：
+             <head>
+            <style type="text/css">
+                   ...此处写CSS样式
+           </style>
+          </head>
+          缺点是对于一个包含很多网页的网站，在每个网页中使用嵌入式，进行修改样式时非常麻烦。单一网页可以考虑使用嵌入式。
+    3.导入式:将一个独立的.css文件引入HTML文件中，导入式使用CSS规则引入外部CSS文件，<style>标记也是写在<head>标记中，使用的语法如下：
+              <style type="text/css">
+                        @import"mystyle.css"; 此处要注意.css文件的路径
+             </style>
+             导入式会在整个网页装载完后再装载CSS文件，因此这就导致了一个问题，如果网页比较大则会儿出现先显示无样式的页面，闪烁一下之后，再出现网页的样式。这是导入式固有的一个缺陷。
+
+    4.链接式:也是将一个.css文件引入到HTML文件中，但它与导入式不同的是链接式使用HTML规则引入外部CSS文件，它在网页的<head></head>标签对中使用<link>标记来引入外部样式表文件，使用语法如下：
+              <link href="mystyle.css" rel="stylesheet" type="text/css"/>
+              使用链接式时与导入式不同的是它会以网页文件主体装载前装载CSS文件，因此显示出来的网页从一开始就是带样式的效果的，它不会象导入式那样先显示无样式的网页，然后再显示有样式的网页，这是链接式的优点。
+    总结：一般来说，做网站时把样式多写在多个样式表文件中，因此我们先用链接式引入一个总的CSS文件，然后在这个CSS文件中在使用导入式来引入其他的CSS文件。但如果通过JavaScrip来动态引入CSS文件则只能使用链接式。
+    二、将javascript引入到页面中
+        1、行内javascript(js) --强烈不推荐使用 <div onclick="alert(1)"></div>
+        2、内嵌式(将js代码写在<script></script>中间)，把script标签放入到页面中。
+           <!--内嵌式引入js-->
+            <script type="text/javascript">
+                //js代码都写在这里面
+            </script>
+        3、外链式(新建一个外部的js文件，然后把js代码都写在那个文件中，通过<script src='地址'>引入进来)
+           <!--外链式引入js文件-->
+           <script type="text/javascript" src="test.js">
+                //外链式中这里面不能写js代码了，js代码都写在test.js中了(写了也没有效果)
+           </script>
+    三、浏览器加载和渲染html的顺序
+        1、浏览器加载html页面的Dom结构，是从上到下一行一行的下载和渲染的。
+        2、html页面所有渲染完的部分都是已经下载完的。
+        3、如果有js文件或者css样式文件，那么浏览器会启用单独的线程单独下载。 
+        4、当所有样式表都下载完成以后页面才开始一起解析css文件开始渲染文件。
+        5、因为浏览器的加载是从上到下一行一行的加载的，所以如果页面同事定义了两个相同命名的js函数，后面的函数会覆盖前面的函数。
+        6、js函数只能操作js函数定义位置之前的Dom元素。
+
+        关于浏览器加载的详细资料参考http://www.knowsky.com/613448.html
+</pre>
+<div id="div1" style="width: 100px; height: 100px; border: 1px solid red;"></div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>5 清除所有元素的样式再给指定元素添加样式的写法（性能较差的写法）</title>
+<style type="text/css">
+#tab{ width:800px; margin:10px auto;}
+#tab ul{ padding:0; margin:0; overflow:hidden; list-style:none;}
+#tab li{ float:left; width:130px; height:30px; text-align:center; line-height:30px; font-size:16px; background:#9C9;  margin-left:10px; cursor:pointer;}
+#tab li.selectedLi{ background:pink; font-weight:bold;}
+/*  内容部分的样式 */
+#tab div{ clear:both; height:400px; padding:10px; background:pink; display:none; }
+#tab div.selectedDiv{ display:block;}
+</style>
+</head>
+<body>
+<div id="tab">
+	<ul>
+        <li class="selectedLi">选项一</li>
+        <li>选项二</li>
+        <li>选项三</li>
+        <li>选项四</li>
+        <li>选项五</li>
+    </ul>   
+    <div class="selectedDiv" >内容一</div>
+    <div >内容二</div>
+    <div >内容三</div>
+    <div >内容四</div>
+    <div >内容五</div>
+</div>
+</body>
+</html>
+<script>
+var oLis=document.getElementById("tab").getElementsByTagName("li");
+var oDivs=document.getElementById("tab").getElementsByTagName("div");
+function changeTab(index){
+	//先把原来选中的样式清掉
+	for(var i=0;i<oLis.length;i++){
+		oLis[i].className="";
+		oDivs[i].className="";	
+	}	
+	oLis[index].className="selectedLi";
+	oDivs[index].className="selectedDiv";	
+}
+for(var i=0;i<oLis.length;i++){
+		oLis[i].n=i;
+		oLis[i].onclick=function(){
+			changeTab(this.n);
+		}
+	}
+</script>

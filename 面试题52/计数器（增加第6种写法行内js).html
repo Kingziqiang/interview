@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, div, h1 {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 14px;
+            -webkit-user-select: none;
+        }
+
+        h1 {
+            margin: 20px auto;
+            width: 400px;
+            height: 50px;
+            line-height: 50px;
+            border-bottom: 1px dashed #0fb200;
+            font-size: 18px;
+        }
+
+        div {
+            margin: 20px auto;
+            width: 400px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            cursor: pointer;
+        
+            border-radius: 10px;
+        }
+        #spans{
+                background: -webkit-linear-gradient(top left, #FFE0E9, #FFF38F, #ddf0f8);
+        }
+
+        #spans span {
+            font-size: 18px;
+            color: #F9044E;
+            font-weight: bold;
+        }
+        button { 
+            display: inline-block; 
+            zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */ 
+            *display: inline; 
+            vertical-align: baseline; 
+            margin: 0 2px; 
+            outline: none; 
+            cursor: pointer; 
+            text-align: center; 
+            text-decoration: none; 
+            font: 14px/100% Arial, Helvetica, sans-serif; 
+            padding: .5em 2em .55em; 
+            text-shadow: 0 1px 1px rgba(0,0,0,.3); 
+            -webkit-border-radius: .5em; 
+            -moz-border-radius: .5em; 
+            border-radius: .5em; 
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2); 
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2); 
+            box-shadow: 0 1px 2px rgba(0,0,0,.2); 
+        } 
+    </style>
+</head>
+<body>
+
+<h1>No.1 认为赵雅芝漂亮的支持一票~~</h1>
+
+<div id="spans"> <li >累积支持人数 [ <span id="spanF">0</span> ]</li></div>
+<div>
+    <button type="button" id="btn" onclick="add()">支持+1</button>
+    <button type="button" id="btn_sub" onclick="sub()">反对-1</button>
+</div>
+
+<script type="text/javascript">
+    var oBtn = document.getElementById("btn");
+    var spanF = document.getElementById("spanF");
+
+    //1、利用全局作用域不销毁(全局变量total也不销毁)的原理，每一次点击的时候，让全局变量total的值一直在累加，实现我们的需求
+    //弊端：我们依赖于全局变量的使用，而项目中为了避免全局变量的污染和冲突，我们一般都禁止使用全局变量
+    //    var total = 0;
+    //    oBtn.onclick = function () {
+    //        total++;
+    //        spanF.innerHTML = total;
+    //    }
+
+    //不能使用全局变量，但是还需要把total这个值保留住，那该如何的处理?
+
+    //2、自定义属性临时存储值，而且自定义属性还可以把这个值一直保存下来
+    //oBtn.count = 0;
+    //oBtn.onclick = function () {
+    //    spanF.innerHTML = ++this.count;
+    //};
+
+    //3、手动创建一个不销毁的私有作用域，里面定义私有的变量来进行累加
+    //    oBtn.onclick = (function () {
+    //        var count = 0;
+    //        return function () {
+    //            count++;
+    //            spanF.innerHTML = count;
+    //        }
+    //    })();//oBtn.onclick=自执行函数执行的返回结果  oBtn.onclick=xxxfff000
+
+    //4、手动创建一个不销毁的私有作用域，里面定义私有的变量来进行累加(这是第二种写法)
+    //    ~function () {
+    //        var total = 0;
+    //        oBtn.onclick = function () {
+    //            total++;
+    //            spanF.innerHTML = total;
+    //        }
+    //    }();
+
+
+    //5、利用innerHTML属性即可以设置，也可以获取的原理来实现我们的需求
+    //    oBtn.onclick = function () {
+    //        //每一次点击的时候，都把之前的先获取到，然后在累加1，最后重新把最新的结果赋值给spanF
+    //        spanF.innerHTML = Number(spanF.innerHTML) + 1;
+    //    }
+
+    // 6、行内js写法
+          function add() {
+            //每一次点击的时候，都把之前的先获取到，然后在累加1，最后重新把最新的结果赋值给spanF
+            spanF.innerHTML = Number(spanF.innerHTML) + 1;
+        }
+        function sub() {
+            //每一次点击的时候，都把之前的先获取到，然后在累加1，最后重新把最新的结果赋值给spanF
+            spanF.innerHTML = Number(spanF.innerHTML) -1;
+        }
+
+</script>
+</body>
+</html>

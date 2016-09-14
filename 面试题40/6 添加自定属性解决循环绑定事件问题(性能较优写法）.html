@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>6 添加自定属性解决循环绑定事件问题(性能较优写法）</title>
+<style type="text/css">
+#tab{ width:800px; margin:10px auto;}
+#tab ul{ padding:0; margin:0; overflow:hidden; list-style:none;}
+#tab li{ float:left; width:130px; height:30px; text-align:center; line-height:30px; font-size:16px; background:#9C9;  margin-left:10px; cursor:pointer;}
+#tab li.selectedLi{ background:pink; font-weight:bold;}
+/*  内容部分的样式 */
+#tab div{ clear:both; height:400px; padding:10px; background:pink; display:none; }
+#tab div.selectedDiv{ display:block;}
+</style>
+</head>
+<body>
+<div id="tab">
+	<ul>
+        <li class="selectedLi">选项一</li>
+        <li>选项二</li>
+        <li>选项三</li>
+        <li>选项四</li>
+        <li>选项五</li>
+    </ul>   
+    <div class="selectedDiv" >内容一</div>
+    <div >内容二</div>
+    <div >内容三</div>
+    <div >内容四</div>
+    <div >内容五</div>
+</div>
+</body>
+</html>
+<script>
+var oLis=document.getElementById("tab").getElementsByTagName("li");
+var oDivs=document.getElementById("tab").getElementsByTagName("div");
+var pre=0;//pr是保存被点中元素的索引号。默认第1个元素是被选中索引号为0
+function changeTab(index){//index表示把被选中的li的索引号从外边传进来
+	//把原来选中的清掉（把类样式清掉）
+	oLis[pre].className="";
+	oDivs[pre].className="";
+	//下面需要把当前被点中的加上相应的类样式，问题：需要知道那个一是被选中的
+	oLis[index].className="selectedLi";//给第三个li增加这个类样式
+	oDivs[index].className="selectedDiv";
+	pre=index;//让pre更新，使下一次操作的时候，能把最近的一次选中（的样式）清掉	
+}
+//用自定义属性的方式来解决绑定的bug
+for(var i=0;i<oLis.length;i++){	
+	var oLi=oLis[i];
+	oLi.index=i;//index是自定义属性，它也可以叫其它的名字
+	//oLi.i=i;//把当前循环执行的时候的i的值保存到这个元素的自定义属性上
+	//oLi.n=i;
+	oLi.onclick=function(){
+		//这里的this是指的当前被点中的那个li
+		changeTab(this.index)
+	}	
+}
+//Uncaught TypeError: Cannot set property 'className' of null
+//null和undefined没有任何属性。这不是className的问题，是className的前面的对象（就是className宿主对象）不存在（）
+///循环和changeTag方法不是一起执行的
+</script>

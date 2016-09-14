@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>7 通过获取当前元素在兄弟元素中索引位置的选项卡写法（性能最优写法）</title>
+<style type="text/css">
+#tab{ width:800px; margin:10px auto;}
+#tab ul{ padding:0; margin:0; overflow:hidden; list-style:none;}
+#tab li{ float:left; width:130px; height:30px; text-align:center; line-height:30px; font-size:16px; background:#9C9;  margin-left:10px; cursor:pointer;}
+#tab li.selectedLi{ background:pink; font-weight:bold;}
+/*  内容部分的样式 */
+#tab div{ clear:both; height:400px; padding:10px; background:pink; display:none; }
+#tab div.selectedDiv{ display:block;}
+</style>
+</head>
+<body>
+<div id="tab">
+	<ul>
+        <li class="selectedLi">选项一</li>
+        <li>选项二</li>
+        <li>选项三</li>
+        <li>选项四</li>
+        <li>选项五</li>
+    </ul>   
+    <div class="selectedDiv" >内容一</div>
+    <div >内容二</div>
+    <div >内容三</div>
+    <div >内容四</div>
+    <div >内容五</div>
+</div>
+</body>
+</html>
+<script>
+var oLis=document.getElementById("tab").getElementsByTagName("li");
+var oDivs=document.getElementById("tab").getElementsByTagName("div");
+var pre=0; //记录上次选中的索引，最初选中的索引0，即第一个选项卡
+function changeTab(){
+	//先把原来选中的样式清掉	
+	//this是不是当前被点中的那个li
+	this;//如果li前边还有两个元素li，说明它的索引是2	
+	//previousSibling//表示是前边的那一个同级节点
+	var n=0;//这是表示它索引的变量。假设它没有哥哥，则它就是老大
+	var p=this.previousSibling;
+	while(p){//判断p是否存在，就是判断它前边有没有节点
+		if(p.nodeType===1){//通过判断这个节点的nodeType属性就可以知道它是不是元素
+			n++
+		}
+		p=p.previousSibling;
+	}	
+    oLis[pre].className="";
+	oDivs[pre].className="";		
+	//上边计算的n，用在了这里
+	oLis.item(n).className="selectedLi";
+	oDivs.item(n).className="selectedDiv";
+	pre=n;	//将当前选中的索引赋值给全局变量pre，当我们下次选中其他选项卡时，当前选中的索引相对于下次被选中的索引来说，就成了上次被选中的索引
+}
+for(var i=0;i<oLis.length;i++){
+	oLis.item(i).onclick=changeTab;		
+}
+</script>

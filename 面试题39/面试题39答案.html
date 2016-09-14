@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题39答案</title>    
+</head>
+<body>
+<h1>39 写一个九九乘法表?什么是严格模式？严格模式和非严格模式的区别?</h1>
+<pre>
+  一、写一个九九乘法表   
+      见“面试题39/九九乘法表(随机变色).html”
+  二、什么是严格模式 
+      1 严格模式的概念
+        除了正常运行模式，ECMAscript 5添加了第二种运行模式："严格模式"（strict mode）。顾名思义，这种模式使得Javascript在更严格的条件下运行。
+      2 添加严格模式的目的
+        消除Javascript语法的一些不合理、不严谨之处，减少一些怪异行为;
+　　    消除代码运行的一些不安全之处，保证代码运行的安全；
+　　    提高编译器效率，增加运行速度；
+　　    为未来新版本的Javascript做好铺垫。
+      3 进入严格模式的标记 
+        3.1 支持严格模式的浏览器有：IE10+、Firefox4+、Safari 5.1+、Opera12+和Chrome.
+            在支持严格模式的浏览器下，进入"严格模式"的标志是下面语句：
+                "use strict";
+        3.2 在不支持严格模式的老版本浏览器中，会把上述语句当做字符串，直接忽略。
+      4 启用严格模式的两种不同场合
+        4.1 针对整个脚本文件
+            将"use strict"放在脚本文件的第一行，则整个脚本都将以"严格模式"运行。
+            4.1.1  "use strict";在整个script脚本的第一行，则是严格模式。
+                <script>
+            　　　　"use strict";
+            　　　　console.log("这是严格模式。");
+            　　</script>
+            4.1.2 "use strict";虽然不在第一行，但是前面的空分号不是产生实际运行结果的语句，也是严格模式。
+                <script>
+                    ;
+            　　　　"use strict";
+            　　　　console.log("这是严格模式。");
+            　　</script>
+            4.1.3 "use strict";不在第一行，且前面有产生时机运行结果的语句，所以是正常模式。
+                <script>
+            　　　　console.log("这是正常模式。");
+                    "use strict";
+            　　</script>
+            4.1.4 在script脚本中，并没有 "use strict";关键字，所以是正常模式
+                <script>
+            　　　　console.log("这是正常模式。");
+            　　</script>
+            4.1.5 合并4.1.1和4.1.2两个脚本中的代码到同一个script脚本中
+                 因为4.1.1严格模式在前面，整个脚本都变成了严格模式  
+                 <script>
+            　　　　"use strict";
+            　　　　console.log("这是严格模式。");
+                    console.log("这是正常模式。");
+            　　</script> 
+           4.1.6 合并4.1.2和4.1.1两个脚本中的代码到同一个script脚本中  
+                因为4.1.2正常模式在前面，整个脚本都变成了正常模式  
+                 <script>
+                    console.log("这是正常模式。");
+            　　　　"use strict";
+            　　　　console.log("这是严格模式。");                    
+            　　</script> 
+        4.2 针对单个函数        
+            将"use strict"放在函数体的第一行，则整个函数以"严格模式"运行。
+             4.2.1  "use strict";在整个函数体内的第一行，则是严格模式。
+                function strict(){
+            　　　　"use strict";
+            　　　　return "这是严格模式。";
+            　　}
+            4.2.2 "use strict";虽然不在第一行，但是前面的空分号不是产生实际运行结果的语句，也是严格模式。
+                function strict(){
+                     ;
+            　　　　"use strict";
+            　　　　return "这是严格模式。";
+            　　}
+            4.2.3 "use strict";不在第一行，且前面有产生时机运行结果的语句，所以是正常模式。
+                function notStrict() {
+                    console.log("这是正常模式。");
+                    "use strict";
+            　　　　return "这是正常模式。";
+            　　}
+            4.2.4 在整个函数体内中，并没有 "use strict";关键字，所以是正常模式                
+            　　function notStrict() {
+            　　　　return "这是正常模式。";
+            　　}
+        4.3 脚本文件的变通写法
+            因为4.1针对整个脚本的写法不利于不同模式下脚本的合并，比如严格模式和正常模式的脚本合并，会变成同一种模式。
+            可以借助4.2针对整个函数的写法将整个脚本的代码放在一个立刻执行的自执行匿名函数中，形成闭包，不同script脚本合并代码时互不影响。
+            4.3.1 针对整个script脚本文件的严格模式
+                  <script type="text/javascript">
+                      (function (){
+                　　　　"use strict";
+                　　　　console.log("这是严格模式。");
+          　　        })();
+                  </script> 
+            4.3.2 针对整个script脚本文件的严格模式
+                  <script type="text/javascript">
+                      (function (){
+                        ;
+                　　　　"use strict";
+                　　　　console.log("这是严格模式。");
+          　　        })();
+                  </script>            
+            4.3.3 针对整个script脚本文件的正常模式
+                  <script type="text/javascript">
+                      (function (){ 
+                        console.log("这是正常模式。");
+                　　　　"use strict"; 
+          　　        })();
+                  </script>            
+            4.3.4 针对整个script脚本文件的正常模式
+                  <script type="text/javascript">
+                      (function (){                　　　　
+                　　　　console.log("这是正常模式。");
+          　　        })();
+                  </script> 
+            4.3.5 合并4.3.1和合并4.3.2中的脚本
+                 上面一个匿名函数中的代码依然是严格模式，下面一个匿名函数中的代码依然是正常模式
+                 <script type="text/javascript">
+                      (function (){
+                　　　　"use strict";
+                　　　　console.log("这是严格模式。");
+          　　        })();
+                       (function (){                　　　　
+                　　　　console.log("这是正常模式。");
+          　　        })();
+                  </script> 
+                
+          因此，推荐4.3的写法，当需要脚本合并时，即使不同模式的脚本合并到同一个脚本也不会互相影响，依然保留了原来脚本的模式。不推荐4.1中的写法，合并后会通常被统一成最上面脚本的模式。
+     
+  三、严格模式和正常模式的区别
+      严格模式对Javascript的语法和行为，都做了一些改变。
+      1 全局变量显式声明
+        1.1 在正常模式中，如果一个变量没有声明就赋值，默认是全局变量。
+             a = 1; // a被默认为全局变量，被赋值为1.
+        　　for(i = 0; i < 2; i++) { // i被默认为全局变量，被初始化赋值为0.
+        　　}
+        1.2 严格模式禁止这种用法，全局变量必须显式声明。
+            "use strict";
+        　　 a = 1; // 报错，a未声明
+        　　for(i = 0; i < 2; i++) { // 报错，i未声明
+        　　}
+            因此，严格模式下，变量都必须先用var命令声明，然后再使用。
+            "use strict";
+        　　var a = 1; // 严格模式下的正确写法，用var声明后再赋值
+        　　for(var i = 0; i < 2; i++) { // 严格模式下的正确写法，用var声明后再赋值
+        　　}
+      2 静态绑定
+        Javascript语言的一个特点，就是允许"动态绑定"，即某些属性和方法到底属于哪一个对象，不是在编译时确定的，而是在运行时（runtime）确定的。
+        严格模式对动态绑定做了一些限制。某些情况下，只允许静态绑定。也就是说，属性和方法到底归属哪个对象，在编译阶段就确定。这样做有利于编译效率的提高，也使得代码更容易阅读，更少出现意外。
+        具体来说，涉及以下几个方面。
+        2.1 禁止使用with语句
+            因为with语句无法在编译时就确定，属性到底归属哪个对象。
+        　　"use strict";
+        　　var attr = 1;
+        　　with (obj){ // 语法错误 
+        　　　　v = 2;
+        　　}
+        2.1 创设eval作用域
+            正常模式下，Javascript语言有两种变量作用域（scope）：全局作用域和函数作用域。严格模式创设了第三种作用域：eval作用域。
+            正常模式下，eval语句的作用域，取决于它处于全局作用域，还是处于函数作用域。严格模式下，eval语句本身就是一个作用域，不再能够生成全局变量了，它所生成的变量只能用于eval内部。
+        　　"use strict";
+        　　var x = 2;
+        　　console.info(eval("var x = 5; x")); // 5
+        　　console.info(x); // 2
+      3 增强的安全措施
+        3.1 禁止this关键字指向全局对象
+            3.1.1 正常模式下执行普通函数，前面没有.，this指向window
+              　　function fn1(){
+              　　　　return this;
+              　　} 
+              　　fn1();// 返回"this"指向的全局对象window
+            3.1.2 严格模式下执行普通函数，前面没有.,this为undefined
+              　　function fn2(){ 
+              　　　　"use strict";
+              　　　　return this;
+              　　} 
+              　　fn2();// 返回this的值为undefined
+            3.1.3 使用构造函数时，如果忘了加new，this不再指向全局对象，而是报错。
+            　　function fn(){
+            　　　　"use strict";
+            　　　　this.a = 1;
+            　　};
+            　　fn();// 报错，this未定义
+        3.2 禁止在函数内部遍历调用栈
+        　　function f1(){
+        　　　　"use strict";
+        　　　　f1.caller; // 报错
+        　　　　f1.arguments; // 报错
+        　　}
+        　　f1();
+    4 禁止删除变量
+       下列代码在正常模式下可以执行成功
+       严格模式下无法删除变量。只有configurable设置为true的对象属性，才能被删除。
+    　　"use strict";
+    　　var x;
+    　　delete x; // 语法错误
+    　　var o = Object.create(null, {'x': {
+    　　　　　　value: 1,
+    　　　　　　configurable: true
+    　　}});
+    　　delete o.x; // 删除成功
+   5 显式报错
+     下列代码在正常模式下都不会报错
+     5.1 正常模式下，对一个对象的只读属性进行赋值，不会报错，只会默默地失败。严格模式下，将报错。
+      　　"use strict";
+      　　var o = {};
+      　　Object.defineProperty(o, "v", { value: 1, writable: false });
+      　　o.v = 2; // 报错
+     5.2 严格模式下，对一个使用getter方法读取的属性进行赋值，会报错。
+      　　"use strict";
+
+      　　var o = {
+
+      　　　　get v() { return 1; }
+      　　};
+      　　o.v = 2; // 报错
+     5.3 严格模式下，对禁止扩展的对象添加新属性，会报错。
+      　　"use strict";
+      　　var o = {};
+      　　Object.preventExtensions(o);
+      　　o.v = 1; // 报错
+     5.4 严格模式下，删除一个不可删除的属性，会报错。
+      　 "use strict";
+      　　delete Object.prototype; // 报错
+   6 重名错误
+     严格模式新增了一些语法错误。
+     6.1 对象不能有重名的属性
+          正常模式下，如果对象有多个重名属性，最后赋值的那个属性会覆盖前面的值。严格模式下，这属于语法错误。
+      　　"use strict";
+      　　var o = {
+      　　　　p: 1,
+      　　　　p: 2
+      　　}; // 语法错误
+    6.2 函数不能有重名的参数
+       正常模式下，如果函数有多个重名的参数，可以用arguments[i]读取。严格模式下，这属于语法错误。
+    　　"use strict";
+    　　function f(a, a, b) { // 语法错误
+    　　　　return ;
+    　　}
+   7 禁止八进制表示法
+     正常模式下，整数的第一位如果是0，表示这是八进制数，比如0100等于十进制的64。
+     严格模式禁止这种表示法，整数第一位为0，将报错。
+　　 "use strict";
+　　 var n = 0100; // 语法错误
+   8 arguments对象的限制
+     arguments是函数的参数对象，严格模式对它的使用做了限制。
+     8.1 不允许对arguments赋值
+    　　"use strict";
+    　　arguments++; // 语法错误
+    　　var obj = { set p(arguments) { } }; // 语法错误
+    　　try { } catch (arguments) { } // 语法错误
+    　　function arguments() { } // 语法错误
+    　　var f = new Function("arguments", "'use strict'; return 17;"); // 语法错误
+     8.2 arguments不再追踪参数的变化
+    　　function f(a) {
+    　　　　a = 2;
+    　　　　return [a, arguments[0]];
+    　　}
+    　　f(1); // 正常模式为[2,2]
+    　　function f(a) {
+    　　　　"use strict";
+    　　　　a = 2;
+    　　　　return [a, arguments[0]];
+    　　}
+    　　f(1); // 严格模式为[2,1]
+     8.3 禁止使用arguments.callee
+       这意味着，你无法在匿名函数内部调用自身了。
+    　　"use strict";
+    　　var f = function() { return arguments.callee; };
+    　　f(); // 报错
+    9 函数必须声明在顶层({}外部)
+      Javascript的新版本ES6会引入"块级作用域"。为了与新版本接轨，严格模式只允许在全局作用域或函数作用域的顶层声明函数。也就是说，不允许在非函数的代码块内声明函数。
+  　　"use strict";
+  　　if (true) {
+  　　　　function f() { } // 语法错误
+  　　}
+  　　for (var i = 0; i < 5; i++) {
+  　　　　function f2() { } // 语法错误
+  　　}
+   10 保留字
+      为了向Javascript的新版本过渡，严格模式新增了一些保留字：implements, interface, let, package, private, protected, public, static, yield。
+      使用这些词作为变量名将会报错。
+      　　function package(protected) { // 语法错误
+      　　　　"use strict";
+      　　　　var implements; // 语法错误
+      　　}
+      此外，ECMAscript第五版本身还规定了另一些保留字（class, enum, export, extends, import, super），以及各大浏览器自行增加的const保留字，也是不能作为变量名的。
+         
+           
+</pre>
+
+</body>
+</html>

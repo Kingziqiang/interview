@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>九九乘法表</title>
+    <style type="text/css">
+	    html,body,ul,li{
+		    margin:0;
+		    padding:0;
+		    font-size:16px;
+	    }
+		ul,li{
+		    list-style:none;
+		}
+    	#mulTable{
+		    width:900px;
+		    margin:30px auto 0;
+		    padding:10px;
+		    border:1px solid hotpink;
+		    border-radius:5px;
+		}
+		#mulTable ul li span{
+		    display:inline-block;
+		    width:100px;
+		    height:2em;
+		    line-height:2em;
+		    text-align:center;
+		    color:white;
+		    font-weight:bold;
+		}
+    </style>
+</head>
+<body>
+    <div id="mulTable"></div>
+    <script type="text/javascript">
+    	var oTable=document.getElementById("mulTable");
+		function mulTable(){
+		    var str="<ul>";
+		    for(var i=1;i<=9;i++){
+		        str+="<li>";
+		        for(var j=1;j<=i;j++){
+		            var r = Math.round(Math.random()*255);
+		            var g = Math.round(Math.random()*255);
+		            var b = Math.round(Math.random()*255);
+		            str+="<span style='background-color:rgb("+r+","+g+","+b+")'>"+j+" * "+i+" = "+(j*i)+"</span>"
+		        }
+		            str+="</li>";
+		    }
+		    str+="</ul>";
+		    return str;
+		}
+		var sTable=mulTable();
+		console.log(sTable);
+		oTable.innerHTML=sTable;
+    </script>
+</body>
+</html>

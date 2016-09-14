@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题40答案</title>    
+</head>
+<body>
+<h1>40 尝试用加自定义属性、闭包、获取当前元素在兄弟元素中的索引等方式写选项卡，对比不同方法之间的性能差异？</h1>
+<pre>
+一、方法1在script脚本中，为每个元素分别绑定事件，虽然避免了索引越界，但是大量的重复的代码明显应该用循环解决，手动书写重复的代码是非常愚蠢的行为。
+    <script type="text/javascript">
+		oLis[0].onclick=function(){changeTab(0);}
+		oLis[1].onclick=function(){changeTab(1);}
+		oLis[2].onclick=function(){
+			changeTab(2);
+		}
+		oLis[3].onclick=function(){
+			changeTab(3);
+		}
+		oLis[4].onclick=function(){
+			changeTab(4);
+		}	
+	</script>
+
+二、方法2犯了同样的愚蠢问题，逃避循环，用手动方式为每个元素单独绑定事件，而且用行内js写法为每个元素绑定事件也不安全。
+    <ul>
+        <li class="selectedLi" onClick="changeTab(0)">选项一</li>
+        <li onclick="changeTab(1)">选项二</li>
+        <li onclick="changeTab(2)">选项三</li>
+        <li onclick="changeTab(3)">选项四</li>
+        <li onclick="changeTab(4)">选项五</li>
+    </ul>  
+三、方法3虽然用了循环绑定事件，但是忽略了事件函数执行机制，在事件被触发前，函数里的代码仅仅是代码字符串不会执行。当事件触发时函数才执行，但此时循环已结束，索引i已经变成length超出最大索引，出现索引越界错误。
+    <script type="text/javascript">
+    	for(var i=0;i<oLis.length;i++){
+			oLis[i].onclick=function(){changeTab(i)}
+			//当循环执行的时候，做事件绑定。事件绑定的时候changeTab没有执行	
+			//当changeTab执行的时候，是click点击事件触发的时候，这时候循环早已经结束了（循环只要是结束了，则i的值是5）
+		}
+    </script>
+
+四、方法4采用执行函数形成的闭包解决了循环绑定事件时的索引越界问题，但是由于自执行函数内部，元素绑定了事件，这种情况下函数永远占用堆内存无法释放直到关闭浏览器为止，而且在自执行函数内执行另外一个自执行函数，相当于堆内存内开辟堆内存，这种写法性能最差。
+    <script type="text/javascript">
+    	for(var i=0;i<oLis.length;i++){
+			;(function(n){//加了个自运行的匿名函数，形成了闭包，把里面的i保护起来了
+				//形参相当于这个函数里的局部变量
+				oLis[n].onclick=function(){
+					changeTab(n);	
+				}
+			})(i);	
+		}
+    </script>    
+五、通过添加自定义属性即解决了循环绑定事件时的索引越界问题，又避免了事件绑定嵌套在自执行函数内部，造成最外层自执行函数永远无法释放堆内存空间的问题。但是每次点击一个选项卡都要清除所有选项卡的选中样式，同样会造成性能消耗，毕竟我们只需要清除上次选中的那个选项卡的选中样式就行了。
+    <script>
+		var oLis=document.getElementById("tab").getElementsByTagName("li");
+		var oDivs=document.getElementById("tab").getElementsByTagName("div");
+		function changeTab(index){
+			//把所有元素的选中样式清理掉，即使没被有选中样式也清理。
+			for(var i=0;i<oLis.length;i++){
+				oLis[i].className="";
+				oDivs[i].className="";	
+			}	
+			oLis[index].className="selectedLi";
+			oDivs[index].className="selectedDiv";	
+		}
+	    for(var i=0;i<oLis.length;i++){
+			oLis[i].n=i;
+			oLis[i].onclick=function(){
+				changeTab(this.n);
+			}
+		}
+    </script>
+六、通过添加自定义属性即解决了循环绑定事件时的索引越界问题，又避免了事件绑定嵌套在自执行函数内部，造成最外层自执行函数永远无法释放堆内存空间的问题。而且只清楚上次选中的元素样式，性能较优。
+    <script>
+		<script>
+		var oLis=document.getElementById("tab").getElementsByTagName("li");
+		var oDivs=document.getElementById("tab").getElementsByTagName("div");
+		var pre=0
+		function changeTab(index){
+			//把原来选中的样式清掉,只清理原来选中的元素样式			
+			oLis[pre].className="";
+			oDivs[pre].className="";					
+			oLis[index].className="selectedLi";
+			oDivs[index].className="selectedDiv";
+			pre=index;	
+		}
+	    for(var i=0;i<oLis.length;i++){
+			oLis[i].n=i;
+			oLis[i].onclick=function(){
+				changeTab(this.n);
+			}
+		}
+    </script>
+七、通过获取当前元素在兄弟元素中索引位置，不需要传参就能获取当前元素，不传参有两大好处：一是避免索引越界；二是带参数的函数执行语句需要嵌套在匿名函数内部才能绑定事件， 每次事件触发匿名函数执行产生的私有作用域无法释放，不带参数可以用函数名直接绑定事件。因此这种方法性能最优。     
+   <script>
+		var oLis=document.getElementById("tab").getElementsByTagName("li");
+		var oDivs=document.getElementById("tab").getElementsByTagName("div");
+		var pre=0; //记录上次选中的索引，最初选中的索引0，即第一个选项卡
+		function changeTab(){
+			//先把原来选中的样式清掉	
+			//this是不是当前被点中的那个li
+			this;//如果li前边还有两个元素li，说明它的索引是2	
+			//previousSibling//表示是前边的那一个同级节点
+			var n=0;//这是表示它索引的变量。假设它没有哥哥，则它就是老大
+			var p=this.previousSibling;
+			while(p){//判断p是否存在，就是判断它前边有没有节点
+				if(p.nodeType===1){//通过判断这个节点的nodeType属性就可以知道它是不是元素
+					n++
+				}
+				p=p.previousSibling;
+			}	
+		    oLis[pre].className="";
+			oDivs[pre].className="";		
+			//上边计算的n，用在了这里
+			oLis.item(n).className="selectedLi";
+			oDivs.item(n).className="selectedDiv";
+			pre=n;	//将当前选中的索引赋值给全局变量pre，当我们下次选中其他选项卡时，当前选中的索引相对于下次被选中的索引来说，就成了上次被选中的索引
+		}
+		for(var i=0;i<oLis.length;i++){
+			oLis.item(i).onclick=changeTab;		
+		}
+	</script>  
+八、方法7中获取当前元素在兄弟元素中的索引，应该提取出一个方法方便将来重复使用，因此代码可以进一步优化。
+   <script>
+		var oLis=document.getElementById("tab").getElementsByTagName("li");
+		var oDivs=document.getElementById("tab").getElementsByTagName("div");
+		function getIndex(ele){
+			var n=0;
+			var p=ele.previousSibling;
+			while(p){
+				if(p.nodeType===1){
+					n++	
+				}
+				p=p.previousSibling;
+			}
+			return n;
+		}
+		var pre=0;
+		function changeTab(){	
+			var n=getIndex(this)	
+		    oLis[pre].className="";
+		    oDivs[pre].className="";		
+			//上边计算的n，用在了这里
+			oLis[n].className="selectedLi";
+			oDivs[n].className="selectedDiv";	
+			pre=n;
+		}
+		for(var i=0;i<oLis.length;i++){
+				oLis[i].onclick=changeTab;//只有直接被绑定事件上的方法在运行的时候，this才指向当前的li元素
+				/*oLis.item(i).onclick=function(){
+					//this
+					this是当前被点的li
+					changeTab();//如果是这样绑定的事件，那changeTab函数在运行的时候，this不是当前被点到的li，而是window
+					}
+				*/		
+		}
+	</script>   
+</pre>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>3 选好绑定事件的索引越界问题（错误的写法）</title>
+<style type="text/css">
+#tab{ width:800px; margin:10px auto;}
+#tab ul{ padding:0; margin:0; overflow:hidden; list-style:none;}
+#tab li{ float:left; width:130px; height:30px; text-align:center; line-height:30px; font-size:16px; background:#9C9;  margin-left:10px; cursor:pointer;}
+#tab li.selectedLi{ background:pink; font-weight:bold;}
+/*  内容部分的样式 */
+#tab div{ clear:both; height:400px; padding:10px; background:pink; display:none; }
+#tab div.selectedDiv{ display:block;}
+</style>
+</head>
+<body>
+<div id="tab">
+	<ul>
+        <li class="selectedLi">选项一</li>
+        <li>选项二</li>
+        <li>选项三</li>
+        <li>选项四</li>
+        <li>选项五</li>
+    </ul>   
+    <div class="selectedDiv" >内容一</div>
+    <div >内容二</div>
+    <div >内容三</div>
+    <div >内容四</div>
+    <div >内容五</div>
+</div>
+</body>
+</html>
+<script>
+var oLis=document.getElementById("tab").getElementsByTagName("li");
+var oDivs=document.getElementById("tab").getElementsByTagName("div");
+var pre=0;//pre是保存被点中元素的索引号。默认第1个元素是被选中
+function changeTab(index){//index表示把被选中的li的索引号从外边传进来
+	//把原来选中的清掉（把类样式清掉）
+	oLis[pre].className="";
+	oDivs[pre].className="";
+	//下面需要把当前被点中的加上相应的类样式，问题：需要知道那个一是被选中的
+	oLis[index].className="selectedLi";//给第三个li增加这个类样式
+	oDivs[index].className="selectedDiv";
+	pre=index;//让pre更新，使下一次操作的时候，能把最近的一次选中（的样式）清掉	
+}
+for(var i=0;i<oLis.length;i++){
+	oLis[i].onclick=function(){changeTab(i)}
+	//当循环执行的时候，做事件绑定。事件绑定的时候changeTab没有执行	
+	//当changeTab执行的时候，是click点击事件触发的时候，这时候循环早已经结束了（循环只要是结束了，则i的值是5）
+}
+//Uncaught TypeError: Cannot set property 'className' of null
+//null和undefined没有任何属性。这不是className的问题，是className的前面的对象（就是className宿主对象）不存在（）
+///循环和changeTag方法不是一起执行的
+</script>

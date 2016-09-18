@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //for in:遍历一个对象中所有的属性名和属性值的
+    //for:知道开始和结束的值,我们进行循环的(知道具体执行的次数)
+    //for (var i = 0; i < 4; i++) {}
+
+    //while:一般都是不知道具体循环多少次才结束的,我们用while
+    //var ary = [];
+    //    for (var i = 0; i < 4; i++) {
+    //        ary.push(i + 1);
+    //    }
+
+    //    var i = 0;
+    //    while (i < 4) {
+    //        ary.push(i + 1);
+    //
+    //        i++;
+    //    }
+
+
+    //Math.round()//四舍五入
+    //Math.random()//获取[0-1)随机小数
+    //获取[n-m]之间的随机整数
+    //Math.round(Math.random() * (m - n) + n);
+    //例如：我想获取1-10之间的随机整数
+    //var ran = Math.round(Math.random() * (10 - 1) + 1);
+
+
+    //往数组中添加五个数字,数字的范围都是1-10,但是数组中的数字不能重复
+    //->具体循环多少次不知道了
+    var ary = [];
+    while (ary.length < 5) {
+        //获取1-10之间的随机整数
+        var ran = Math.round(Math.random() * (10 - 1) + 1);
+        //判断:如果数组中没有这一项我们才存入数组中
+        if (ary.indexOf(ran) === -1) {
+            ary.push(ran);
+        }
+    }
+    console.log(ary);
+
+    //indexOf:数组的方法,返回当前项在数组中第一次出现位置的索引,lastIndexOf返回的是当前项在数组中最后一次出现位置的索引
+    //如果当前项在数组中不存在,我们返回的索引是-1,由此我们也可以通过indexOf判断数组中是否包含这一项
+    //var ary=[12,23,34,45,12,23];
+    //ary.indexOf(23) ->1
+    //ary.lastIndexOf(23) ->5
+    //ary.indexOf(100) ->-1
+    //    if (ary.indexOf(100) === -1) {
+    //        //说明100在数组中是不存在的
+    //    }
+
+
+</script>
+</body>
+</html>

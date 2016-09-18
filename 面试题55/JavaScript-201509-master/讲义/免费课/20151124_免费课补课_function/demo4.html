@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //任意数求和的几部优化
+    //1、增加return返回值,在函数外面可以把我们计算的结果获取到
+    //2、对于字符串类型的有效数字(例如:"2")为了防止在相加的时候进行的是字符串的拼接,我们需要转换为number类型的然后在相加
+    //3、把非有效数字的进行屏蔽,屏蔽后是不相加的
+    function sum() {
+        var total = null;
+        for (var i = 0; i < arguments.length; i++) {
+            var cur = Number(arguments[i]);//->2
+//            if (isNaN(cur) === false) {//->3
+//                total += cur;
+//            }
+            if (!isNaN(cur)) {//isNaN是false代表是有效数字,取反后为true条件成立->条件成立代表的是有效数字
+                total += cur;
+            }
+        }
+        return total;//->1
+    }
+    var total = sum(1, "a");
+    console.log(total);
+</script>
+</body>
+</html>

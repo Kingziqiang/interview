@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //如何查找当前作用域的上级作用域?
+    //当前作用域的上级作用域是谁和函数在哪执行的没有任何的关系,我们只需要看当前函数是在哪个作用域下定义的,那么它的上级作用域就是谁
+
+    var total = 100;
+    function fn() {
+        var total = 10;
+        return function () {
+            console.log(total);
+        };//如果返回的是一个引用数据类型的值(对象、数组、函数...)，首先是把这个值开辟一个内存空间,有一个地址,然后把内存地址返回 ->例如在这里其实返回的就是 return xxxfff111;
+    }
+    var f = fn();//f=xxxfff111;
+    f();
+    //输出的结果是 10 还是 100 ? 为什么 ?
+    //10
+</script>
+</body>
+</html>

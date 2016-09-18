@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #tab{
+            width: 500px;
+            margin: 50px;
+        }
+        #tab ul{
+            text-align: center;
+        }
+        .option{
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+            line-height: 30px;
+            background: paleturquoise;
+            cursor: pointer;
+            text-align: center;
+        }
+        .content{
+            height: 200px;
+            background: palegreen;
+            display: none;
+            font-size: 40px;
+        }
+        .selectLi{
+            background:palegreen ;
+        }
+        .selectDiv{
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+<div id="tab">
+    <ul>
+        <li class="option selectLi"  >选项卡一</li>
+        <li class="option "  >选项卡二</li>
+        <li class="option "  >选项卡三</li>
+        <li class="option " >选项卡四</li>
+        <li class="option"  >选项卡五</li>
+    </ul>
+    <div class="content selectDiv">内容一</div>
+    <div class="content  ">内容二</div>
+    <div class="content ">内容三</div>
+    <div class="content ">内容四</div>
+    <div class="content">内容五</div>
+</div>
+</body>
+</html>
+<script>
+    var oTab = document.getElementById("tab");
+    var oLis =oTab.getElementsByTagName('li');
+    var oDivs = oTab.getElementsByTagName('div');
+    /*function changeTab(n){
+        for(var i = 0;i<oLis.length;i++){
+            oLis.item(i).className = "option";
+            oDivs.item(i).className = "content";
+        }
+        oLis.item(n).className = 'option selectLi';
+        oDivs.item(n).className = 'content selectDiv';
+    }*/
+    //以下方法能理解则理解,不能理解也没关系
+    var  nPrevious = 0;//设置上一次点击的li标签的索引
+    function changeTab(n){  //这种方式就是性能比较好
+        //n表示当前点击的li标签的索引
+        oLis.item(nPrevious).className = "option";
+        oDivs.item(nPrevious).className = "content";
+        oLis.item(n).className = 'option selectLi';
+        oDivs.item(n).className = 'content selectDiv';
+        nPrevious = n;
+    }
+
+
+    for(var i =0;i<oLis.length;i++){
+        oLis[i].index = i; //自定义属性的方式
+        oLis[i].onclick = function(){
+            //console.log(this.index);
+            //另一个内置对象就是this,表示当前的主体
+            changeTab(this.index)//this.index获取到当前的索引
+        };
+    }
+
+
+
+</script>

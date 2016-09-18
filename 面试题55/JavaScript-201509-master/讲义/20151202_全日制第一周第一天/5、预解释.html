@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //1、JS中的内存空间分为两种：栈内存、堆内存
+    //栈内存：提供JS代码执行的环境;存储基本数据类型的值; ->全局作用域或者私有的作用域其实都是栈内存
+    //堆内存：存储引用数据类型的值(对象是把属性名和属性值存储进去,函数是把函数体中的代码当做字符串存储进去)
+
+    //2、当浏览器加载我们HTML页面的时候,首先会提供一个供JS代码执行的环境->全局作用域(global->window)
+
+    //3、在JS代码执行之前,浏览器还需要自己做一些事情:把所有带var/function关键字的进行提前的声明或者定义 ->"预解释"(变量提声)
+    //声明(declare) -> 告诉浏览器我有这样一个东西啦,例如 var num1; function fn;
+    //定义(defined) -> 给我们声明的变量或者函数赋值,例如 num1=12; fn=function(){}
+    //[重要]变量只声明没有定义,默认的值是undefined(未定义)
+
+    //4、var和function在预解释阶段处理是不一样的
+    //var -> 在预解释的时候只是提前的声明了这个变量,只有当代码执行的时候才会完成赋值操作
+    //function -> 在预解释的时候会提前的把声明加定义都完成了(在代码执行的时候遇到定义的代码直接的跳过)
+    //[重要]刚开始只对window下的进行预解释,fn函数中目前存储的都是字符串,所以var total没啥实际的意义,所以不进行预解释 -> "预解释是发生在当前作用域下的"
+
+    //    console.log(obj);//->undefined
+    //    var obj = {name: "王文沙", age: 18};
+    //    function fn(num1, num2) {//代码执行到这一行的时候直接的跳过,因为在预解释的时候我们已经完成了声明加定义
+    //        var total = num1 + num2;
+    //        console.log(total);
+    //    }
+    //    var num1 = 12;
+    //
+    //    fn(num1, 100);//执行fn，把全局变量num1的值赋值给形参num1，把100赋值给形参num2
+
+    //5、在全局作用域下声明的变量是全局变量
+    //在私有作用域中声明的变量是私有变量;函数的形参也是私有的变量;
+
+    //如何分辨函数中出现的变量是私有的还是全局的?
+    //首先看是否为形参，然后看是否在私有作用域中声明过(有没有var过)，两者有其一就是私有的变量,那么在当前函数中不管什么位置出现都是私有的,和全局的没有半毛钱的关系;如果两者都没有，说明不是私有的，则往其上一级作用域进行查找...
+
+
+    //6、函数执行的时候会形成一个新的私有的作用域(栈内存),供函数体中的代码执行;
+    //1)给形参赋值
+    //2)私有作用域下的预解释
+    //3)私有作用域下的代码执行
+    //形成的新的私有的作用域还保护了里面的私有变量不受外界的影响,我们把函数的这种保护机制->"闭包"
+
+    //    console.log(total); ->undefined
+    //    var total = 0;
+    //    function fn() {
+    //        console.log(total); ->undefined
+    //        total += 100;
+    //        var total = 200;
+    //        console.log(total); ->200
+    //    }
+    //    fn();
+    //    console.log(total); ->0
+
+
+    //    console.log(total); ->undefined
+    //    var total = 0;
+    //    function fn() {
+    //        console.log(total); ->0
+    //        total += 100;
+    //        total = 200;
+    //        console.log(total); ->200
+    //    }
+    //    fn();
+    //    console.log(total); ->200
+
+
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    /*
+    * 1.对象类型的意义和定义
+    * 2.对对象类型的操作:增,删,改,查
+    * 3.严格的对象类型:json
+    * */
+    //对象类型是复合类型的数据,可以存多对数据类型
+    var str  = {}; //字面量的方式(对象直接量的方式)
+    var str = new Object()//创建实例的方式
+   // obj = {属性1:值1,属性2:值2}
+    var obj  = {"name":"lily",age:18,gender:true,"width":"100px",fn:function(){},arr:[1,2,3],ele:document.body}
+    var obj3 ={"name":"lily",age:18,gender:true,"width":"100px",fn:function(){},arr:[1,2,3],ele:document.body,0:"aa",1:"bb"}
+    //:就相当于等号(赋值) 每一对属性和值之间拿逗号隔开
+    //1.查询 对象.属性名 对象["属性名"]
+    //obj.width
+    //obj["width"]数组表示法
+    //alert(obj.aaa) ; //去读取一个不存在的属性,如果找不到也不会报错,而是返回undefined
+    //添加
+   // obj.color = "red";
+    //obj["color"] = "red";
+   // console.log(obj);
+
+    //修改
+    obj.age = '38';
+    obj["age"] = 48;
+
+
+    //删除
+    delete obj.width;
+    console.log(obj);
+
+    //判读属性是否在对象中  通过in运算符去检测
+   console.log( "bcde" in obj   )  //返回值:如果是true表示存在,false表示不存在
+
+    //特殊点 :js当中不可以把数字作为变量名,但是可以把数字作为属性名
+    //如果属性名是数字,不可以打点的方式去获取他
+    //如果属性名是字符串的,以[]的方式去获取的时候一定要写双引号或者单引号,但是数字的话,单引号或双引号可写可不写
+    var obj2 = {0:"aa",1:"bb"};
+    alert(obj2[0])//一般情况下,我们属性名不以数字命名
+    console.log(obj);
+    console.log(obj3)
+</script>
+</body>
+</html>

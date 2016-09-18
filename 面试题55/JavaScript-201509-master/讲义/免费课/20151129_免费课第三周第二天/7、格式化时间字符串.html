@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var timeStr = "2015-2-4 10:2:34";
+    //->"2015年02月04日 10点02分34秒"
+    //焦龙超思想:
+    //split 按照空格拆分成 ["2015-2-4","10:2:34"]
+    //"2015-2-4" split("-")  ["2015","2","4"]
+    //"10:2:34"  split(":")  ["10","2","34"]
+
+
+    //不足十的在前面补充零
+    //    function addZero(value) {
+    //        return value < 10 ? "0" + value : value;
+    //    }
+    //    var ary = timeStr.split(" ");
+    //    var temp1 = ary[0];
+    //    var temp2 = ary[1];
+    //    var ary1 = temp1.split("-");
+    //    var ary2 = temp2.split(":");
+    //    var result = ary1[0] + "年" + addZero(ary1[1]) + "月" + addZero(ary1[2]) + "日 " + addZero(ary2[0]) + "点" + addZero(ary2[1]) + "分" + addZero(ary2[2]) + "秒";
+    //    console.log(result);
+
+    //目前仅做参考,切勿研究
+    String.prototype.myFormatTime = function myFormatTime() {
+        var reg = /^(\d{4})(?:-|\/|\.|:)(\d{1,2})(?:-|\/|\.|:)(\d{1,2})(?:\s+)(\d{1,2})(?:-|\/|\.|:)(\d{1,2})(?:-|\/|\.|:)(\d{1,2})$/g, ary = [];
+        this.replace(reg, function () {
+            ary = ([].slice.call(arguments)).slice(1, 7);
+        });
+        var format = arguments[0] || "{0}年{1}月{2}日 {3}:{4}:{5}";
+        return format.replace(/{(\d+)}/g, function () {
+            var val = ary[arguments[1]];
+            return val.length === 1 ? "0" + val : val;
+        });
+    };
+    timeStr = "2015/2/4 10:2:34";
+    console.log(timeStr.myFormatTime("{1}-{2} {3}:{4}"));
+</script>
+</body>
+</html>

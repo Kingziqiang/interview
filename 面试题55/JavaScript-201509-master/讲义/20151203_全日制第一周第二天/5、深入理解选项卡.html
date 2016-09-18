@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训选项卡深入理解</title>
+    <link type="text/css" rel="stylesheet" href="css/index.css"/>
+</head>
+<body>
+<div class="box">
+    <div class="banner" id="banner">
+        <div class="select"><img src="img/1_big.jpg"/></div>
+        <div><img src="img/2_big.jpg"/></div>
+        <div><img src="img/3_big.jpg"/></div>
+        <div><img src="img/4_big.jpg"/></div>
+        <div><img src="img/5_big.jpg"/></div>
+    </div>
+    <div class="bg"></div>
+    <ul class="tip" id="tip">
+        <li class="select"><span></span><img src="img/1.jpg"/></li>
+        <li><span></span><img src="img/2.jpg"/></li>
+        <li><span></span><img src="img/3.jpg"/></li>
+        <li><span></span><img src="img/4.jpg"/></li>
+        <li><span></span><img src="img/5.jpg"/></li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    var banner = document.getElementById("banner");
+    var tip = document.getElementById("tip");
+    var oDivs = banner.getElementsByTagName("div");
+    var oLis = tip.getElementsByTagName("li");
+    //鼠标滑过某一个li,我们让所有的li和所有的div都没有选中的样式(select),然后让当前选中的这个li和对应的div有选中的样式
+    function changeTab(nIndex) {
+        for (var i = 0; i < oLis.length; i++) {
+            oLis[i].className = null;
+            oDivs[i].className = null;
+        }
+        oLis[nIndex].className = "select";
+        oDivs[nIndex].className = "select";
+    }
+
+    //1、传统的循环绑定事件的方式
+    //    for (var i = 0; i < oLis.length; i++) {
+    //        oLis[i].onmouseover = function () {
+    //            changeTab(i);
+    //        };
+    //    }
+    //这种方式不能实现我们的效果,为什么?
+    //我们是循环所有的li,给每一个li都绑定了鼠标滑过的事件->
+    /*
+     i=0
+     oLis[0].onmouseover=function(){changeTab(i);}; 我们绑定事件其实是把匿名函数定义的主体赋值给元素的事件行为 -> oLis[0].onmouseover=xxxfff000;
+     i=1
+     oLis[1].onmouseover=function(){changeTab(i);};
+     ...
+     i=4
+     oLis[4].onmouseover=function(){changeTab(i);};
+
+     i=5
+     循环结束
+     */
+    //当我们手动触发的这些行为的时候,比如触发第一个li的onmouseover,执行第一个绑定的方法:行程一个私有的作用域->形参赋值->预解释->代码执行,遇到了一个变量i,不是自己的私有的,找全局作用域下的i,这个i的值已经变为循环结束后的5,所以不是我们期望的索引值...
+
+    //2、如何解决这个问题?
+    //[作用域式解决]
+    //当触发onmouseover的时候,全局的i变为了5,我们找全局的肯定不行,但是我可一这样来操作:
+    //在当前私有作用域和全局作用域之间在嵌入一层作用域A,然后让A中有一个私有的变量i,存储的是自己的索引即可
+    //    for (var i = 0; i < oLis.length; i++) {
+    //        (function (i) {
+    //            oLis[i].onmouseover = function () {
+    //                changeTab(i);
+    //            };
+    //        })(i);//每一次循环把当前i的值(0,1,2,3,4)赋值给形参i
+    //    }
+    //函数执行形成不销毁的私有的作用域的第二种情况:
+    //在一个函数中,给函数外面的DOM元素绑定事件 -> 由于给事件绑定的方法是一个引用数据类型值,而元素不属于这个作用域,而是函数外面的变量,这样也相当于外面的东西占用了函数里面的内存,当前的私有作用域不销毁
+    //    for (var i = 0; i < oLis.length; i++) {
+    //        oLis[i].onmouseover = function (i) {
+    //            return function () {
+    //                changeTab(i);
+    //            };
+    //        }(i);
+    //    }
+
+    //弊端:会形成多个不销毁的私有的作用域，占内存
+    
+    //[自定义属性的方式]
+    //自定义属性处理问题是JS中最常用的编程思想
+    for (var i = 0; i < oLis.length; i++) {
+        oLis[i].index = i;//每一次循环把当前li的索引存储到自己的自定义属性index上,后期需要用到索引的时候我们只需要把自定义属性index的值获取到拿来用即可
+        oLis[i].onmouseover = function () {
+            //this->当前鼠标滑过的这个li
+            changeTab(this.index);
+        };
+    }
+</script>
+</body>
+</html>

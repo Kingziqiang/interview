@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<ul id="list">
+    <!--免费课-->
+    <li>1、数据类型(number、string、object、boolean、function)、操作语句、选项卡、99乘法表</li>
+    <li>2、数组、Math、DOM、Date、String、定时器</li>
+    <!--正式课-->
+    <li>1、预解释、作用域、闭包、this、单例模式、工厂模式、构造函数模式、原型链模式、继承、数组高级</li>
+    <li>2、call和apply、表格排序、原型链深入、正则基本语法、正则的捕获、正则的真实应用、表单验证</li>
+    <li>3、DOM盒子模型13个属性和2个方法、异步编程思想、图片延迟加载、DOM库(20几个方法)、选项卡高级</li>
+    <li>4、基础动画实现的原理、buffer动画、tween算法动画库、轮播图、jQuery的源码解析和实现原理</li>
+    <li>5、jQuery实战应用、DOM2级事件、事件对象、一些经典的案例、事件库、拖拽</li>
+    <li>6、高级事件库、观察者模式、高级拖拽</li>
+    <li>7、Ajax、nodejs、jsonp跨域</li>
+    <li>8、移动端综合实战开发</li>
+    <li>9、就业指导、移动端基础和高级知识、实战经验、js高级编程技巧</li>
+</ul>
+<div id="aaa">
+    <ol id="ccc">
+        <li>内容一</li>
+        <li>内容二</li>
+        <li>内容三</li>
+    </ol>
+</div>
+</body>
+</html>
+<script>
+
+//    var oA = document.getElementById("aaa"); //id名时候唯一的,只能在document下面去获取它,不能再给它限制更细的范围(不能再一个唯一里去获取另一个唯一)
+//    console.log(oA.getElementById('ccc'));//错
+//
+//    document.getElementById('ccc')//对
+    //获取页面上ul下面的所有的li标签
+    //document.getElementsByTagName('li');//在整个文档里找到标记名是li的标签,得到的是一组元素
+    //get
+    //Elements
+    //By
+    //tagName  标记名
+
+    var oUl = document.getElementById("list");//得到是一个元素
+
+   var oLis = oUl.getElementsByTagName('li');
+    //item是操作网页元素的一个方法,表示获得集合里的第几项,参数表示索引,索引都是从0开始的
+     oLis.item(0).style.backgroundColor='purple';
+    oLis.item(1).style.backgroundColor = "purple";
+    oLis.item(2).style.backgroundColor = "purple";
+    oLis.item(3).style.backgroundColor = "purple";
+    oLis.item(4).style.backgroundColor = "purple";
+    oLis.item(5).style.backgroundColor = "purple";
+   // console.log(oLis.length);//11
+    /*
+    * for 循环
+    * 1.定义初始变量 var i =0;
+    * 2.设置循环执行的条件
+    * 3.条件成立执行循环体中内容
+    * 4.最后执行累加的操作
+    *
+    * */
+
+     for(var i = 0;i<oLis.length;++i){
+        //i=0
+        //i=1
+        //i=2
+        // i =10
+        //oLis[i].style.backgroundColor='pink' ;
+        //oLis[i].style.margin='10px';
+    }
+    console.log(i) //11
+
+//i++ i+1
+
+/*i++和++i*/
+    //var a = 0;
+   // var m = a++;
+    //console.log(a); //1
+    //console.log(m);//0 先赋值后累加
+    var b = 0;
+    var n =++b;
+    console.log(b);//1
+    console.log(n);//1 先累加后赋值
+
+
+
+oLis[0].style.backgroundColor='pink' ;
+oLis[1].style.backgroundColor='green' ;
+oLis[2].style.backgroundColor='pink' ;
+oLis[1].style.backgroundColor='green' ;
+
+
+
+</script>

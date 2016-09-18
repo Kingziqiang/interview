@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!--内嵌式编写样式-->
+    <style type="text/css">
+        /*初始化常用标签的样式:因为这些标签在不同的浏览器中有自己的样式，为了统一操作，我们都从新设置为统一的值*/
+        body, div, img, input {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        img {
+            border: none;
+        }
+
+        input {
+            outline: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        .box {
+            width: 100%;
+            height: 100%;
+            background: url("img/bg.jpg") no-repeat;
+            background-size: 100%; /*CSS3中新增加的属性:当前区域有多大,让背景图片也显示多大*/
+        }
+    </style>
+    <!--外链式引入-->
+    <link type="text/css" rel="stylesheet" href="css/test1.css"/>
+    <!--导入式引入-->
+    <style type="text/css">
+        @import "css/test2.css";
+    </style>
+</head>
+<body>
+<!--
+1、如何的给我们的HTML结构增加CSS样式
+  1)行内样式 ->直接的在HTML标签上增加style='....样式都写在这里'
+    <img src="img/logo.png" style="width: 270px; height: 125px;"/>
+    应用于单独的给某一个元素增加样式(一般在写css样式的时候我们都不用)
+
+  2)内嵌样式 ->在HEAD中增加style标签,然后把需要给元素设置的样式都写在style里面
+
+  3)外联样式 ->为了让HTML页面中的标签和我们的样式分离开，我们把样式写在一个外部的文件中，然后在通过link引入进来
+  <link type="text/css" rel="stylesheet" href="css/test1.css"/>
+
+  4)导入式 ->和外链式相同，都是把样式文件写在外面，然后通过@import导入进来
+   @import "css/test2.css";
+-->
+<!--给DIV加了一个样式类名 class="box"-->
+<div class="box">
+    <div class="inner">
+        <img src="img/logo.png" style="width: 270px; height: 125px;"/>
+        <input type="text" id="search"/>
+        <input type="button" id="submit" value="百度一下" onclick="alert('行内的js不推荐使用')"/>
+    </div>
+</div>
+<!--
+和CSS一样,如何的把JS引入到我们的页面中
+行内JS(不推荐大家使用 不安全)、内嵌JS、外链JS
+-->
+
+
+<!--内嵌式引入js-->
+<script type="text/javascript">
+    //alert("大家今天来学习都是好样的~~");
+    //document.write("来珠峰我们保证的是好好学，加持下来肯定高薪资~~剩下的就靠你们能不能吃苦了~~");
+    //console.log("免费课对于零基础的，能听懂就认真听，听不懂就认真记");
+    //console.dir()
+
+    //给我们的文本框(id='search'这个文本框)增加内容
+    //1、首先我们先获取这个文本框
+    //页面中的元素都可以增加一个id,id和我们的身份证号码一样都是唯一的,HTML页面中的id理论上也是唯一的,id就代表了具体的某一个元素
+
+    //->在整个文档中,通过元素的ID来获取一个元素
+    //document:文档 限定了我们在整个文档中获取,我们把document称之为上下文(context) -> "上下文":上文和下文,整个执行的环境,在这里是限定获取的范围
+    //get:获取
+    //Element:一个元素
+    //By:通过
+    //Id:元素的ID
+    //console.log(document.getElementById("search")); -><input type="text" id="search">
+    //console.dir(document.getElementById("search")); ->看到的内容比.log详细的多的多的多...
+    //document.getElementById("search").value = "张春芳同学so good~~";
+</script>
+
+<!--外链式引入JS-->
+<script type="text/javascript" src="js/test.js">
+    //如果你使用的是外链式引入的JS，在当前的script中编写的任何其他代码都不在执行
+    alert("嘿嘿嘿");
+</script>
+</body>
+</html>

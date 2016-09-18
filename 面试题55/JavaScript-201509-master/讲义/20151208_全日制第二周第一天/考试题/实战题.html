@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        input {
+            width: 200px;
+            height: 50px;
+            border: 1px solid #008000;
+            outline: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<input type="button"/>
+<input type="button"/>
+<input type="button"/>
+
+<script type="text/javascript">
+    var oBtn = document.getElementsByTagName("input");
+    var ary = ["red", "green", "orange"];
+
+    //1、自定义属性
+    //    for (var i = 0; i < oBtn.length; i++) {
+    //        oBtn[i].index = i;
+    //        oBtn[i].onmouseover = function () {
+    //            document.body.style.backgroundColor = ary[this.index];
+    //        }
+    //    }
+
+    //2、闭包
+    //    for (var i = 0; i < oBtn.length; i++) {
+    //        ~function (i) {
+    //            oBtn[i].onmouseover = function () {
+    //                document.body.style.backgroundColor = ary[i];
+    //            }
+    //        }(i);
+    //    }
+
+    for (var i = 0; i < oBtn.length; i++) {
+        oBtn[i].onmouseover = (function (i) {
+            return function () {
+                document.body.style.backgroundColor = ary[i];
+            }
+        })(i);
+    }
+</script>
+</body>
+</html>

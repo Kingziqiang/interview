@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //1、string 字符串
+    //1)JS中只要用""/''包起来的都是字符串
+
+    //2)每一个字符串都是由字符组成的(在""/''中间的所有内容都是字符串的一个字符，包括空格和一些特殊的符号)
+    //str.length 字符串的长度/字符串中字符的个数
+    //每一个字符在字符串中都有自己的一个位置，而字符串为每个字符贴了一个数字代表它的位置,例如：w是第一个字符，代表它位置的数字是0，e是第二个字符，代表它位置的数字是1...代表每一个字符位置的数字是从零开始逐级递增的-->我们把这个数字称之为"索引"
+    //想获取其中的某一个字符,我们可以直接的使用 str[索引]
+    //var str = "welcome to zhu feng pei xun,good good study,day day up~~";
+    //console.log(str.length);//->56
+    //console.log(str[0]);//->"w" 获取第一个字符
+    //console.log(str[str.length - 1]);//->~ 获取最后一个字符 ->str.length - 1 就是最后一个字符的索引
+
+    //3)关于字符串的数学运算
+    //数学运算: + - * /
+    //    1+1=2
+    //    1-1=0
+    //    1*1=1
+    //    1/1=1
+    //    "1"-1=0 --> Number("1")->1
+    //    "1"*1=1 --> Number("1")->1
+    //    "1"/1=1 --> Number("1")->1
+    //    "1"+1="11"
+    //在JS中，如果运算过程中出现了字符串，那么对于- * / 来说都是把字符串转换为数字(Number)然后在进行数学运算；但是如果是+，JS中的+不一定是数学运算，对于有字符串来说，是字符串的拼接，例如：
+    //console.log("3px" * 3); //Number("3px")->NaN  NaN*3=NaN
+    //console.log("3px" + 3); //"3px3"
+
+    //4)BAT面试题：
+    //从左到右依次相加
+    //console.log(12 + null + [] + undefined + "zhuFeng" + null + undefined + 20);
+    //12 + null -> 12 + 0 -> 12
+    //12 + [] -> 先把[]转换为""，然后让12+"" -> "12"
+    //"12" + undefined -> "12undefined"
+    //"12undefined" + "zhuFeng" -> "12undefinedzhuFeng"
+    //"12undefinedzhuFeng" + 后面的内容都是字符串拼接了
+    //-->"12undefinedzhuFengnullundefined20"
+
+
+    //2、boolean 布尔类型  true/false
+    //1)将其它的数据类型转化为布尔类型遵循的规律
+    //有且只有“ 0、NaN、空字符串、null、undefined ”这五个值转换为布尔类型的时候会是false，其余的所有值转换为布尔类型都是true
+
+    // ! : 首先把其他的数据类型转换为布尔类型，然后在取反，例如: !12 ->false
+    // !! : 把其他的数据类型转换为布尔类型->相当于Boolean() 例如: !!12 ->true
+    // ![] -> false
+    // !"" -> true
+
+    //2)在判断语句中
+    //if后面的条件本身就是一个转换成布尔类型然后判断真假的操作
+    //    //把num的变量值5拿出来和我们的数字10进行比较,5<=10是成立的,返回的是true,这样说明我们的条件成立,执行num++
+    //    var num = 5;
+    //    if (num <= 10) {num++;}
+
+    //    //首先我们分析出oDiv这个变量存储的值是null，然后我们把它转换为布尔类型false,条件就不成立了
+    //    var oDiv = document.getElementById("div1");
+    //    //console.log(oDiv);//->null 获取的元素如果在页面中不存在,我们的结果是null(空、没有)
+    //    if (oDiv) {} ->判断oDiv是否存在 -> !!oDiv
+
+
+    //3、null和undefined
+    //null 空
+    //undefined 未定义
+    //null和undefined都代表没有,但是之间还是有区别的,null是暂时没有以后会有的(它是在情理之中的),undefined是现在没有,以后也没有(它是在意料之外的)
+    //王梦缘的女朋友是null,王梦缘的男朋友是undefined
+    //关于null和undefined的情况(正式课以后再讲):
+    //    [null]
+    //    1)在定义变量的时候手动的设置为null
+    //    var _temp=null;
+    //    [疑问]为啥不设置为0或者""来代表空呢? ->0/""属于挖了坑没有种树，是有内存的消耗的，而null是连坑都没有挖所以没有内存的消耗，性能更好一些
+    //    2)我们用DOM的属性和方法获取元素，如果当前的元素不存在，获取到的结果就是null
+    //    document.parentNode ->null 、 document.body.offsetParent ->null 、document.getElementById("tab") 如果ID不存在 ->null ...
+    //    3)关于在浏览器中内存释放的时候
+    //    var obj={}; 如果使用完成后想让obj对应的堆内存销毁 -> obj=null
+    //    4)元素节点/document的nodeValue值为null
+    //    5)正则捕获exec的时候，如果捕获不到内容，捕获的结果就是null
+
+    //    [undefined]
+    //    1)只声明为定义,默认的结果是undefined
+    //    2)在函数中定义了形参变量，但是执行的时候没有传递值，那么默认值也是undefined
+    //    3)在函数中没有写return或者什么也没有返回(return;)我们默认返回的值就是undefined
+    //    4)获取对象属性名对应的属性值,如果当前的这个属性不存在我们获取的属性值也是undefined，扩展：->JS检测浏览器兼容
+    //    "getComputedStyle" in window、window.getComputedStyle、typeof window.getComputedStyle!=="undefined"
+</script>
+</body>
+</html>

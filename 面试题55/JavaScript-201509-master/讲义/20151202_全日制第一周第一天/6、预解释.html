@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //只有在全局作用域下才有这样的关系
+    //区别：带var的可以在代码执行前进行声明,而不带var的不能提前的声明
+
+    //    //预解释：var num1;
+    //    console.log(num1);//->undefined
+    //    var num1 = 12;
+    //
+    //    console.log(num2);//->Error:num2 is not defined
+    //    num2 = 12;
+
+    //关系:在全局作用域下,var num1=12,不仅仅是增加了一个全局变量,而且还相当于给window增加了一个叫做num1的属性名 -> window.num1=12;
+    //    var num1 = 12;
+    //    console.log(num1);//12
+    //    console.log(window.num1);//12
+    //
+    //    //不带var的不是全局变量,而是相当于给window增加了一个属性名window.num2=12;
+    //    num2 = 12;
+    //    console.log(num2);//console.log(window.num2); 我们可以把window.省略
+
+
+    //    var a, b = 0, fn = function () {
+    //        var a = b = 2;
+    //    };
+    //    fn();
+    //    console.log(a, b);
+    //把上面解析成下面就好理解了
+    //    var a;
+    //    window.b = 0;
+    //    window.fn = function () {
+    //        //var a = b = 2;
+    //        var a = 2;//a是私有的和全局没关系
+    //        b = 2;//b是全局的
+    //    };
+    //    fn();//window.fn()
+    //    console.log(a, b);//undefined 2
+
+    //如果一个函数中出现的变量不是私有的,那么会往其上级作用域查找,上级没有则继续查找,一直找到window为止,如果window也没有呢?
+    //获取:会报错
+    //    function fn() {
+    //        console.log(num);//Uncaught ReferenceError: num is not defined
+    //    }
+    //    fn();
+
+    //设置:不是私有的,找全局,全局没有的话相当于给全局加一个
+    //    function fn() {
+    //        num = 13;//相当于给window增加了一个叫做num的属性名,属性值是13 window.num=13;
+    //    }
+    //    fn();
+    //    console.log(num);//13
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, div {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 16px;
+            -webkit-user-select: none;
+        }
+
+        #code {
+            margin: 50px auto;
+            width: 100px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border: 1px solid #08BECE;
+            letter-spacing: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="code"></div>
+
+<script type="text/javascript">
+    //验证码：数字+字母(四位或者六位)、拼图、问答题(数学运算、成语填词、查找不一样类别的)、滑动的.....
+    //需求:实现四位不重复的随机验证码(介于数字和字母(大小写字母)之间的)
+    var code = document.getElementById("code");
+
+    //首先规定我们获取验证码的范围,一共有62个字符,索引从0-61
+    var rangeStr = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //实现一个方法,获取四位的随机验证码
+    //原理:
+    //1)首先获取四位0-61之间的随机整数->对应了我们rangeStr的索引
+    //2)通过获取的随机索引获取对应的字符
+    //3)把每一次获取的字符都存在一个容器中
+    function getCode() {
+        var str = "";
+//        for (var i = 0; i < 4; i++) {
+//            var ran = Math.round(Math.random() * (61 - 0) + 0);
+//            str += rangeStr[ran];
+//        }
+        //获取四位不重复的验证码?
+//        while (str.length < 4) {
+//            var ran = Math.round(Math.random() * 61);
+//            var temp = rangeStr[ran];
+//            if (str.indexOf(temp) === -1) {
+//                str += temp;
+//            }
+//        }
+        //大小写重复也算重复了?
+        while (str.length < 4) {
+            var ran = Math.round(Math.random() * 61);
+            var temp = rangeStr[ran];
+            if (str.toLowerCase().indexOf(temp.toLowerCase()) === -1) {//不管哪边是大写还是小写我们都转换为小写,然后在判断
+                str += temp;
+            }
+        }
+        return str;
+    }
+    code.innerHTML = getCode();
+    code.onclick = function () {
+        //this->code
+        this.innerHTML = getCode();
+    };
+
+
+</script>
+</body>
+</html>

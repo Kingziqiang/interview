@@ -1,0 +1,60 @@
+1、window下的预解释
+    var total; fn = xxxfff000;
+
+2、window下的代码执行
+    console.log(total); -> undefined
+    var total = 0; -> 全局变量total=0
+
+    function fn() {
+        console.log(total);
+        total += 100;
+        var total = 200;
+        console.log(total);
+    }
+    fn();
+
+    3、fn执行形成一个私有的作用域(A)
+        A下的形参赋值:无
+        A下的预解释:var total; ->total是这里的私有的变量,也就是函数中出现的total和外面的没有任何的关系("闭包")
+        A下的代码执行:
+            console.log(total); -> undefined
+            total+=100; -> total=total+100=undefined+100=NaN
+            total = 200;
+            console.log(total); -> 200
+
+    console.log(total); -> 0
+
+-----------------------------------------------------------------
+1、window下的预解释: var total; fn=xxxfff000;
+2、window下的代码执行
+    console.log(total); ->undefined
+    var total = 0; ->window下的total=0
+
+    function fn() {
+        console.log(total);
+        total += 100;
+        total = 200;
+        console.log(total);
+    }
+    fn();
+
+    3、形成一个私有的作用域(A)
+        A下的形参赋值和A下的预解释都没有操作任何事情 ->total不是私有的变量了,则往上级全局作用域下找,全局有total,所以A中的total都是全局的
+        A下的代码执行
+            console.log(total); ->输出全局total的值 0
+            total += 100; ->全局total=100
+            total = 200; ->全局total=200
+            console.log(total); ->输出全局total的值 200
+
+    console.log(total); ->200
+
+
+
+
+
+
+
+
+
+
+

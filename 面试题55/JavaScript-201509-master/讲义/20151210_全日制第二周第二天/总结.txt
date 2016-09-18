@@ -1,0 +1,89 @@
+this是谁和函数在哪定义的或者在哪执行的都没有任何的关系，只和下述几条规律有关：
+
+1、方法执行，看方法名前面是否有"."，有的话，"."前面是谁this就是谁，没有"."的话this就是window(这是在非严格模式下,但是在严格模式下("use strict"),没有"."默认的this不是window而是undefined)
+    [案例1]
+    function fn(){
+        console.log(this);
+    }
+    var obj={
+        fn:fn
+    };
+    fn();//this->window
+    obj.fn();//this->obj
+
+    [案例2]
+    function Fn(){
+        this.x=100;
+    }
+    Fn.prototype.getX=function(){
+        console.log(this.x);
+    };
+    var f=new Fn;
+    f.getX();//getX中的this是f,相当于输出的是console.log(f.x),按照原型链查找的模式,f.x对应的值是100(查找的是实例的私有的属性)
+    f.__proto__.getX();//getX中的this是f.__proto__,相当于输出的是console.log(f.__proto__.x),直接查找的是原型上的x属性,没有属性,所以输出的结果是undefined
+    Fn.prototype.getX();//undefined
+
+    [案例3]
+    var loginRender={
+        check:function(){
+
+        },
+        init:function(){
+            //this->loginRender 当前单例模式的命名空间  我如果想调用同一个命名空间下的方法，只需要用this替换命名空间的名字即可
+            this.check();
+        }
+    };
+    loginRender.init();
+
+2、自执行函数中的this永远是window(这是在非严格模式下,在严格模式下自执行函数中的this是undefined)
+    [案例1]
+    var obj={
+        fn:(function(){
+            console.log(this);//this->window
+            return function(){
+                console.log(this);//this->obj
+            }
+        })()
+    };
+    obj.fn();
+
+    [案例2]
+    (function(){
+        console.log(this);//this->window
+    })();
+
+    (function(){
+        "use strict";
+        console.log(this);//this->undefined
+    })();
+
+
+3、给元素的某一个行为绑定方法，当行为触发的时候，会执行对应的方法，并且方法中的this是当前的元素
+    function fn(){
+        console.log(this);
+    }
+
+    [案例1]
+    oDiv.onclick=fn;
+    当我们点击oDiv的时候会执行fn,fn中的this->oDiv
+
+    [案例2]
+    oDiv.onclick=function(){
+        //this->oDiv
+        fn();
+    };
+    当我们点击oDiv的时候会执行匿名函数，在匿名函数中在执行我们的fn，此时fn中的this->window(非严格模式)
+
+4、在构造函数模式中，我们函数体中的this.xxx=xxx;中的this其实就是我们当前类的一个实例
+    [案例1]
+    function Fn(){
+        this.x=100;//this->f
+    }
+    var f=new Fn;
+
+5、使用Function.prototype上定义的call/apply方法来强制改变我们函数的this关键字(强制改变:一但遇到了call/apply上述的四条都不好使了)
+
+
+
+
+

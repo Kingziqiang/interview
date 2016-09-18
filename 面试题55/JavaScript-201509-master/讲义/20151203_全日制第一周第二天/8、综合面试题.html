@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var num = 2;
+    var obj = {
+        num: 3,
+        fn: (function (num) {
+            this.num *= 2;
+            num += 1;
+            var num = 3;
+            return function () {
+                this.num *= 2;
+                num += 2;
+                console.log(num);
+            }
+        })(num)//->此处是把全局变量num的值2传递给自执行函数中的形参,如果想传递的是obj下的num属性值3,需要这样写:obj.num
+    };
+    var fn = obj.fn;
+    fn();//->5
+    obj.fn();//->7
+    console.log(window.num, obj.num);//->8、6
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+珠峰培训的GIT仓库地址：https://github.com/zhufengpeixun/JavaScript-201508.git
+
+FORK过来自己仓库地址：https://github.com/你们自己的用户名/JavaScript-201508.git
+
+1、fork珠峰培训的仓库
+2、把自己仓库下载到本地
+   $ git clone 自己仓库的地址(https://github.com/你们自己的用户名/JavaScript-201508.git)
+
+   $ git remote -v 查看当前本地都和哪些远程仓库保持了链接
+   origin(本地个远程仓库链接的名字)  https://github.com/zhouxiaotian/JavaScript-201508.git(链接的远程仓库的地址 自己的仓库) (fetch)
+   origin  https://github.com/zhouxiaotian/JavaScript-201508.git (push)
+
+3、增加和珠峰培训仓库的链接
+   $ git remote add zhufeng(名字) 珠峰培训仓库的地址
+
+4、拉取珠峰培训最新的讲义
+   $ git remote update zhufeng ->把本地和珠峰培训的链接通道进行更新
+   $ git pull zhufeng master ->把最新的讲义代码拉取到本地
+
+5、把本地拉取的最新讲义更新到我们的自己的仓库中
+   $ git add -A
+   $ git commit -m"备注信息"
+   建议:$ git pull origin master  每一次推送之前先进行拉去
+   $ git push origin master    ->把本地代码推送到自己的远程仓库中
+
+
+

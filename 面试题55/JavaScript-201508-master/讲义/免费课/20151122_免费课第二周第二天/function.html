@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    //特殊类型:function
+    //由于function在js地位非常重要,非常突出,所以把他单独设成一种数据类型,就叫function类型
+    //function的作用
+    //1.把实现同一个功能的代码进行封装
+    //2.防止代码的重复
+    //3.将代码进行封装,代码没必要重新编写,只需要执行下函数即可
+    //4.能创建私有变量
+    //5.创建类(面向对象那边具体描述)
+
+
+    //定义function/制作一个功能
+   /* function 函数名(){ //方法(函数)就是对一个功能的描述和定义
+        函数体:实现我们具体功能的具体操作
+    }
+    执行一个函数
+    函数名();//方法的执行*/
+
+    function sum(){
+        var total = null;
+        var n = 1;
+        var m = 2;
+        total = n+m;
+        return total;
+        total+=10;
+
+    }
+    //return注意事项 (把方法的结果最后的值给返回)
+    //1.如果return 后面没有跟任何数据,则方法的返回是undefined
+    //2.遇到return后,方法无条件终止,return后面的js表达式都不再执行
+    //3.return 关键字只能写在方法体里面
+
+    console.log(sum());
+   // var total;
+    //alert(typeof n)
+    //window,顶级作用域,全局环境(全局的也就是谁都可以获取到,也可以访问)
+    //当一个方法运行的时候,会产生一个封闭的空间,称之为私有作用域,也叫"闭包",在函数体里定义的变量我们称之为私有变量,在全局环境下访问不到方法里面的变量,在方法里面能获取到方法外面定义变量
+
+</script>
+</body>
+</html>

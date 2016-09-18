@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //    function Fn() {
+    //        //this->f1
+    //        this.x = 100;
+    //        this.getX = function () {
+    //            //this->需要看getX执行的时候才知道
+    //            console.log(this.x);
+    //        }
+    //    }
+    //    var f1 = new Fn;
+    //    f1.getX();//->方法中的this是f1 ->100
+    //    var ss = f1.getX;
+    //    ss();//->方法中的this是window ->undefined
+
+    //1、在构造函数模式中new Fn()执行,如果Fn不需要传递参数的话,后面的小括号可以省略
+    //2、this的问题:在类中出现的this.xxx=xxx中的this都是当前类的实例,而某一个属性值(方法),方法中的this需要看方法执行的时候,前面是否有"."才能知道this是谁
+
+
+    //    function Fn() {
+    //        var num = 10;
+    //        this.x = 100;//f1.x=100
+    //        this.getX = function () {//f1.getX=function...
+    //            console.log(this.x);
+    //        }
+    //    }
+    //    var f1 = new Fn;
+    //    console.log(f1.num);//->undefined
+    //3、类有普通函数的一面,当函数执行的时候,var num其实只是当前形成的私有作用域中的私有变量而已,它和我们的f1这个实例没有任何的关系;只有this.xxx=xxx才相当于给f1这个实例增加私有的属相和方法,才和我们的f1有关系...
+
+    //    function Fn() {
+    //        this.x = 100;
+    //        this.getX = function () {
+    //            console.log(this.x);
+    //        };
+    //        return {name: "珠峰"};
+    //    }
+    //    var f1 = new Fn;
+    //    console.log(f1);
+    //4、在构造函数模式中,浏览器会默认的把我们的实例返回(返回的是一个对象数据类型的值);如果我们自己手动写了return返回:
+    //返回的是一个基本数据类型的值,当前实例是不变的,例如:return 100; 我们的f1还是当前Fn类的实例
+    //返回的是一个引用数据类型的值,当前的实例会被自己返回的值给替换掉,例如:return {name:"珠峰"} 我们的f1就不在是Fn的实例了,而是对象{name:"珠峰"}
+
+
+    //    function Fn() {
+    //        this.x = 100;
+    //        this.getX = function () {
+    //            console.log(this.x);
+    //        };
+    //    }
+    //    var f1 = new Fn;
+    //5、检测某一个实例是否属于这个类->instanceof
+    //    console.log(f1 instanceof Fn);//->true
+    //    console.log(f1 instanceof Array);//->false
+    //    console.log(f1 instanceof Object);//->true  因为所有的实例都是对象数据类型的,而每一个对象数据类型都是Object这个内置类的一个实例,所以f1也是它的一个实例
+    //对于检测数据类型来说,typeof有自己的局限性,不能细分object下的对象、数组、正则...
+    //var a = [];
+    //console.log(a instanceof Array);//->true 说明a是一个数组
+
+    function Fn() {
+        this.x = 100;
+        this.getX = function () {
+            console.log(this.x);
+        };
+    }
+    var f1 = new Fn;
+    var f2 = new Fn;
+    //6、f1和f2都是Fn这个类的一个实例,都拥有x和getX两个属性,但是这两个属性是各自的私有的属性,所以:
+    //console.log(f1.getX === f2.getX);//->false
+
+    //in:检测某一个属性是否属于这个对象(attr in object),不管是私有的属性还是公有的属性,只要存在,用in来检测都是true
+    //console.log("getX" in f1);//->true 是它的一个属性
+
+    //hasOwnProperty:用来检测某一个属性是否为这个对象的"私有属性",这个方法只能检测私有的属性
+    //console.log(f1.hasOwnProperty("getX"));//->true "getX"是f1的私有的属性
+
+    //思考:检测某一个属性是否为该对象的"公有属性" hasPubProperty
+    function hasPubProperty(obj, attr) {
+        //首先保证是它的一个属性并且还不是私有的属性,那么只能是公有的属性了
+        return (attr in obj) && !obj.hasOwnProperty(attr);
+    }
+    console.log(hasPubProperty(f1, "getX"));//->false
+
+    //7、isPrototypeOf 自己回去查看高程三或者百度搜素自己找到答案即可
+</script>
+</body>
+</html>

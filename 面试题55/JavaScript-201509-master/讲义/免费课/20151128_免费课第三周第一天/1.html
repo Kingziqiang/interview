@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<input type="button"/>
+<input type="button"/>
+<input type="button"/>
+<input type="button"/>
+<input type="button"/>
+
+<script type="text/javascript">
+    //4、99乘法表 -> 关于把HTML进行字符串拼接的黄金法则
+    //1)单双引号不能同时使用 str+="<div class='bg'></div>";
+    //2)在字符串中拼接变量,最外面用的是"",里面就写"+变量+"(外面用''同理) var num=2; str+="<span class='bg"+num+"'></span>";
+    //3)使用转译字符
+    //    var str = "";
+    //    str += "<div onclick=\"alert('珠峰培训');\">珠峰培训</div>";
+    //    document.body.innerHTML = str;
+
+
+    //3、循环绑定事件
+    //getElementsByTagName:通过元素的标签名来获取一组元素(类数组集合)
+    //document:限定了我们获取的范围->"上下文"(context)
+    //var oBtn = document.getElementsByTagName("input");
+
+    //    for (var i = 0; i < oBtn.length; i++) {
+    //        var cur = oBtn[i];
+    //        cur.onclick = function () {
+    //            console.log(i);
+    //        };
+    //        //给每一个按钮分别的绑定一个点击事件,当点击某一个按钮的时候触发后面绑定的函数执行
+    //    }
+    //上述代码肯定不行,在循环给按钮绑定点击事件的时候,我们是把每一个匿名函数定义的部分当做值赋值给我们的click事件(函数表达式)；函数定义的时候里面存储的都是 “代码字符串”,也就是此时函数中的i只是一个字符"i";当页面加载完成,我们看到了五个按钮后才可以点击(此时我们的循环都结束了页面才能加载完,循环结束i=5);此时在点击,执行匿名函数,里面的i都是访问的最后一次循环结束变为的5; ->第一周:17、选项卡视频
+
+    //解决办法->"自定义属性的方式"
+    //    for (var i = 0; i < oBtn.length; i++) {
+    //        var cur = oBtn[i];
+    //        cur.zhuFeng = i;
+    //        cur.onclick = function () {
+    //            console.log(this.zhuFeng);
+    //        };
+    //    }
+
+
+    //1、任意数求和的完整代码
+    //    function sum() {
+    //        var total = null;
+    //        for (var i = 0; i < arguments.length; i++) {
+    //            var cur = Number(arguments[i]);
+    //            if (!isNaN(cur)) {
+    //                total += cur;
+    //            }
+    //        }
+    //        return total;
+    //    }
+    //    var total = sum(12, 23, "34", "zhufeng");
+    //    console.log(total);
+
+    //2、基本数据类型和引用数据类型的区别
+    //var a = b = c = d = 5;//->四个变量存储的是一个值5
+    //d = 9;//->把d改成了9
+    //a,b,c会变化吗? ->不会
+
+    //在JS中遇到{}、[]、function马上就会开辟一个新的内存空间,然后把地址给对应的变量
+    //var a = b = c = d = [1, 2, 3, 4, 5];
+    //首先开辟一个新的内存空间,里面分别存储数组中的每一项
+    //把空间的地址分别的赋值给a,b,c,d
+    //d[5] = 9;//d通过地址找到内存空间,然后把空间中索引为5的那一项的值修改为(增加)9
+    //a,b,c会发生变化吗？ ->会,d修改了内存中的内容,而abc访问的也是这个内存所以也会跟着发生改变
+
+    //var a = b = c = d = [1, 2, 3, 4, 5];
+    //首先开辟一个新的内存空间,里面分别存储数组中的每一项
+    //把空间的地址分别的赋值给a,b,c,d,此时四个变量访问的是同一个空间
+    //a=b=c=d=xxxfff000
+    //d = [9];
+    //[9]是又开辟了一个新的空间,把9存进去,然后把新空间的地址(xxxfff111)赋值给我们的d
+    //a,b,c会发生变化吗？->不变
+
+
+</script>
+</body>
+</html>

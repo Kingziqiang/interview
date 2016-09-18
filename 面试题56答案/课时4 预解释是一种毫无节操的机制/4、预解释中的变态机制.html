@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //预解释是毫无节操的一种机制
+    //自从学了预解释,从此节操是路人
+
+    //in:"num" in window 判断num是否为window这个对象的一个属性,是的话返回true,不是的话返回false
+    //    var obj = {name: "张文静", age: 17};
+    //    console.log("name" in obj);//->true
+    //    console.log("eat" in obj);//->false
+
+    //1、预解释的时候不管你的条件是否成立,都要把带var的进行提前的声明
+    //window的预解释:var num; -> window.num;
+    //    if (!("num" in window)) {//"num" in window ->true
+    //        var num = 12;
+    //    }
+    //    console.log(num);//->undefined
+
+    //2、预解释的时候只预解释"="左边的,右边的是值,不参与预解释
+    //匿名函数之函数表达式:把函数定义的部分当做一个值赋值给我们的变量/元素的某一个事件
+    //window下的预解释:var fn;
+    //    fn();//-> undefined() Uncaught TypeError: fn is not a function
+    //    var fn = function () {
+    //        console.log("ok");
+    //    };
+
+    //    fn(); ->"ok"
+    //    function fn(){
+    //        console.log("ok");
+    //    }
+    //    fn(); ->"ok"
+
+    //3、执行函数定义的那个function在全局作用域下不进行预解释,当代码执行到这个位置的时候定义和执行一起完成了
+    //自执行函数：定义和执行一起完成了
+    //    (function(num){})(100);
+    //    ~function(num){}(100);
+    //    +function(num){}(100);
+    //    -function(num){}(100);
+    //    !function(num){}(100);
+
+    //4、函数体中return下面的代码虽然不在执行了,但是需要进行预解释;return后面跟着的都是我们返回的值,所以不进行预解释;
+    //    function fn() {
+    //        //预解释:var num;
+    //        console.log(num);//->undefined
+    //        return function () {
+    //
+    //        };
+    //        var num = 100;
+    //    }
+    //    fn();
+
+    //5、在预解释的时候,如果名字已经声明过了,不需要从新的声明,但是需要重新的赋值;
+    //在JS中如果变量的名字和函数的名字重复了,也算冲突
+    //预解释:var fn; window.fn;   fn=xxxfff000 window.fn=xxxfff000
+    //    var fn = 13;
+    //    function fn() {
+    //        console.log("ok");
+    //    }
+
+    //window预解释:
+    //声明+定义 fn=xxxfff111
+    //声明 var fn; (不需要重新声明)
+    //声明(不重复进行)+定义 fn=xxxfff222
+    //->fn=xxxfff222
+    fn();//->2
+    function fn(){console.log(1);};
+    fn();//->2
+    var fn=10;//->fn=10
+    fn();//->10() Error:fn is not a function
+    function fn(){console.log(2);};
+    fn();
+</script>
+</body>
+</html>

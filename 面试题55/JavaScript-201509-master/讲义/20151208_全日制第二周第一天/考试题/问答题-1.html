@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //window下的预解释:
+    //var num; ->window.num=undefined;
+    //    console.log(num);//undefined
+    //    if ("num" in window) {//in:检测某个属性是否属于这个对象(既可以检测私有的也可以检测公有的属性) hasOwnProperty:检测某个属性是否为这个对象的私有的属性
+    //        var num = 12;
+    //    }
+    //    console.log(num);//12
+
+
+    //console.log(num);//Error:num is not defined
+    //    num = 12;//window.num=12
+    //    if ("num" in window) {
+    //        num++;
+    //    }
+    //    console.log(num);//console.log(window.num)
+
+
+    var obj = {num: "珠峰", age: 25, "珠峰": 12};
+    //obj["name"] - > 获取obj下name这个属性名对应的属性值
+    //obj[name] - > 把name这个变量存储的值作为obj的一个属性名来获取它的属性值
+
+    //    var num = 13;
+    //    console.log(obj["num"]);//->郑海鑫
+    //    console.log(obj[num]);//->obj[13] ->undefined
+
+    //    var attr = [12, 23, 34];
+    //    console.log(obj[attr]); //->obj["12,23,34"]
+
+    //    var num = "珠峰";
+    //    console.log(obj[num]);//obj["珠峰"]->12
+
+    for (var key in obj) {
+        //key是一个变量，存储的是我们对象中的属性名
+        //key="name"
+        console.log(obj[key]);//->obj["name"]
+    }
+
+
+</script>
+</body>
+</html>

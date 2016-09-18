@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>王自强__第1周作业</title>
+</head>
+<body>
+<script type="text/javascript">
+    /*
+     *1 基于Number的原型编写两个方法：plus(+)、reduce(-)  实现: var num=(8).plus(5).reduce(3); num-->10
+     * */
+    //内置类的原型Number.prototype无法修改默认的堆内存空间指向吗，这种方式Number.prototype上并未增加自定义属性。
+    // 调用自定义方法会报错。Uncaught TypeError: 8.plus is not a function
+    /*  var pro=Number.prototype;
+     Number.prototype={
+         constructor:Number,
+         plus: function(num){
+             num=Number(num)||0;
+             return this+num;
+         },
+         reduce: function(num){
+             num=Number(num)||0;
+             return this-num;
+         },
+         recover: function(){
+             for (var key in pro) {
+                this[key] = pro[key];
+             }
+         }
+     };
+     Number.prototype.recover();*/
+
+    // 为何只有在Number.prototype默认的堆内存中才可以成功增加自定义属性
+    Number.prototype.plus = function (num) {
+        num = Number(num) || 0; //将传入的第一个参数强制转换成Number类型，若是有效数字则去转换后的值，若不是有效数字则取0。
+        return this + num;   //this表示调用该方法的数字类型的实例，一个具体的数字。
+    }
+    Number.prototype.reduce = function (num) {
+        num = Number(num) || 0;
+        return this - num;
+    }
+    console.log("(8).plus(5).reduce(3)=" + (8).plus(5).reduce(3));
+
+
+    /*
+     *2 slice(n,m)  slice(n) slice() slice里面的索引可以传负数  slice中如果n和m的值大小错了....
+     *假设数组中没有slice这个方法，我们自己在Array.prototype上编写一个mySlice，要求实现的功能个slice一致
+     * */
+    //修改Array.prototype上默认的toString方法，使输出结果在控制台显示更清晰。
+    Array.prototype.toString = function () {
+        var str = "[";
+        for (var i = 0; i < this.length; i++) {
+            str += this[i];
+            if (i < this.length - 1)  str += ",";
+        }
+        str += "]";
+        return str;
+    }
+
+    //模仿Array.prototype上的slice方法，自定义mySlice方法
+    Array.prototype.mySlice = function () {
+        var len = this.length;  //调用该方法的数组实例所含数组元素的个数。
+        var lens = arguments.length;  //实际传入的参数个数。
+        var ary = [];
+        //当第一个参数的值没有传递或者不是有效数字时，n当做0来处理，将最后的结果向下取整，返回索引范围为[0,m-1]。
+        var n = Math.floor(Number(arguments[0]) || 0);
+        //当没有传递第二个参数时，m当做len来处理，返回索引范围为[n,len-1]. 当传递了第二个参数且不是有效数字时m=0,即返回空数组。
+        var m = Math.floor(lens <= 1 ? len : Number(arguments[1]) || 0);
+        //当n<-len时n=0;当-len<=n<0时，n=n+len;否则当n>=0时，n=n。
+        n = n<-len?0:(n>=0?n:n+len);//(经过右侧处理使得n>=0，当n>=len时n>=m永远成立，则不执行循环体，返回空数组)
+        //当m>len时m=len;当0<=m<=len时，m=m;否则当m<0时m=m+len。
+        m = m>len?len:(m>=0?m:m+len);//(经过左侧处理使得m<=len，当m<=-len时(m=m+len)<=n永远成立，则不执行循环体，返回空数组)
+
+        //Array.portotype默认的slice方法中,在n和m经过上述负数和越界处理后再比较n和m的大小。
+        // 若n>=m则不执行循环体，直接返回空数组，不需要交换顺序。
+        /*if(n>m){
+             var temp = null;
+             temp=n;
+             n=m;
+             m=temp;
+        }*/
+
+        for (var i = n; i < m; i++) ary.push(this[i]);
+        return ary;
+    }
+
+    var arr = [1, 2, 3, 4, 5];
+    //控制台输出，验证各种情形下，数组的事例调用slice方法和mySlice方法返回结果的对比。
+    //下述n指传入的第一个参数，m指传入的第二个参数，len指arr所含元素的个数，非有效数字指Number强转后为NaN的参数。
+    console.log("调用mySclie方法前原数组为：" + arr);
+    //不传参数时，返回原数组
+    console.log("arr.slice()=" + arr.slice(), "<==> arr.mySlice()=" + arr.mySlice());
+    //传一个参数值为数字0或小于等于-len的负数时，返回原数组
+    console.log("arr.slice(0)=" + arr.slice(0), "<==> arr.mySlice(0)=" + arr.mySlice(0));
+    console.log("arr.slice(-7)=" + arr.slice(-7), "<==> arr.mySlice(-7)=" + arr.mySlice(-7));
+    //当传递一个参数为字符串"0"或不是有效数字时时，返回原数组。
+    console.log("arr.slice('3a')=" + arr.slice('3a'), "<==> arr.mySlice('3a')=" + arr.mySlice('3a'));
+    //传一个[0,len-1]之间的参数n时，返回索引在[n,len-1]之间的数组。
+    console.log("arr.slice(2)=" + arr.slice(2), "<==> arr.mySlice(2)=" + arr.mySlice(2));
+    //传一个[-len,-1]之间的参数n时，返回索引在[n+len,len-1]之间的数组。
+    console.log("arr.slice(-2)=" + arr.slice(-2), "<==> arr.mySlice(-2)=" + arr.mySlice(-2));
+    //传两个[0,len]之间的参数n,m且n<m时，返回索引在[n,m-1]之间的数组。
+    console.log("arr.slice(1,3)=" + arr.slice(1, 3), "<==> arr.mySlice(1,3)=" + arr.mySlice(1, 3));
+    //传两个[-len,0]之间的参数n,m且n<m时，返回索引在[n+len,m-1+len]之间的数组。
+    console.log("arr.slice(-3,-1)=" + arr.slice(-3, -1), "<==> arr.mySlice(-3,-1)=" + arr.mySlice(-3, -1));
+    //当传递的第一个参数n在[0,len]之间，第二个参数m的值大于len时，把第二个参数转换成len处理，返回索引在[n,len-1]之间的数组
+    console.log("arr.slice(0,6)=" + arr.slice(0, 6), "<==> arr.mySlice(0,6)=" + arr.mySlice(0, 6));
+    console.log("arr.slice(2,6)=" + arr.slice(2, 6), "<==> arr.mySlice(2,6)=" + arr.mySlice(2, 6));
+    //当传递的第一个参数小于-len，第二个参数m的值在[0,len]之间时，把第一个参数转换成0处理，返回索引在[0,m-1]之间的数组
+    console.log("arr.slice(-7,3)=" + arr.slice(-7, 3), "<==> arr.mySlice(-7,3)=" + arr.mySlice(-7, 3));
+    console.log("arr.slice(-7,6)=" + arr.slice(-7, 6), "<==> arr.mySlice(-7,6)=" + arr.mySlice(-7, 6));
+    //当传递的第一个参数n在[0,len]之间，第二个参数m在[-len,-1]之间，则m=m+len，若n<m，则返回索引在[n,m-1+len]之间的数组
+    console.log("arr.slice(1,-2)=" + arr.slice(1, -2), "<==> arr.mySlice(1，-2)=" + arr.mySlice(1, -2));
+    //当传递的第一个参数n在[-len,-1]之间，第二个参数m在[0,len]之间，则n=n+len，若n<m，则返回索引在[n+len,m-1]之间的数组
+    console.log("arr.slice(-4,3)=" + arr.slice(-4, 3), "<==> arr.mySlice(-4，3)=" + arr.mySlice(-4, 3));
+    //当传递传两个[0,len]之间的纯数字字符串类型参数n,m,且n<m时，返回索引在返回索引在[Number(n),Number(m-1)]之间的数组。
+    console.log("arr.slice('1','3')=" + arr.slice("1", "3"), "<==> arr.mySlice('1','3')=" + arr.mySlice("1", "3"));
+    //当传递两个参数，第一个参数时不是有效数字，第二个参数是有效数字时，把第一个参数转换成数字0来处理。返回索引在[0,m-1]范围内的数组。
+    console.log("arr.slice('a',3)=" + arr.slice('a', 3), "<==> arr.mySlice('a',3)=" + arr.mySlice('a', 3));
+    //当传递两个以上参数时，忽略后面的参数，只处理前两个参数。
+    console.log("arr.slice(1,3,5)=" + arr.slice(1, 3, 5), "<==> arr.mySlice(1,3,5)=" + arr.mySlice(1, 3, 5));
+    console.log("arr.slice('a',3,'c')=" + arr.slice('a', 3, 'c'), "<==> arr.mySlice('a',3,'c')=" + arr.mySlice('a', 3, 'c'));
+    //但传递的参数为小数时，向下取整。
+    console.log("arr.slice(0.7,2.2)=" + arr.slice(0.7, 2.2), "<==> arr.mySlice(0.7,2.2)=" + arr.mySlice(0.7, 2.2));
+    //不管第一个参数是否是有效数字，当传递的第二个参数不是有效数字时，返回空数组。
+    console.log("arr.slice(1,'a')=" + arr.slice(1, 'a'), "<==> arr.mySlice(1,'a')=" + arr.mySlice(1, 'a'));
+    //遵循上一条，不管第一个参数是否是有效数字，当第二个参数不是有效数字时返回空数组。
+    console.log("arr.slice('a','2b')=" + arr.slice('a', '2b'), "<==> arr.mySlice('a','2b')=" + arr.mySlice('a', '2b'));
+    //当传入的两个参数都为数字且已经将负数加上len后，若第一个参数不小于第二个参数时，返回空数组。
+    console.log("arr.slice(3,3)=" + arr.slice(3, 3), "<==> arr.mySlice(3,3)=" + arr.mySlice(3, 3));
+    console.log("arr.slice(3,1)=" + arr.slice(3, 1), "<==> arr.mySlice(3,1)=" + arr.mySlice(3, 1));
+    console.log("arr.slice(-3,1)=" + arr.slice(-3, 1), "<==> arr.mySlice(-3,1)=" + arr.mySlice(-3, 1));
+    console.log("arr.slice(3,-4)=" + arr.slice(3, -4), "<==> arr.mySlice(3,-4)=" + arr.mySlice(3, -4));
+    console.log("arr.slice(-3,-4)=" + arr.slice(-3, -4), "<==> arr.mySlice(-3,-4)=" + arr.mySlice(-3, -4));
+    console.log("调用mySlice方法后原数组不变：" + arr);
+
+    //控制台输出的结果为：
+    /*
+         (8).plus(5).reduce(3)=10
+         1.html:90 调用mySclie方法前原数组为：[1,2,3,4,5]
+         1.html:92 arr.slice()=[1,2,3,4,5] <==> arr.mySlice()=[1,2,3,4,5]
+         1.html:94 arr.slice(0)=[1,2,3,4,5] <==> arr.mySlice(0)=[1,2,3,4,5]
+         1.html:95 arr.slice(-7)=[1,2,3,4,5] <==> arr.mySlice(-7)=[1,2,3,4,5]
+         1.html:97 arr.slice('3a')=[1,2,3,4,5] <==> arr.mySlice('3a')=[1,2,3,4,5]
+         1.html:99 arr.slice(2)=[3,4,5] <==> arr.mySlice(2)=[3,4,5]
+         1.html:101 arr.slice(-2)=[4,5] <==> arr.mySlice(-2)=[4,5]
+         1.html:103 arr.slice(1,3)=[2,3] <==> arr.mySlice(1,3)=[2,3]
+         1.html:105 arr.slice(-3,-1)=[3,4] <==> arr.mySlice(-3,-1)=[3,4]
+         1.html:107 arr.slice(0,6)=[1,2,3,4,5] <==> arr.mySlice(0,6)=[1,2,3,4,5]
+         1.html:108 arr.slice(2,6)=[3,4,5] <==> arr.mySlice(2,6)=[3,4,5]
+         1.html:110 arr.slice(-7,3)=[1,2,3] <==> arr.mySlice(-7,3)=[1,2,3]
+         1.html:111 arr.slice(-7,6)=[1,2,3,4,5] <==> arr.mySlice(-7,6)=[1,2,3,4,5]
+         1.html:113 arr.slice(1,-2)=[2,3] <==> arr.mySlice(1，-2)=[2,3]
+         1.html:115 arr.slice(-4,3)=[2,3] <==> arr.mySlice(-4，3)=[2,3]
+         1.html:117 arr.slice('1','3')=[2,3] <==> arr.mySlice('1','3')=[2,3]
+         1.html:119 arr.slice('a',3)=[1,2,3] <==> arr.mySlice('a',3)=[1,2,3]
+         1.html:121 arr.slice(1,3,5)=[2,3] <==> arr.mySlice(1,3,5)=[2,3]
+         1.html:122 arr.slice('a',3,'c')=[1,2,3] <==> arr.mySlice('a',3,'c')=[1,2,3]
+         1.html:124 arr.slice(0.7,2.2)=[1,2] <==> arr.mySlice(0.7,2.2)=[1,2]
+         1.html:126 arr.slice(1,'a')=[] <==> arr.mySlice(1,'a')=[]
+         1.html:128 arr.slice('a','2b')=[] <==> arr.mySlice('a','2b')=[]
+         1.html:130 arr.slice(3,3)=[] <==> arr.mySlice(3,3)=[]
+         1.html:131 arr.slice(3,1)=[] <==> arr.mySlice(3,1)=[]
+         1.html:132 arr.slice(-3,1)=[] <==> arr.mySlice(-3,1)=[]
+         1.html:133 arr.slice(3,-4)=[] <==> arr.mySlice(3,-4)=[]
+         1.html:134 arr.slice(-3,-4)=[] <==> arr.mySlice(-3,-4)=[]
+         1.html:135 调用mySlice方法后原数组不变：[1,2,3,4,5]
+    */
+
+</script>
+</body>
+</html>

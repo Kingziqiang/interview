@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<ul id="tab">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <div></div>
+    <span></span>
+</ul>
+
+
+<script type="text/javascript">
+    //一个页面是由节点组成的,常用的节点分为四类:
+    //           nodeType      nodeName        nodeValue
+    //元素节点        1       大写的标签名("LI")      null
+    //文本节点        3         #text              文字内容
+    //注释节点        8         #comment           注释内容
+    //document      9         #document            null
+
+
+    //1、childNodes 获取当前元素的所有子节点(元素\文本\注释...)
+    //2、children 获取当前元素的所有元素子节点 ->IE6~8下我们通过children获取的结果是不准确的
+    //3、parentNode 获取当前元素的父亲节点
+    //4、previousSibling 获取上一个哥哥节点  ->previousElementSibling 获取上一个哥哥元素节点(IE6~8下不兼容)
+    //5、nextSibling 获取下一个弟弟节点  ->nextElementSibling 获取下一个弟弟元素节点(IE6~8下不兼容)
+    //6、firstChild 获取第一个子节点 ->firstElementChild 获取第一个元素子节点(IE6~8下不兼容)
+    //7、lastChild 获取最后一个子节点 ->lastElementChild 获取最后一个元素子节点(IE6~8下不兼容)
+
+    //在保准的浏览器下(除了IE6~8)会把我们的空格、换行等都当做文本节点来处理
+
+    //获取所有的元素子节点
+    //    var oTab = document.getElementById("tab");
+    //    var allNodes = oTab.childNodes;//获取的是所有的子节点
+    //    var ary = [];
+    //    for (var i = 0; i < allNodes.length; i++) {
+    //        var cur = allNodes[i];
+    //        if (cur.nodeType === 1) {
+    //            ary.push(cur);
+    //        }
+    //    }
+    //    console.log(ary);
+</script>
+</body>
+</html>

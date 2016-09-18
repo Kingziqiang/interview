@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    function sum(n1,n2){ //形参(不是具体的某一个值,只是起了一个标示的作用)
+        var total = null;
+        total = n1+n2;
+        return total;
+    }
+ // sum(10,20)//方法运行的时候,传进去具体的值,称为实参
+    //n1=10,n2=20
+   //console.log(sum (10)) //没有值赋给n2,那n2的值就是undefined;10+undefined-->NaN  10+null-->10
+    var a = 16;
+    sum(a,20);//sum(16,20) //传递的永远是值
+
+
+</script>
+</body>
+</html>

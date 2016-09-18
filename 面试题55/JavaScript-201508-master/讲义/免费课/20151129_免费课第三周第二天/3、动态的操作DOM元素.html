@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, div, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        #list {
+            margin: 50px auto;
+            width: 500px;
+        }
+
+        #list li {
+            height: 35px;
+            line-height: 35px;
+        }
+
+        /*CSS3新增加的伪选择器*/
+        #list li:nth-child(odd) {
+            background: #ffe470;
+        }
+
+        #list li:nth-child(even) {
+            background: #08BECE;
+        }
+
+        #btnAdd {
+            position: absolute;
+            top: 10px;
+            right: 400px;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border: 1px solid red;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="btnAdd">+</div>
+<ul id="list">
+    <li></li>
+    <li></li>
+</ul>
+
+<script type="text/javascript">
+    var btnAdd = document.getElementById("btnAdd");
+    var oList = document.getElementById("list");
+
+    btnAdd.onclick = function () {
+        var oLi = document.createElement("li");
+        oLi.innerHTML = "我是动态创建的~~" + Math.round(Math.random() * (100 - 1) + 1);
+        oList.appendChild(oLi);
+        delLi();
+    };
+
+    function delLi() {
+        var oLis = oList.getElementsByTagName("li");
+        for (var i = 0; i < oLis.length; i++) {
+            oLis[i].onclick = function () {
+                oList.removeChild(this);
+            }
+        }
+    }
+    delLi();
+
+    //1、document.createElement() 动态创建一个元素标签
+
+    //2、appendChild:把创建的标签添加到容器的末尾
+    // 容器.appendChild(newEle)
+
+    //3、insertBefore:把创建的标签增加到容器中某一个标签的前面
+    // 容器.insertBefore(newEle,oldEle)  容器:oldEle.parentNode
+
+    //4、replaceChild:用新的标签替换老的标签
+    // 容器.replaceChild(newEle,oldEle)
+
+    //5、removeChild:删除某一个标签
+    // 容器.removeChild(我们要删除的元素)
+
+    //6、cloneNode:复制一个节点 true->把当前元素和它的子元素都克隆一份  false->只把当前的元素克隆,子元素不管
+    // curEle.cloneNode(true);
+</script>
+</body>
+</html>

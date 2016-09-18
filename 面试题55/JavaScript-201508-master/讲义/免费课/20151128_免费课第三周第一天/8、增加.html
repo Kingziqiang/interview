@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<script type="text/javascript">
+    //在JS中创建一个DIV标签并且添加到我们的body中
+
+    //createElement:创建一个标签
+    var oDiv = document.createElement("div");
+    oDiv.id = "div1";
+    oDiv.style.width = "100px";
+    oDiv.style.height = "100px";
+    oDiv.style.backgroundColor = "red";
+
+    //appendChild:把创建的标签添加到指定容器的末尾位置
+    document.body.appendChild(oDiv);
+
+    //insertBefore:把创建的标签放在某一个标签的前面
+    //容器.insertBefore(新标签,旧标签)
+    var oP = document.createElement("p");
+    oP.style.width = "100px";
+    oP.style.height = "100px";
+    oP.style.backgroundColor = "green";
+    document.body.insertBefore(oP, oDiv);
+</script>
+</body>
+</html>

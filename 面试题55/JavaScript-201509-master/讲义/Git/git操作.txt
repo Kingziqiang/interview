@@ -1,0 +1,26 @@
+老师的仓库地址：https://github.com/zhufengpeixun/JavaScript-201508.git
+我自己for老师后的仓库：https://github.com/zhouxiaotian/JavaScript-201508.git
+
+我们通过 $ git clone 我们自己仓库的地址  把我们自己仓库中的代码克隆到了本地一份，默认的我们本地的代码就和github仓库保持连接了
+通过 $ git remote -v 来查看是否连接  "origin"是我们默认和自己远程仓库连接的用户名
+origin  https://github.com/zhouxiaotian/JavaScript-201508.git (fetch)
+origin  https://github.com/zhouxiaotian/JavaScript-201508.git (push)
+
+1、fork
+2、git clone 网址 
+3、在自己本地增加和老师仓库的联系 
+     git remote add 名字 老师仓库的地址      -> 查看是否连接成功  git remote -v     ->git remote rm 名字
+4、拉取老师的最新讲义
+     git remote update 名字
+     git pull 名字 master
+5、把本地最新的代码上传到自己的github仓库
+    git add -A
+    git commit -m"备注"
+(建议在每一次推送之前先拉取) git pull origin master
+    git push origin master
+
+
+
+
+
+

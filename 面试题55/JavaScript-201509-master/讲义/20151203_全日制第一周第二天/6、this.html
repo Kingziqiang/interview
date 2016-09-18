@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="div1">有本事点我啊~~</div>
+
+<script type="text/javascript">
+    //我们接下来研究的this都是指的函数执行中的this
+    //this是执行的主体(谁来执行的this就是谁),context是执行所在的范围(在哪执行的上下文就是谁) -> "this和context没有必然的关系"
+    //例如:
+    //王梦缘在北京饭店吃饭,吃饭是当前的行为,王梦缘是当前行为的主体(this->王梦缘),北京饭店是吃饭的范围/地点(context是北京饭店)
+
+    //this:当前函数执行的主体,它和函数在哪定义的或者在哪执行的都没有任何的关系,想要知道this是谁,我们只需要牢记下面的几条规律即可:
+    //1、看函数执行的时候,函数名之前是否有".",有的话,"."前面是谁this就是谁,没有的话this都是window
+    //2、自执行函数中的this永远是window
+    //3、给元素的某一个事件绑定方法,当事件触发方法执行的时候,方法中的this是当前的元素
+    function fn() {
+        console.log(this);
+    }
+    var obj = {
+        fn: fn
+    };
+    //    fn();//this->window
+    //    obj.fn();//this->obj
+    //    document.getElementById("div1").onclick = fn;//this->#div1
+
+    //    document.getElementById("div1").onclick = function () {
+    //        //匿名函数中的this->#div1
+    //        fn();//fn执行前面没有"."所以fn中的this还是window
+    //    };
+
+    //    document.getElementById("div1").onclick = (function () {
+    //        console.log(this);//window
+    //        return function () {
+    //            console.log(this);//#div1
+    //        }
+    //    })();
+    //你以为，你以为的，就是你以为的
+
+    //    function fn() {
+    //        console.log(this);//window
+    //    }
+    //    fn();//window.fn();
+    //
+    //    (function () {
+    //        function sum() {
+    //            console.log(this);//window
+    //        }
+    //        sum();
+    //        fn();
+    //    })();
+
+    //    function 吃饭(){
+    //        console.log(this);//王梦缘
+    //    }
+    //    王梦缘.吃饭();
+
+
+</script>
+</body>
+</html>

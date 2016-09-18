@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>自从学了预解释,从此节操是路人</title>
+</head>
+<body>
+<script type="text/javascript">
+    //in:检测某一个属性名是否属于这个对象(不管是私有的属性还是公有的属性,只要是当前对象的属性返回true,不是的话返回false)
+    //    var obj = {name: "王小波", age: 30};
+    //    console.log("name" in obj);//->true
+    //    console.log("height" in obj);//->false
+
+    //1、不管条件是否成立都要进行预解释
+    //window预解释:var a; -> window.a;
+    //    if (!("a" in window)) {//"a" in window -> true
+    //        var a = "珠峰培训";
+    //    }
+    //    console.log(a);//->undefined
+
+    //2、预解释只发生在"="的左边,只把左边的进行预解释,右边的是值是不进行预解释的
+
+    //匿名函数之函数表达式:把函数定义的部分当做值赋值给一个变量或者元素的事件
+    //预解释的时候:var fn; ->fn的默认值是undefined
+    //    fn();//->undefined() Uncaught TypeError: fn is not a function JS中只有函数可以执行 && JS上面的代码如果报错了,在不进行任何的特殊处理情况下我们下面的代码都不在执行了
+    //    var fn = function () {
+    //        console.log("ok");
+    //    };
+    //    fn();
+
+    //预解释的时候:fn=xxxfff000
+    //    fn();//->"ok"
+    //    function fn() {
+    //        console.log("ok");
+    //    }
+    //    fn();//->"ok"
+
+
+    //3、函数体中return下面的代码都不在执行了,但是下面的代码需要参加预解释；而return后面的东西是需要处理的，但是由于它是当做一个值返回的，所以不进行预解释；
+    //    var total = 300;
+    //    function fn() {
+    //        console.log(total);
+    //        return function sum() {};//return是把函数中的值返回到函数的外面,这里是把function对应的内存地址返回的到函数的外面,例如:return xxxfff111;函数体中return下面的代码都不在执行了
+    //        var total = 10;
+    //    }
+    //    fn();
+
+    //4、匿名函数的function在全局作用域下是不进行预解释的
+    //匿名函数之自执行函数:定义和执行一起完成了
+    //(function(num){})(100);
+
+    //5、在预解释的时候,如果遇到名字重复了,只声明一次,不重复的声明,但是赋值还是要重复的进行的
+    //在JS中变量的名字和函数的名字如果一样是算作重复的
+    //预解释:
+    //var fn; 声明
+    //fn = xxxfff000; [声明]不要了+定义
+    //fn = xxxfff111; [声明]不要了+定义
+    //->fn=xxxfff111
+    //    var fn = 12;//window.fn=12
+    //    function fn() {//window.fn=function(){}
+    //    }
+    //    function fn() {
+    //    }
+
+    //window下的预解释:
+    //fn=xxxfff111; 声明+定义
+    //var fn; 声明 (这一步不需要处理)
+    //fn=xxxfff222; 声明+定义(只需要执行定义即可)
+    //->fn=xxxfff222
+
+    fn();//->2
+    function fn() {
+        console.log(1);
+    }
+    fn();//->2
+    var fn = 13;//var fn;跳过  fn=13(在预解释的时候没有执行这句话赋值的操作)
+    fn();//->13() Error:fn is not a function
+    function fn() {
+        console.log(2);
+    }
+    fn();
+
+
+    //JS中作用域只有两种：window全局作用域、函数执行形成的私有作用域
+    //{name:""} if(){} for(){} while(){} switch(){} 这些都不会产生作用域
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var ary = [1, 2, 3, 4];
+    function fn(ary) {
+        ary[0] = 0;
+        ary = [0];
+        ary[0] = 100;
+        return ary;
+    }
+    var res = fn(ary);//执行fn函数,把ary的值传递给函数的形参,把函数执行的返回值赋值给我们的res
+    console.log(ary);//[0,2,3,4]
+    console.log(res);//[100]
+</script>
+</body>
+</html>

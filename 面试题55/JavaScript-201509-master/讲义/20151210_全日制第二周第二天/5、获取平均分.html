@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //去掉一个最高分，去掉一个最低分，然后求平均分
+
+    //arguments.sort进行排序的时候报了一个错误：arguments.sort is not a function ?
+    //sort是Array这个内置类原型上的一个方法，只有Array的实例(数组)才能使用这些方法，而arguments虽然长得像数组但是不是数组(类数组)，arguments不是Array这个类的一个实例，所以不能直接的使用sort方法...
+    //console.log(arguments instanceof Array);//->false
+
+    //思路：先排序，然后掐头去尾，剩下数求和求平均...
+    //    function avgFn() {
+    //        //1、首先把arguments转化为数组
+    //        var ary = [];
+    //        for (var i = 0; i < arguments.length; i++) {
+    //            //ary.push(arguments[i]);
+    //            ary[ary.length] = arguments[i];
+    //        }
+    //
+    //        //2、把数组进行排序
+    //        ary.sort(function (a, b) {
+    //            return a - b;
+    //        });
+    //
+    //        //3、掐头去尾
+    //        ary.shift();
+    //        ary.length--;//<==>ary.pop()
+    //
+    //        //4、求和求平均，在保留小数点后两位
+    //        return (eval(ary.join("+")) / ary.length).toFixed(2);
+    //    }
+    //
+    //    var res = avgFn(2, 9, 0, 4, 5);
+    //    console.log(res);
+
+
+    //核心优化:如何把类数组转换为数组
+
+    //模拟数组的slice方法实现最简单的操作：数组的克隆
+    //    Array.prototype.slice = function () {
+    //        var ary = [];
+    //        //数组的slice就是这样实现克隆的
+    //        for (var i = 0; i < this.length; i++) {
+    //            ary[ary.length] = this[i];//->ary.push(this[i]);
+    //        }
+    //
+    //        //把arguments转换为数组
+    //        for (var i = 0; i < arguments.length; i++) {
+    //            ary[ary.length] = arguments[i];
+    //        }
+    //        return ary;
+    //    };
+    //    [12, 23, 34].slice();
+
+    //规律：虽然arguments不是数组，但是它是类数组，也就是相关的操作其实和数组非常的相似，比如循环等都比较相似；对比上述的代码我们发现，内置slice中实现克隆的代码和我们把 arguments转换为数组的代码基本一样，只不过上边用的是this，而下边用的是argumnets；换句话说是要让slice执行的时候，里面的this变为arguments，就相当于我们把arguments转换为数组；
+
+    //    function avgFn() {
+    //        //1、借用数组的slice方法实现将类数组转换为数组
+    //        var ary = Array.prototype.slice.call(arguments, 0);
+    //        //var ary=[].slice.call(arguments,0);
+    //        ary.sort(function (a, b) {
+    //            return a - b;
+    //        });
+    //        ary.shift();
+    //        ary.length--;
+    //        return (eval(ary.join("+")) / ary.length).toFixed(2);
+    //    }
+    //
+    //    var res = avgFn(2, 9, 0, 4, 5);
+    //    console.log(res);
+
+
+    //第二种思想：直接的操作arguments
+    function avgFn() {
+        [].sort.call(arguments, function (a, b) {
+            return a - b;
+        });
+        [].shift.call(arguments);
+        [].pop.call(arguments);
+        return (eval([].join.call(arguments, "+")) / arguments.length).toFixed(2);
+    }
+    var res = avgFn(2, 9, 0, 4, 5);
+    console.log(res);
+</script>
+</body>
+</html>

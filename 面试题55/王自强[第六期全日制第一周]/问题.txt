@@ -1,0 +1,39 @@
+思考题：
+
+1、基于Number的原型编写两个方法：plus(+)、reduce(-)  实现: var num=(8).plus(5).reduce(3); num-->10
+     
+
+    【//内置类的原型Number.prototype无法修改默认的堆内存空间指向吗，这种方式Number.prototype上并未增加自定义属性。
+    // 调用自定义方法会报错。Uncaught TypeError: 8.plus is not a function】
+
+    var pro=Number.prototype;
+     Number.prototype={
+         constructor:Number,
+         plus: function(num){
+             num=Number(num)||0;
+             return this+num;
+         },
+         reduce: function(num){
+             num=Number(num)||0;
+             return this-num;
+         },
+         recover: function(){
+             for (var key in pro) {
+                this[key] = pro[key];
+             }
+         }
+     };
+     Number.prototype.recover();
+
+
+2、slice(n,m)  slice(n) slice() slice里面的索引可以传负数  slice中如果n和m的值大小错了....
+   假设数组中没有slice这个方法，我们自己在Array.prototype上编写一个mySlice，要求实现的功能个slice一致。
+
+   【//slice中如果n和m的值大小错了什么意思，是当n>m时需要交换顺序么。
+   //Array.portotype默认的slice方法中,在n和m经过下列负数和越界处理后再比较n和m的大小，若n>=m则直接返回空数组，不需要交换顺序。】
+
+    //当n<-len时n=0;当-len<=n<0时，n=n+len;否则当n>=0时，n=n。
+      n = n<-len?0:(n>=0?n:n+len);//(经过右侧处理使得n>=0，当n>=len时n>=m永远成立，则不执行循环体，返回空数组)
+    //当m>len时m=len;当0<=m<=len时，m=m;否则当m<0时m=m+len。
+      m = m>len?len:(m>=0?m:m+len);//(经过左侧处理使得m<=len，当m<=-len时(m=m+len)<=n永远成立，则不执行循环体，返回空数组)
+     

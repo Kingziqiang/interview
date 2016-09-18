@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //1、toUpperCase:将所有的字母转换为大写
+    //toLowerCase:将所有的字母转换为小写
+    //"abcd".toUpperCase() -> "ABCD"
+    //"ABCD".toLowerCase() -> "abcd"
+
+    //2、indexOf:返回字符在字符串中第一次出现位置的索引
+    //lastIndexOf:返回字符在字符串中最后一次出现位置的索引
+    //"abcddcba".indexOf("a") ->0
+    //"abcddcba".lastIndexOf("a") ->7
+    //"abcddcba".indexOf("z") ->-1  如果该字符在字符串中不存在的话获取的索引是-1
+    //    if ("abcddcba".indexOf("z") === -1) {
+    //        //说明z在字符串中不存在
+    //    }
+
+    //3、charAt:通过索引获取指定位置的字符
+    //charCodeAt:通过索引获取指定位置的字符的Unicode编码值
+    //Unicode编码值（ASCII码表）
+    //var str = "zhufengpeixun2015";
+    //str[0] -> str.charAt(0) ->"z"
+
+    //4、split:把字符串按照指定的分隔符拆分成数组中的每一项,和数组中的join对应
+    //    var ary = [12, 23, 34];
+    //    var str = ary.join("+");//"12+23+34"
+    //    ary = str.split("+");//["12", "23", "34"]
+
+    //5、replace:把老字符替换为新字符
+    //在不使用正则的情况下，执行一次replace只能替换一个，有多个的话我们需要执行多次(最简单的是使用正则)
+    //    var str = "zhufengpeixun";
+    //    //str = str.replace("n", "哈哈").replace("n", "哈哈");
+    //    str = str.replace(/n/g, "哈哈");
+    //    console.log(str);
+
+    //6、截取字符串的方法
+    //substr(n,m) 从索引n开始截取m个字符
+    //substring(n,m) 从索引n开始查找到索引为m处(不包含m),把找到的进行截取
+    //slice(n,m) 从索引n开始查找到索引为m处(不包含m),把找到的进行截取 ->slice支持以负数作为索引,如果是负数索引=总长度+负数索引
+    //1)如果都是只写了一个n,都是从索引n开始截取到末尾的位置
+    //    var str = "zhufengpeixun";
+    //    console.log(str.substr(2, 4));//->"ufen"
+    //    console.log(str.substring(2, 4));//->"uf"
+    //    console.log(str.slice(-4, -2));//->slice(13+(-4), 13+(-2)) ->slice(9,11) ->"ix"
+
+    //自己回去可以学习更多的字符串中的方法
+    console.dir(String.prototype);
+</script>
+</body>
+</html>

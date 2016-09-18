@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var ary = [12, 23, 34, 24, 35, 15, 26];
+    //1、先排序然后掐头去尾
+    //    ary.sort(function (a, b) {
+    //        return a - b;
+    //    });
+    //    var min = ary[0];
+    //    var max = ary[ary.length - 1];
+    //    console.log(min, max);
+
+    //2、假设法编程
+    //原理：假设数组中的第一个是最大值，我们让其后后面的每一项进行比较，如果遇到比他还大的值，说明假设错误了，我们让假设的值变为当前的最大值...(最小值获取也是同样的原理)
+    //    var max = min = ary[0];
+    //    for (var i = 1; i < ary.length; i++) {
+    //        var cur = ary[i];
+    //        cur > max ? max = cur : null;
+    //        cur < min ? min = cur : null;
+    //    }
+    //    console.log(min, max);
+
+
+    //3、使用Math.max/Math.min
+    //利用apply虽然是把需要传递的参数值放在一个数组中一起传递进来的，但是相当于一个个的传递进来的原理，借用Math的max和min方法获取数组中的最大值个最小值
+    //    Math.min(12, 23, 34, 24, 35, 15, 26);//获取一堆数字中最小的数 ->12
+    //    Math.min([12, 23, 34, 24, 35, 15, 26]);//->NaN
+    //    Math.min([12, 23, 34, 24, 35, 15, 26].toString());//->NaN
+    //    Math.min(eval("12,23,34,24,35,15,26"));//->26
+
+    var min = Math.min.apply(null, ary);
+    var max = Math.max.apply(null, ary);
+    console.log(min, max);
+
+
+    //知识点:
+    //1)把字符串转换为JS表达式执行,我们使用eval
+    //eval("12+23");//->35
+
+    //2)括号表达式
+    //(12, 23, 34, 45) //->45 一个括号中有多项,中间用","隔开,我们运行完成后获取的只是最后一个值
+    //    (function () {
+    //        console.log(1);
+    //    }, function () {
+    //        console.log(2);
+    //    })();//->2
+
+    //    function fn() {
+    //        console.log(this);
+    //    }
+    //    var obj = {fn: fn};
+    //    (obj.fn)();//this->obj
+    //    (fn, obj.fn)();//this->window
+</script>
+</body>
+</html>

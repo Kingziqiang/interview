@@ -1,0 +1,38 @@
+1、alert("我们要输出的内容")
+  ->在浏览器中弹出一个对话框,然后把要输出的内容展示出来
+  ->alert都是把要输出的内容首先转换为字符串然后在输出的
+
+2、document.write("我们要输出的内容")
+  ->直接的在页面中展示我们输出的内容
+
+3、console.log(我们要输出的内容)
+  ->在控制台输出我们的内容
+  ->如何打开/查看控制台 ->所有的浏览器都是F12这个键打开，拿谷歌浏览器来说，控制台包含了很多项：
+    Elements:展示的是我们页面中的HTML结构,但是它最主要的功能就是随时的调试我们的css样式(等价于火狐浏览器中的fire bug)
+    Console:我们在控制台输出的内容都可以在这里查看,不仅如此,我该可以在这里编写js代码
+    Sources:我们网站中的CSS/JS/HTML所有页面的文件都在这里可以下载查看,可以通过这个扒别人的源码
+    Network:展示了页面所有的加载资源(CSS/JS/img/Ajax/JSONP...)，并且每一个资源文件加载的时间都能看到,通过这个我们可以进行页面的性能优化
+  ......
+  ->console.dir(我们要输出的内容) 这种方式比.log输出的内容更加的详细
+  ->console.table
+
+4、value
+  ->给文本框(表单元素)赋值内容
+  ->获取文本框中(表单元素)的内容
+  document.getElementById("search").value = "我们要给#search这个文本框添加的内容";
+
+5、innerHTML/innerText
+  ->给除了表单元素的标签赋值内容
+    document.getElementById("div1").innerHTML = "勿忘初心方得始终~~";
+    document.getElementById("div1").innerText = "在没有努力之前不要谈天赋和基础~~";
+
+  ->innerHTML和innerText的区别
+    1)innerHTML在赋值的时候,如果遇到了有效的HTML标签会把它当做真正的标签处理,标签就可以起到自己的作用了；innerText不管是不是标签都当做文本来赋值，那么看到的都是文本，标签起不到自己的作用；(总结：在赋值的时候innerHTML可以识别HTML标签，而innerText不能识别)
+    document.getElementById("div1").innerHTML = "<a href='http://www.zhufengpeixun.cn/'>珠峰培训的官网</a>";
+    document.getElementById("div1").innerText = "<a href='http://www.zhufengpeixun.cn/'>珠峰培训的官网</a>";
+
+    2)在部分火狐浏览器中，不支持innerText,而innerHTML是所有浏览器都支持的
+
+
+
+

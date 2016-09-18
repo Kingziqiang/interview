@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //在JS中，如果当前行代码执行出现了错误，会在浏览器的控制台抛出异常的信息，当前行下面所有行代码都不在执行了
+    //但是在JS我们可以进行异常信息的捕获-> try、catch、finally
+    //    try {
+    //        //JS执行的代码
+    //    } catch (e) {//e是一个形参名字，可以自己随便起，但是必须要写一个
+    //
+    //        //如果上述的JS代码报错，就会执行catch中的代码
+    //        //e存储的是当前代码报错的信息 e.message就是具体的内容
+    //    } finally {
+    //        //这个不常用，一般都不加
+    //        //这里是不管JS代码是否报错，都会执行这里的代码
+    //    }
+
+    //作用：
+    //1、防止JS报错后下面代码不执行
+    //    console.log(num);//Error
+    //    console.log("ok");//本行代码不执行
+
+    //    try {
+    //        console.log(num);
+    //    } catch (e) {
+    //
+    //    }
+    //    console.log("ok");//上面不管是否报错，本行代码都会执行
+
+    //2、捕获异常的信息
+    //    try {
+    //        console.log(num);
+    //    } catch (e) {
+    //        //e.message ->传给后台进行错误统计
+    //        console.log("当前您的人品欠费，请充值~~");
+    //    }
+    //    console.log("ok");
+
+    //需求：一方面想要捕获异常的信息，另一方面还不想让下面的代码执行 ->手动抛出浏览器异常的信息
+    //    try {
+    //        console.log(num);
+    //    } catch (e) {
+    //        //e.message ->传给后台进行错误统计
+    //        throw new Error("当前您的人品欠费，请充值~~");
+    //
+    //        //Error:浏览器内置错误信息的类
+    //        //throw new ReferenceError() ->引用错误
+    //        //throw new TypeError() ->类型错误
+    //        //throw new RangeError() ->范围错误
+    //    }
+    //    console.log("ok");
+
+    //3、使用try catch进行兼容检测
+    //    var ary = [];
+    //    try {
+    //        ary = Array.prototype.slice.call(oList, 0);//如果这句话不兼容的话会报错
+    //    } catch (e) {
+    //        for (var i = 0; i < oList.length; i++) {
+    //            ary[ary.length] = oList[i];
+    //        }
+    //    }
+</script>
+</body>
+</html>

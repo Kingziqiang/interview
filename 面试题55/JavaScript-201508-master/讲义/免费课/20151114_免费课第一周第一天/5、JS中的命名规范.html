@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //命名规范
+    //1、严格的区分大小写
+    //var num = 12;
+    //console.log(Num);//->Uncaught ReferenceError: Num is not defined ->Num这个变量的名字没有定义(名字不存在)
+
+    //2、遵循"驼峰命名"法
+    //通用的国际编码命名法(编码命名习惯):
+    //每一个名字都有自己的含义,并且需要使用英文拼接的方式(别用汉语拼音)
+    //以_开头的,一般这样的变量都是公用的变量(全局变量)
+    //对于一些常用的单词可以使用缩写 Info -> information  Imp -> Import num ->number  str -> string ...
+    //create/add 增加、remove/delete/del 删除、match/replace 替换、get/query/select 获取 ...
+
+    //1)单词的首字母小写,其余每一个有意义的单词首字母大写
+    //学生信息 -> studentInfo  [xueshengXinxi  xueshengInfo xsXx "no"]
+
+    //2)可以使用数字、字母、_、$来进行命名,但是数字不能作为开头
+
+    //3、不能使用关键字和保留字
+    //关键字：在JS中有特殊意义的单词，我们不能拿来命名，例如：var 是用来定义变量的关键字，所以你不能var var=12;
+    //保留字：未来可能会成为关键字的我们也不能来命名，例如：public是后台需要用的，但是前端目前还没有应用，但是未来可能会使用，这样的名字也不能命名
+    //免费课教材，第5-6页，常用的关键字保留字都有，自己回去记忆
+
+
+    //变量的定义:
+    //var num; 其实就是在定一个名字,没有什么实际的意义,只是用来存储一个值，并且以后就代表这个值了
+    //例如:我的名字是周啸天,这个名字没啥实际的意义,谁都可以叫,只不过我把我的肉体和灵魂赋值给了这个名字而已,以后再提到周啸天其实代表的就是这堆不到120斤的肉而已
+
+    //var num = 12;//定义一个变量，然后给这个变量赋值为12，此时num这个名字(变量名)代表的就是12这个值
+    //console.log(num);//->在控制台把我们num这个名字代表的那个值输出
+
+    //JS中我们的变量是松散类型的:只要通过var 名字=值;就创建了一个变量，但是我们的值可以存储各式各样的
+    var num = 12;
+    var str = "珠峰培训";
+    var boo = true;//false
+    var n = null;
+    var u = undefined;
+    var obj = {name: "周啸天", age: 25};
+    var ary = [12, 23, 34, 45];
+    var reg = /^[+-]?(\d|([1-9]\d+))(\.\d+)?$/;
+    var fn = function () {
+
+    };
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //if、else if、else
+    //是我们项目中最全最常用的判断，用它可以解决一切的判断需求
+
+    //1、三元运算符
+    //应用于简单的if、else情况,它是把if、else代码简化了
+    //    var num = 12;
+    //    if (num <= 10) {
+    //        num++;
+    //    } else {
+    //        num--;
+    //    }
+    //    console.log(num);//->11
+
+    //条件?条件成立执行的操作:条件不成立执行的操作;
+    //var num = 12;
+    //num <= 10 ? num++ : var num = 12;num--;
+
+    //思考题:获取把这个三元运算符改写成if、else判断
+    //    var num = 12;
+    //    num >= 0 ? (num <= 10 ? num++ : num--) : (num >= -10 ? num++ : num--);
+
+
+    //2、switch case
+    //应用于一个变量在不同值情况下的不同的操作
+    //switch(变量){每一种case都相当于判断变量是否等于这个值,等于就执行对应的代码; 每一种case情况后面都要加break;}
+    //和普通if else的区别是:每一种case情况都相当于用===进行绝对的比较
+    var num = "10";
+    switch (num) {
+        case 0:
+            num++;
+            break;
+        case 5:
+            num--;
+            break;
+        case 10: //"10" case 10 是不成立的 "10"===10 ->false
+            num += 2;
+            break;
+        default:
+            num -= 2;
+    }
+    console.log(num);//->8
+
+
+    //    var num = "10";
+    //    if (num == 0) {
+    //        num++;
+    //    } else if (num == 5) {
+    //        num--;
+    //    } else if (num == 10) {//"10" == 10 ->true
+    //        num += 2;//num=num+2 -> num = "10"+2 -> "102"
+    //    } else {
+    //        num -= 2;
+    //    }
+    //    console.log(num);//->"102"
+
+
+</script>
+</body>
+</html>

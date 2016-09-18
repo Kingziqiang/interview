@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训-参数</title>
+</head>
+<body>
+<script type="text/javascript">
+    //参数
+    //函数定义->生产洗衣机  执行->洗衣服  但是在生产洗衣机的时候,厂家不知道用户放入的是什么样的洗衣液,所以它只是预留了几个入口 -->入口在函数中就是我们的参数
+
+    //1、形参:num1/num2就是当前sum这个函数的两个入口 ->形参变量
+    //    function sum(num1, num2) {
+    //        var total = num1 + num2;
+    //        console.log(total);
+    //    }
+    //    //执行的时候只需要在小括号中把对应的参数的值传递进来即可(执行时候传递的永远是给形参赋的值)
+    //    sum(100, 200);//->num1=100 num2=200
+    //    var a = 1000;
+    //    sum(a, 1 === 1 ? 20 : 30);//->传递的永远是一个值,第二个虽然写的是三元运算符的表达式,其实是先执行表达式,然后把表达式的结果赋值给我们的num2 -> num=20 同理第一个也是把a这个变量的值赋值给num1 -> num1=1000
+    //    sum(100);//->定义了形参但是没有传递值,默认值是undefined num2=undefined
+
+
+    //2、arguments 函数天生自带的参数的集合(不管是否传递参数值了,arguments都存在)
+    //1)arguments是一个对象数据类型的值 typeof arguments -> "object"
+    //2)常用的属性
+    //arguments.callee -> 存储/代表的是当前函数本身
+    //arguments.caller -> 执行当前函数本身 -> arguments.callee()
+
+    //arguments.length -> 存储的是一个数字,代表当前传递进来的参数值的个数
+    //当传递参数的时候还会有一些数字属性名,arguments[0]->第一个传递进来的参数值 arguments[1]->第二个传递进来的参数值,这些数字属性名代表的是当前第几个传递进来的参数值-->我们把代表位置的数字属性名也叫作"索引"
+    //->这个结构和我们的数组很像,但是arguments不是数组,所以我们也把arguments叫作类数组集合(getElementsByTagName获取的元素集合其实也是类数组集合)
+
+    //任意数求和:不管传递进来的是多少个参数我们都能求和
+    function sum() {
+        var total = null;//total=0  0和null的区别:虽然在我们看是都是没有,但是拿种树举例子的话:0->挖了坑里面什么都没种 null->连坑都没挖
+//        total += 100;//total->100
+//        total += 200;//total->300
+//        total += 300;//total->600
+        for (var i = 0; i < arguments.length; i++) {
+            //i=0 第一次循环 total+=arguments[0]
+            //i=1 第二次循环 total+=arguments[1]
+            //i=2 第三次循环 total+=arguments[2]
+            //我们循环时候 i存储的这个数字就是我们当前想获取值的索引
+            total += arguments[i];
+        }
+        console.log(total);
+    }
+    sum(100, 200);
+    sum(100, 200, 300);
+    sum(100, 200, 400, 5000);
+    sum(100);
+</script>
+</body>
+</html>

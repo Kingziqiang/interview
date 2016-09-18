@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //循环:重复多次做一件事情
+
+    //1、for循环
+    //四部曲:
+    //1)设置初始的值 -> var i=0;
+    //2)判断循环的条件 -> i<5 只要i的值小于5我们就继续循环
+    //3)执行循环体中的内容 -> {}包起来的是循环体
+    //4)执行最后的累加操作 -> i++
+    //    for (var i = 0; i < 5; i++) {
+    //        console.log(i);//循环五次分别输出0 1 2 3 4 循环后的i变为5
+    //    }
+    //    console.log(i);//->5
+    //break/continue
+    //不管是哪一个，循环体中break/continue后面的语句都不在执行了
+    //break:结束整个循环,并且i++也不在执行了
+    //continue:结束本轮循环,继续执行下一轮循环,i++要执行的
+    //    for (var i = 0; i < 5; i++) {
+    //        continue;
+    //        break;
+    //        console.log(i);//这句话是不会执行的
+    //    }
+
+    //BAT面试题
+    //    for (var i = 0; i < 5; i++) {
+    //        if (i <= 2) {
+    //            continue;
+    //            i++;
+    //        } else {
+    //            i += 2;
+    //            break;
+    //        }
+    //        console.log(i);
+    //    }
+    //    console.log(i);//->5
+
+    //for循环一般应用于知道具体的起始值和结束值的情况下,我们循环重复操作某一件事情
+
+
+    //2、for in循环
+    //应用于遍历一个对象中的属性名和属性值的
+    var obj = {name: "王梦缘", age: 29, sex: "boy", height: "128cm", weight: "130kg", 1: 100};
+    for (var key in obj) {
+        //console.log(key);//key是一个变量(可以随便的起名字),一般情况下对象中有几个属性我们就循环多少次,在每一次循环的时候,我们把对应的属性名都存储到key变量中-->key存储的值就是我们对象的属性名
+        //console.log(obj[key]);//由于不知道对象中是否存在数字属性名,所有for in中规定只能使用obj[key]来获取我们的属性值
+        console.log(key, obj[key]);
+    }
+    //循环的时候存在一些顺序问题:如果有数字属性名,它是先循环数字属性名的(是按照数字的由小到大循环的)数字的都循环完成后,我们在按照编写的顺序依次循环非数字的属性名
+
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>免费课复习</title>
+</head>
+<body>
+<script type="text/javascript">
+    //数组去重
+    function unique(ary) {
+        //想要让原有的数组不变的话,我们就不能直接操作ary了,而是把ary克隆一份一模一样的操作
+        var tempAry = ary.slice(0);
+        var obj = {};
+        for (var i = 0; i < tempAry.length; i++) {
+            var cur = tempAry[i];
+            if (obj[cur] == cur) {
+                tempAry[i] = tempAry[tempAry.length - 1];
+                tempAry.length--;
+                i--;
+                continue;
+            }
+            obj[cur] = cur;
+        }
+        obj = null;
+        return tempAry;
+    }
+
+    //利用"冒泡排序思想"实现的排序方法
+    function sortAry(ary) {
+        var tempAry = ary.slice(0);
+        var temp = null;
+        for (var i = 0; i < tempAry.length - 1; i++) {
+            for (var j = 0; j < tempAry.length - 1 - i; j++) {
+                if (tempAry[j] < tempAry[j + 1]) {
+                    temp = tempAry[j];
+                    tempAry[j] = tempAry[j + 1];
+                    tempAry[j + 1] = temp;
+                }
+            }
+        }
+        return tempAry;
+    }
+
+    var ary = [12, 23, 23, 12, 24, 34, 34, 23, 34, 5, 21, 2];
+    var newAry = unique(ary);//执行unique函数把ary这个变量存储的地址传递给函数中的形参,这样的话函数中的形参和外面的ary访问的是同一个内存空间,函数里面把空间东西改变了,外面的ary也会跟着发生改变 ->原有数组为什么改变的原因就在这
+    newAry = sortAry(newAry);
+    console.log(newAry, ary);
+
+</script>
+</body>
+</html>

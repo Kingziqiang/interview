@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //任意数求和
+    function sum() {
+        var total = null;
+        for (var i = 0; i < arguments.length; i++) {
+            var cur = Number(arguments[i]);
+            if (!isNaN(cur)) {
+                total += cur;
+            }
+        }
+        return total;
+    }
+
+
+    //getRandom:获取[n-m]之间的随机整数
+    function getRandom(n, m) {
+        //判断有没有传递参数:定义了形参没有传递值的话,默认的值是undefined
+        if (typeof n === "undefined" || typeof m === "undefined") {
+            return Math.random();
+        }
+
+        //判断是否为有效的数字:不管传递的是啥首先都转换为数字,这样n或者m只能是数字和NaN了
+        n = Number(n);
+        m = Number(m);
+        if (isNaN(n) || isNaN(m)) {
+            return Math.random();
+        }
+
+        //如果n>m让n和m交换位置
+        if (n > m) {
+            n = n + m;
+            m = n - m;
+            n = n - m;
+        }
+        return Math.round(Math.random() * (m - n) + n);
+    }
+
+    //    a=12; -> a=13
+    //    b=13; -> b=12
+
+    //    a=a+b; -> a=25
+    //    b=a-b; -> b=25-13=12
+    //    a=a-b; -> a=25-12=13
+
+
+</script>
+</body>
+</html>

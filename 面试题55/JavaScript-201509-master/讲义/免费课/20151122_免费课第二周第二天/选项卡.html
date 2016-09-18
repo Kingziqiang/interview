@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #tab{
+            width: 500px;
+            margin: 50px;
+        }
+        #tab ul{
+            text-align: center;
+        }
+        .option{
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+            line-height: 30px;
+            background: paleturquoise;
+            cursor: pointer;
+            text-align: center;
+        }
+        .content{
+            height: 200px;
+            background: palegreen;
+            display: none;
+            font-size: 40px;
+        }
+        .selectLi{
+            background:palegreen ;
+        }
+        .selectDiv{
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="tab">
+        <ul>
+            <li class="option selectLi"  >选项卡一</li>
+            <li class="option "  >选项卡二</li>
+            <li class="option "  >选项卡三</li>
+            <li class="option " >选项卡四</li>
+            <li class="option"  >选项卡五</li>
+        </ul>
+        <div class="content selectDiv">内容一</div>
+        <div class="content  ">内容二</div>
+        <div class="content ">内容三</div>
+        <div class="content ">内容四</div>
+        <div class="content">内容五</div>
+    </div>
+
+</body>
+</html>
+<script>
+    var oTab = document.getElementById("tab");
+    var oLis =oTab.getElementsByTagName('li');
+    var oDivs = oTab.getElementsByTagName('div');
+    function changeTab(n){
+        for(var i = 0;i<oLis.length;i++){
+            oLis.item(i).className = "option";
+            oDivs.item(i).className = "content";
+        }
+        oLis.item(n).className = 'option selectLi';
+        oDivs.item(n).className = 'content selectDiv';
+    }
+//    oLis.item(0).onclick =function(){ changeTab(0)};
+//    oLis.item(1).onclick = function(){changeTab(1)};
+//    oLis.item(2).onclick = function(){changeTab(2)};
+//    oLis.item(3).onclick = function(){changeTab(3)};
+//    oLis.item(4).onclick = function(){changeTab(4)};
+    var i =0;
+    for(;i<oLis.length;i++){
+        oLis[i].index = i; //自定义属性的方式
+        oLis[i].onclick = function(){
+            //console.log(this.index);
+            //另一个内置对象就是this,表示当前的主体
+                changeTab(this.index)
+        };
+    }
+//    function 起床(){
+//        谁去刷牙
+//        谁去吃早饭
+//        谁去上班
+//    }
+//    王梦缘.on7:30 = 起床
+
+
+
+
+</script>

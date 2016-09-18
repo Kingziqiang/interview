@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    /*什么是number类型的数据?
+    *   整数,小数,NaN(not a number)
+    * */
+    alert(typeof NaN);
+    //什么情况下会是NaN?
+    //1.做数学运算失败的时候会是NaN
+    //2.强制把其他类型转换成number类型失败的时候会是NaN
+    //强制类型转化的方法 Number(),parseInt(),parseFloat()
+    //Number可以把其他任意类型的数据转化成数类型的
+    //parseInt,parseFloat专门把字符串转换成数类型的
+    /*以下是通过Number来转的
+    * boolean值 -->true :1 ,false 0  Number(true)
+    * 数字只是简单的传入和传出
+    * null --> 0
+    * undefined --> NaN
+    * "" --> 0
+    * 如果是其他的字符串,必须每个字符都是数字才可以转换成功,只要有一个不是就是NaN
+    * */
+    //parseInt 把字符串的整数部分提取出来
+    parseInt("33.55px") //33
+    parseInt('-33px')//-33
+    parseInt('.5')//NaN
+    parseInt('0.5')//0
+    //parseFloat //除了能把字符串的整数部分提取出来,还可以把小数部分也提取出来
+    parseFloat('33.55px')//33.55
+    parseFloat('a33.55px')//NaN
+    parseFloat('33px')//33
+
+    //==表示做比较的意思,比较左右两边的值是否相等,如果相等的话返回true ,不相等返回false
+    NaN == NaN  //NaN跟自己比都不想等,跟其他任何数据比都不相等,NaN是一个非常广泛的概念
+
+    //isNaN 来检测一个值是否为有效数字,是有效数字就返回false,否则返回true
+    //isNaN在检测之前会先调用Number()这个方法将其转换成数类型的,然后再去检测
+    isNaN("12") //false
+    isNaN("12px") //true
+    isNaN("a12px") //true
+
+ </script>
+
+</body>
+</html>

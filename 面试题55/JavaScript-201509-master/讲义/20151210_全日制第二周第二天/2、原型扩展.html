@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //    function Fn() {
+    //        this.x = 100;
+    //    }
+    //    Fn.prototype.getX = function () {
+    //        console.log(this.x);
+    //    };
+    //    var f = new Fn;
+
+
+    //所有的函数都是Function这个基类的一个实例,而在Function的原型上有几个常用的方法：call、apply、bind(不兼容) -> 每一个函数都可以调用call/apply的方法了
+
+    //    function fn() {
+    //        console.log(this);
+    //    }
+
+    //1、他们找到的都是Function原型上的call方法
+    //console.log(fn.call === fn.__proto__.call);//->true
+    //console.log(fn.call === Function.prototype.call);//->true
+    //console.log(fn.__proto__.call === Function.prototype.call);//->true
+
+    //2、Function原型上的call方法的作用  ->fn.call([this])
+    //fn.call();//->fn通过原型链找到call这个方法,并且让call这个方法执行
+    //当call方法执行的时候,call方法中的this是fn
+
+    //call方法执行的时候都做了哪些事情(call方法的作用)
+    //1)是call方法中的this(在这里是fn)，当做一个函数执行(fn())
+    //2)把call方法中的this的this改变为第一个参数值(fn是call方法中的this,我们call执行的时候其实是把fn中的this改变为第一个传递参数的值)
+    //fn.call(12);//执行call方法,让fn执行,并且把fn中的this改变为12
+
+    function fn1() {
+        console.log(1);
+    }
+    function fn2() {
+        console.log(2);
+    }
+
+    fn1.call(fn2);//调用call方法执行,里面的this是fn1;首先让fn1执行,然后让fn1中的this变为fn2  ->1
+
+    //1)为什么可以fn.call.call.call...
+    //fn1.call;//获取的是Function原型上的call方法->它也是一个函数,所以可以继续使用call方法
+
+    //2)
+    //fn1.call.call(fn2);
+    //a、首先执行最后一个call方法,里面的this是fn1.call
+    //b、让最后一个call中的this执行 ->fn1.call() ->默认第一个call中的this是fn1
+    //c、让最后一个call中的this(fn1.call)的this变为fn2 ->fn1.call里面的this变为fn2 -> fn2.call()
+    //d、其实也就相当于让fn2执行
+
+    //fn1.call.call.call.call.call(fn2); ->2
+
+    //规律:
+    //fn1.call(fn2) ->fn1执行
+    //fn1.call.call(fn2) ->fn2执行  两个及以上call出现的时候其实都是让最后一个call中的参数执行
+
+
+    Function.prototype.call(fn1);//->Function.prototype执行,Function.prototype是一个空函数(和其他类的原型都不一样，其他类的原型是一个对象，但是函数的这个除了类型不一样以外操作原理等都和其他的类一模一样),执行没有任何的输出
+    Function.prototype.call.call(fn1);//->fn1() ->1
+
+
+    //http://www.zhufengpeixun.com/viewer.do?courseId=955223#currentPlaying=1652869 (周->课件6最后几分钟)
+    //http://www.zhufengpeixun.com/viewer.do?courseId=859485#currentPlaying=1351238 (耿)
+
+</script>
+</body>
+</html>

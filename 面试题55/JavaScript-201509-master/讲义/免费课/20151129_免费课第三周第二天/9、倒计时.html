@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, div, span {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 18px;
+        }
+
+        .box {
+            margin: 20px auto;
+            width: 400px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            border: 1px dashed #08BECE;
+        }
+
+        .box span {
+            display: inline-block;
+            font-size: 20px;
+            color: red;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="box">
+    距离开抢还剩 [ <span id="boxTime">00:00:00</span> ]
+</div>
+
+<script type="text/javascript">
+    //如何的把一个字符串转换为时间格式的日期?
+    //console.log(new Date("2015/11/29 20:00:00"));
+    //但是IE浏览器对于要转换的字符串是有格式限制的:
+    //"2015-11-29 20:00:00" 这样的是转换不了的，需要把-替换为/ ->"2015/11/29 20:00:00"
+    //支持的其它格式自己去百度搜索一下
+
+    //getTime:获取当前操作的时间距离 1970-01-01 00:00:00 之间的毫秒差
+
+    function addZero(value) {
+        return value < 10 ? "0" + value : value;
+    }
+    function computedTime() {
+        var nowTime = new Date();
+        var tarTime = new Date("2015/11/29 17:28:00");
+        var str = "00:00:00";
+
+        //1、获取目标时间和当前时间之间相差的毫秒数 -> tarTime-nowTime
+        var spanTime = tarTime.getTime() - nowTime.getTime();
+
+        //只有当前时间还没有到达目标时间我们才计算包含了多少个小时\分钟\秒
+        if (spanTime > 0) {
+            //2、计算毫秒差中包含了多少个小时
+            var hour = Math.floor(spanTime / (1000 * 60 * 60));
+            spanTime = spanTime - (hour * 60 * 60 * 1000);
+
+            //3、计算剩余的毫秒差中包含了多少个分钟
+            var minute = Math.floor(spanTime / (1000 * 60));
+            spanTime = spanTime - (minute * 60 * 1000);
+
+            //4、计算剩下的毫秒差中包含了多少个秒
+            var second = Math.floor(spanTime / 1000);
+
+            str = addZero(hour) + ":" + addZero(minute) + ":" + addZero(second);
+        } else {
+            //当我们当前的时间已经超过目标时间的时候,我们清除正在运行的定时器
+            window.clearInterval(timer);
+            timer = null;
+        }
+        return str;
+    }
+
+    var boxTime = document.getElementById("boxTime");
+    boxTime.innerHTML = computedTime();
+
+    var timer = window.setInterval(function () {
+        boxTime.innerHTML = computedTime();
+    }, 1000);
+</script>
+</body>
+</html>

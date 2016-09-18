@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2>珠峰培训正式课课程大纲</h2>
+<ul>
+    <!--http://www.zhufengpeixun.cn/jscourse/jscourse383.html-->
+    <li>第一周:预解释、作用域、闭包、this、面向对象、单例模式、工厂模式、构造函数模式、原型链模式、数组高级</li>
+    <li>第二周:原型链深入、call/apply、call实战应用、sort高级、类数组变数组、toString检测数据类型、表格排序实战、正则及正则实战应用、DOM的回流和重绘以及大数据绑定</li>
+    <li>第三周:DOM盒子模型、异步加载原理、图片延迟加载、DOM库(30~40个方法左右)</li>
+    <!--对前三周进行知识点的总结和梳理-->
+    <li id="li4">第四周:动画原理和优化、tween算法动画库、复合轮播图、百叶窗轮播图、jQuery深入原理和简单实战</li>
+    <li>第五周:DOM2级事件、事件传播、事件委托、京东的放大镜、百度的登录拖拽、事件库、jQuery深入实战</li>
+    <li>第六周:DOM2级事件深入、观察者模式、照片墙</li>
+    <li>第七周:Ajax/jsonp/nodejs初级</li>
+    <!--在以上几周的周一到周五不定时补课和复习，在补课过程中就把H5和CSS3基础的知识补完了-->
+    <li>第八周/第九周:都是移动端项目实战、项目优化...</li>
+</ul>
+<script type="text/javascript">
+    var oLi4 = document.getElementById("li4");
+
+    //jQuery -> prev 获取上一个哥哥元素节点
+    //console.log(oLi4.previousElementSibling);//在IE6~8下输出的结果是undefined，说明浏览器不支持这个属性
+    function prev(curEle) {
+        var pre = curEle.previousSibling;
+        while (pre && pre.nodeType != 1) {//如果上一个哥哥节点存在并且不是我们想要的元素节点，我们就继续向上查找
+            pre = pre.previousSibling;
+        }
+        return pre;
+    }
+
+    //jQuery -> prevAll 获取所有的哥哥元素节点
+    function prevAll(curEle) {
+        var pre = curEle.previousSibling, ary = [];
+        while (pre) {
+            pre.nodeType === 1 ? ary.unshift(pre) : null;
+            pre = pre.previousSibling;
+        }
+        return ary;
+    }
+    var res = prevAll(oLi4);
+    console.log(res);
+
+    //思考题：
+    //next ->获取下一个弟弟元素节点
+    //nextAll ->获取所有的弟弟元素节点
+    //siblings ->获取所有的兄弟元素节点
+
+    //    var pre = oLi4.previousSibling;//获取当前元素的上一个哥哥节点
+    //    pre = pre.previousSibling;//基于上一次获取的内容继续向上找我们的哥哥节点
+    //    pre = pre.previousSibling;
+    //    pre = pre.previousSibling;
+    //    console.log(pre);
+</script>
+</body>
+</html>

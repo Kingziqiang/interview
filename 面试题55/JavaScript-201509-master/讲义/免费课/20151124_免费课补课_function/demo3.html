@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //正式课才会讲
+    //    function sum() {
+    //        var total = eval([].join.call(arguments, "+"));
+    //        console.log(total);
+    //    }
+
+
+    //    function sum() {
+    //        var total = null;
+    //        for (var i = 0; i < arguments.length; i++) {
+    //            total += arguments[i];
+    //        }
+    //    }
+    //    sum(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    //    console.log(total);//Uncaught ReferenceError: total is not defined ->total没有定义  闭包的机制导致函数里面的变量我们外面是不能直接的获取的,想获取就需要用到我们的返回值机制了
+
+
+    //1、return 返回值->给函数开了一个出口,函数外面的可以拿到函数里面的东西
+    // return后面跟啥,函数执行的结果就是啥,如果没有写return,默认的返回结果是undefined
+    //    function fn() {
+    //        var total = 100;
+    //        return total;//->返回值,返回的是一个值,这里不是把变量返回,而是把变量存储的值100返回 -> return 100;
+    //    }
+    //    //console.log(fn);//->输出的是函数体(函数本身)
+    //    //console.log(fn());//->先执行我们的fn这个函数,然后把函数的返回值输出 ->fn()整体代表的其实就是当前函数的返回值
+    //    var total = fn();//->把函数执行的返回值100赋值给了外面的total变量,但是一定要知道外面的total和里面的total没有啥关系是两个不同的变量而已
+
+    //思考题：
+    //    function fn() {
+    //        var total = 100;
+    //        return total;
+    //    }
+    //    var total = fn;
+    //    console.log(total);//->函数体本身
+
+    //    function fn1() {
+    //        var total = 100;
+    //        return total;
+    //    }
+    //    var total = fn1();
+    //    console.log(total);//->100
+
+    //    function fn2() {
+    //        var total = 100;
+    //    }
+    //    var total = fn2();
+    //    console.log(total);//->undefined 因为没有写return所以没有任何的返回值
+
+    //return除了返回值以外,在函数体中和循环中的break一样还有阻止下面代码执行的功能
+    //函数体中return下面的代码都不在执行了
+    function fn3() {
+        return;//虽然写了return但是啥也没返回,默认值还是undefined
+        //下面的两句话都不执行
+        var total = 100;
+        return total;
+    }
+    var total = fn3();
+    console.log(total);//->undefined
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    /*任意几个数(整数和小数)的求和*/
+    function sum(){
+        var total = null;
+        for(var i=0;i<arguments.length;i++){
+          var cur =Number(arguments[i]);//转化成了数类型(整数,小数,NaN)
+//           if(isNaN(cur)){//如果是有效数字(false)才去累加,如果是true 就不操作
+//                  //什么都不操作
+//           }else{
+//               total+=cur;//total=total+arguments[i];
+//           }
+               isNaN(cur)? null : total+=cur;
+//            if(!isNaN(cur)){
+//                total+=cur;
+//            }
+
+        }
+        return total;
+    }
+    var num ;
+    num =sum(10,20,"zhufengpeixun");
+
+    console.log(num);
+
+
+</script>
+</body>
+</html>

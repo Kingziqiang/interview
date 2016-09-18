@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, div {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            margin: 10px auto;
+            width: 200px;
+            height: 200px;
+            background: #008000;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+
+<script type="text/javascript">
+    var oDiv = document.getElementById("div1");
+    //1)typeof oDiv -> "object" 我们获取的元素是一个对象数据类型的值
+
+    //2)oDiv.style 存储是当前元素的所有的行内样式,不管你是否在样式表中设置了样式,只要没有写在行内上我们通过它都是获取不到结果的
+    //例如：我们在样式表中给oDiv设置了背景颜色,但是没有在行内上编写
+    //console.log(oDiv.style.backgroundColor);//->""
+
+    //3)
+    //oDiv.style.backgroundColor = "yellow";//可以实现改变背景样式的
+
+    //var oDivSty = oDiv.style;//->oDivSty=xxxfff111
+    //oDivSty.backgroundColor = "red";//可以实现改变背景样式的
+
+    var oDivBg = oDiv.style.backgroundColor;//->oDivBg="red";
+    oDivBg = "green";//->只是把oDivBg这个变量的值进行了修改,但是没有影响到我们的内存空间(xxxfff00/xxxfff111),这样的话元素的背景颜色是不能发生改变的
+
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+window下的预解释：
+	var name; var age;
+window下的代码执行:
+	name="china";
+	age=5000;
+	自执行函数执行(私有作用域A)
+		A下的形参赋值:
+			name="china";
+			age=undefined;
+		A下的代码执行：
+			arguments[0]="zhufeng"; 
+				->name="zhufeng"
+			age=age||this.age; 
+				->age=age||5000;
+				->age=5000;
+			this.name=name;
+				->windom.name="zhufeng";
+			console.log(name,age);
+				->"zhufeng" 5000
+		console.log(name,age);	
+		        ->"zhufeng" 5000		
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var num = 12;
+    var str = "珠峰培训";
+    var boo = true;//false
+    var n = null;
+    var u = undefined;
+
+    var obj = {name: "周啸天", age: 25};//对象
+
+    var ary = [12, 23, 34, 45];//数组(补课)
+    var reg = /^[+-]?(\d|([1-9]\d+))(\.\d+)?$/;//正则(正式课第二周)
+    var fn = function () {
+
+    };
+
+    //1、JS中的数据类型一共分为两大类
+    //[基本数据类型/值类型]
+    //number、string、boolean、null、undefined
+
+    //[引用数据类型]
+    //object对象数据类型[{}对象、[]数组、/^$/正则...]
+    //function函数数据类型
+
+
+    //2、用JS检测它到底是说什么数据类型的
+    //1)typeof 用来检测数据类型的逻辑运算符
+
+    //typeof value; ->检测value这个值的数据类型
+    //console.log(typeof 12);//->"number" 在控制台看到的是没有加""，这是浏览器的一个机制,在JS中输出,在控制台默认的把""给省略了
+    //返回值:首先是一个字符串,其次里面才包含了我们对应的数据类型,例如:"number"、"string"、"boolean"、"object"、"function"、"undefined"...
+    //注意:
+    // console.log(typeof null);//->"object"
+    // typeof不能具体的细分object下的数组、正则、对象，因为不管检测哪一个返回的都是"object",例如：typeof [12] ->"object"  typeof /^$/ ->"object"
+
+    //BAT面试题
+    //console.log(typeof typeof typeof typeof [12, 23, 34]);//->"string"
+    /*
+     typeof检测的返回值不管是啥，首先都是一个字符串，如果出现两个及以上同时检测的话，最后结果一秒钟出答案->"string"
+     typeof [12, 23, 34] -> "object"
+     typeof "object" -> "string"
+     typeof "string" -> "string"
+     typeof "string" -> "string"
+     */
+
+    //2)instanceof 判断某一个实例是否属于这个类
+    //3)constructor 通过实例的构造函数的执行检测数据类型
+    //4)Object.prototype.toString.call() 调用Object基类原型上的toString方法，让里面的this变为我们要检测值，由此返回对应的数据类型
+
+
+</script>
+</body>
+</html>

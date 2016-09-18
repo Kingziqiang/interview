@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="div1"></div>
+
+<script type="text/javascript">
+    //一、DOM和面向对象
+    //var oDiv = document.getElementById("div1");
+    //console.dir(oDiv);
+
+    //DOM也是基于面向对象思想（类和实例的模式）构建出来的
+    //#div1它是HTMLDivElement这个类的一个实例->HTMLElement->Element->Node->EventTarget->Object
+    //HTMLCollection是我们的元素集合类->Object  所有通过getElementsByTagName、getElementsByClassName...获取的元素集合都是它的一个实例
+    //NodeList是我们的节点集合类->Object 所有通过getElementsByName获取的集合都是它的一个实例
+
+    //思考题:
+    //1、所有的HTML标签(包含document、window)都有一个自己所属的类,都有一套原型查找模式...
+    //自己回去把常用的标签、document、window所属类的层级关系总结下来，在每一级中学习它的常用的属性和方法
+    //2、我们说getElementById、getElementsByTagName、createElement的上下文只能是document,回去后用面向对象的思想去理解为什么?
+
+
+    //二、数据类型和面向对象
+    //    var ary = [12, 23, 34];
+    //    //ary是Array这个内置类的一个实例  ary->Array.prototype->Object.prototype
+    //    //ary就可以使用Array和Object原型上定义的所有的属性和方法了
+    //
+    //    //基本数据类型在面向对象中有自己的特殊性
+    //    //用字面量方式创建:它们是一个基本数据类型值,但是它们也是String这个类的一个实例 str->String->Object
+    //    var str = "珠峰";
+    //    console.log(str.substring(0));
+    //
+    //    //用构造函数模式创建：它们是一个对象数据类型的值
+    //    var str2 = new String("珠峰");
+
+    //我们自己在数组原型上写的方法把原有的slice方法给覆盖了
+    //    Array.prototype.slice = function () {
+    //        console.log("ok");
+    //    };
+    //    [].slice();
+
+
+    function Fn() {
+        this.x = 100;
+    }
+    Fn.prototype.getX = function () {
+        console.log(this.x);
+    };
+    var f = new Fn;
+
+
+    //三、函数的多面性
+
+    //所有的对象数据类型(普通对象、数组、正则、实例、类的原型...)都是Object这个基类的一个实例
+    //所有的函数数据类型(普通函数、内置类、自定义类...)都是Function这个基类的一个实例
+    //函数或者类都是函数数据类型，所有的函数数据类型都是Function的一个实例，所有的实例都是对象数据类型的 -> 函数也是对象数据类型的值
+
+    //1、普通的方法/函数是函数数据类型的
+    //它可以执行,形成私有的作用域,形参赋值,预解释,代码执行,返回值...
+
+    //2、函数也可以是一个类(new Fn)
+    //它包含了prototype和__proto__等一些列的原型链模式、instanceof、hasOwnProperty...
+
+    //3、函数也是一个普通的对象
+    //它可以像{}这样普通的对象一样给自己本身增加属性名和属性值
+
+    //"三种角色是互不影响的"
+
+    //    function Fn() {
+    //        var num = 10;//->作为普通函数执行 形成的私有的变量num
+    //        console.log(num);//->10
+    //
+    //        this.x = 100;//->作为一个类,给自己实例增加的私有的属性
+    //    }
+    //    Fn.num = 20;//->作为一个普通的对象,给自己增加的属性名num
+    //    //Fn.prototype.xxx//->作为一个类,给自己实例增加的公有的属性
+    //    var f = new Fn;
+    //
+    //    console.log(f.num);//->undefined
+    //    console.log(Fn.num);//->20  console.log(Fn["num"])
+
+
+    var num = 0;
+    function Fn(num) {
+        arguments[0] = 100;
+        this.num = 200;
+        console.log(num);
+        console.log(this.num);
+        return num;
+    }
+    Fn.num = 400;
+    Fn.prototype.num = 300;
+    Fn.prototype.getNum = function () {
+        console.log(this.num);
+    };
+    var f = new Fn(num);
+    console.log(f.num);
+    f.getNum();
+    Fn.prototype.getNum();
+    console.log(num);
+    var n = Fn(num);
+    console.log(n);
+    console.log(num);
+</script>
+</body>
+</html>

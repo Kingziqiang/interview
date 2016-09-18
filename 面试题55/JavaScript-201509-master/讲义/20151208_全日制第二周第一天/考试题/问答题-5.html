@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var ary = [12, 23];
+    ~function (ary) {
+        ary.length--;
+        ary = [34];
+        ary.length--;
+        alert(ary);//->""
+    }(ary);//把window的ary的值,当做参数值,传递给自执行函数形参ary
+    alert(ary);//->"12"
+
+    //alert是在页面中弹出一个框展示我们要输出的内容 ->重点：alert是把要输出的内容调用toString方法转换成字符串然后在输出
+</script>
+</body>
+</html>

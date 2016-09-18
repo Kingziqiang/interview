@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div>
+
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript">
+    //var oList = document.getElementsByTagName("div");//获取的是一个元素的集合也是一个类数组
+
+    //兼容的话使用下面的代码
+    //var ary = Array.prototype.slice.call(oList, 0);
+
+    //不兼容的话自己使用for循环处理
+    //    for (var i = 0; i < oList.length; i++) {
+    //        ary[ary.length] = oList[i];
+    //    }
+
+    //    function fn() {
+    //        console.log(Array.prototype.slice.call(arguments, 0));
+    //    }
+    //    fn(100, 200, 300)
+
+    //借用数组原型上的slice方法把我们的类数组转化为数组，对于arguments来说兼容所有的浏览器，但是对于DOM元素/节点集合来说在IE6~8不兼容
+
+    var oList = document.getElementsByTagName("div");
+
+    var ary = utils.listToArray(oList);
+    console.log(ary);
+</script>
+</body>
+</html>

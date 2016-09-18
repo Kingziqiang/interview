@@ -1,0 +1,10 @@
+/*让指定宽高的元素在屏幕的中间位置 top: 50%;*/
+.inner {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    margin: -110px 0 0 -320px;
+
+    width: 640px;
+    height: 220px;
+}

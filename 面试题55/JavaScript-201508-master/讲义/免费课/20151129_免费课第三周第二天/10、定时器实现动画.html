@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //定时器:设置一个定时器、设置一个等待的时间、到到达指定时间后执行我们对应的操作
+    //银行:领号->排队->办理业务->清除号(银行清除、自己把纸条撕掉)
+
+    //JS中的定时器分为两种：
+    //[function]->到达时间去做的事情
+    //[interval]->等待的时间(ms)
+
+    //设置定时器:
+    //window.setTimeout([function],[interval]) 到达指定的时间,完成我们需要做的事情,完后后定时器就停止了
+    //window.setInterval([function],[interval]) 到达指定时间,完成我们需要做的事情,完成后定时器并没有停止,接下来每隔这么长时间都重新的执行一次对应的方法...只有当手动清除后才会停止
+    //清除定时器:
+    //clearTimeout/clearInterval
+
+    //设置定时器是由返回值的,返回值是一个数字,代表当前是第几个定时器->并且在一个页面中不管前面的有没有清除,我们的号是一直累加下来的
+
+    var count = 0;
+    var timer = window.setInterval(function () {
+        count++;
+        console.log(count);
+        if (count >= 10) {
+            window.clearInterval(timer);
+            timer = null;
+        }
+    }, 1000);
+
+
+    //    var timer2 = window.setInterval(function () {
+    //    }, 1000);
+    //    console.log(timer2);
+</script>
+</body>
+</html>

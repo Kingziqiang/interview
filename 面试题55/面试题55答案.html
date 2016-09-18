@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题55答案</title>    
+</head>
+<body>
+	<h1>55 写一个单例模式，说明其作用和弊端？写一个工厂模式说明其作用和弊端？面向对象的特性有哪些？什么是对象、类、实例？列举你所知道的内置对象?</h1>
+	<pre>	
+一、写一个单例模式，说明其作用和弊端？
+    单例模式的定义：保证一个类仅有一个实例，并提供一个访问他的全局访问点。
+    在JavaScript里，单例作为一个命名空间提供者，从全局命名空间里提供一个唯一的访问点来访问该对象。
+    最简单的的方法时使用对象字面量的方式：
+    var attr=3;
+    var attr=4;
+    var singleton1 = {
+        attr : 1,
+        method : function(){ return this.attr; }
+    }
+     var singleton2 = {
+        attr : 2,
+        method : function(){ return this.attr; }
+    }
+    console.log(attr);//4, 全部变量被最后一次赋值覆盖
+    console.log(singleton1.attr);//1，对象的属性虽然同名，但在不同的命名空间内，彼此独立，互不影响。
+    console.log(singleton2.attr);//2，对象的属性虽然同名，但在不同的命名空间内，彼此独立，互不影响。
+    作用：模拟类，把变量和方法作为对象的属性和方法归类到不同的命名空间中，减少全局变量污染
+    弊端：使用同一个接口创建很多个对象（创建多个相似对象，具有相同的属性和方法），会产生大量重复代码。
+  
+二、写一个工厂模式说明其作用和弊端？
+    工厂模式抽象了创建具体对象的过程，用函数来封装以特定接口创建对象的细节。
+    function createJuice(name){ //榨汁机方法
+    	var f = new Object();
+    	f.name = name;
+    	f.drinkJuice = function(){
+    		console.log("喝"+this.name+"汁");
+    	}
+    	return f;
+    }
+    var apple = createJuice("苹果");//传入苹果，返回苹果汁
+    apple.drinkJuice();//喝苹果汁
+    var orange = createJuice("橙子");//传入橙子，返回橙子汁
+    orange.drinkJuice();//喝橙子汁
+    作用：用来创建多个具有相同属性或方法的相似对象，避免代码冗余。
+    弊端：没有解决对象识别问题，无法区分对象类型。
+
+三、面向对象的特性有哪些？
+    面向对象的三大特性：封装、继承、多态。
+    1 封装性
+      封装就是把抽象出来的数据和对数据的操作封装在一起，数据被保护在内部，程序的其它部分只有通过被授权的操作(成员方法)，才能对数据进行操作。
+      <script type="text/javascript"> 
+	      function Person(name, age, salary ){ 
+	        // 公开 
+	        this.name = name; 
+	        // 私有 
+	        var _age = age; 
+	        var _salary = salary ;
+	        this.getAge=function (){  //只能通过成员方法访问私有变量
+	        	return age; //不标准写法，返回形成
+	        }
+	       this.getSalary=function (){  //只能通过成员方法访问私有变量
+	        	return _salary； //标准写法，返回内部var声明的私有变量
+	        }
+	      } 
+	      var p1 = new Person('bill', 100, 100000000); 
+	      console.log(p1.name); //bill
+	      console.log(p1._age);//undefined
+	      console.log(p1.age); //undefined
+	      console.log(p1.getAge()); //100
+	      console.log(p1.getSalary()); //100000000
+      </script>
+      JS封装只有两种状态，一种是公开的，一种是私有的。 
+   2 继承性
+     当多个类存在相同的属性(变量)和方法时，可以从这些类中抽象出父类，在父类中定义这些相同的属性和方法，所有的子类不需要重新定义这些属性和方法，只需要通过继承父类中的属性和方法。
+     继承的6中方式：
+     1 原型链继承
+     2 借用构造函数继承(又叫伪造对象或经典继承)
+     3 组合继承(又叫伪经典继承)
+     4 原型式继承
+     5 寄生式继承
+     6 寄生组合式继承
+     参见文档:http://www.cnblogs.com/xiaohuochai/p/4803084.html
+     参见视频：http://www.zhufengpeixun.cn/course/22/lesson/list
+               课时18：深入扩展-原型链模式(常用的六种继承方式)
+
+   3 多态性
+     JS的函数重载
+     JS函数不支持多态，如果同时定义了多个同名函数，则以最后一个函数为准，因为后定义的函数会覆盖前面的同名函数。 
+     3.1  js不支持重载举例
+        <script type="text/javascript">
+        	//*****************说明js不支持重载***** 
+			  function Person(){ 
+			    this.test=function (a,b){ 
+			      console.log('a,b');  
+			    } 
+			    this.test=function (a){ 
+			      console.log('a'); 
+			    } 
+			  } 
+			  var p=new Person(); 
+			  //js中不支持重载. 
+			  //但是这不会报错，js会默认是最后同名一个函数，可以看做是后面的把前面的覆盖了。 
+			  p.test("a","b"); //function (a)  说明只执行了最后一个而函数
+			  p.test("a");//function (a)  
+        </script>
+     3.2 js虽然不支持重载，但是可以通过判断参数个数或类型不同，在函数类执行不同的操作，从而达到模拟重载功能的目的
+        <script type="text/javascript">
+        	//js怎么实现重载.通过判断参数的个数来实现重载 
+			  function Person(){ 
+			    this.test1=function (){ 
+			      if(arguments.length==1){ 
+			        this.show1(arguments[0]); 
+			      }else if(arguments.length==2){ 
+			        this.show2(arguments[0],arguments[1]); 
+			      }else if(arguments.length==3){ 
+			        this.show3(arguments[0],arguments[1],arguments[2]); 
+			      } 
+			    } 
+			    this.show1=function(a){ 
+			      window.alert("show1()被调用"+a); 
+			    } 
+			    this.show2=function(a,b){ 
+			      window.alert("show2()被调用"+"--"+a+"--"+b); 
+			    } 
+			    function show3(a,b,c){ 
+			      window.alert("show3()被调用"); 
+			    } 
+			  } 
+			  var p1=new Person(); 
+			  //js中不支持重载. 
+			  p1.test1("a","b"); //show2()被调用--a--b
+			  p1.test1("a"); //show1()被调用a，传入参数个数不同执行不同的代码
+        </script>
+
+四、什么是对象、类、实例？列举你所知道的内置对象?  
+	1 对象：JavaScript 中的所有事物都是对象：字符串、数值、数组、函数...
+            此外，JavaScript 允许自定义对象。
+    2 类：把对象具体的细分。
+          例如：人类一个类
+    3 实例：每一个类别中具体的某一个事物
+          例如：张三是人类的一个具体实例
+    4 内置对象：
+      Null
+      Number
+      Boolean
+      String
+      Object
+      Function
+      Array
+      RegExp
+      Error
+      Date
+      Math
+      JSON
+      Global
+      详见附件图片<< Javascript内置对象、原生对象、宿主对象关系.png >>

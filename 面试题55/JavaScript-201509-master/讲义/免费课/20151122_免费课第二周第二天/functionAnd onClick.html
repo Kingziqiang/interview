@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        #div1{
+            width:200px;
+            height: 200px;
+            background: red;
+        }
+    </style>
+</head>
+<body>
+<div id="div1"  onclick="fn()"></div>
+<script>
+    oDiv.onclick = function(){fn() }
+   oDiv.onclick =function(){ fn(); };
+//
+    function fn(){
+        alert(111);
+    }
+    var oDiv = document.getElementById("div1");
+//onclick事件需要的是方法的本身,不是方法运行的返回结果,不需要方法现在立马执行,而是当点击的时候,方法才去执行
+    oDiv.onclick = fn; //fn做计划,onclick就相当执行计划
+   // oDiv["onclick"] = fn;
+    oDiv.onclick = function fn(){alert(111)}
+    //绑定事件就相当于行为的定义,触发事件相当于行为的发生
+//    function 起床(){
+//
+//    }
+//
+//   mswang.on7:30 = 起床
+//   mswang.on8:00 = 吃早饭
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //++i和i++都是在自己本身基础上+1
+    //var i=10;
+    //10+(++i) -> 21  先自己+1，然后拿加完的结果和10相加
+    //10+i++ ->20 先和10进行运算,结果是20,然后本身在加1
+    //思考题:
+    //    var i = 3;
+    //    console.log(10 + (++i) + (i++) + (++i) + (i++));
+    //    console.log(i);
+
+    //    function fn() {
+    //        var i = 10;
+    //        return function (n) {
+    //            console.log(n + (++i));
+    //        }
+    //    }
+    //    var f = fn();
+    //    f(10);//21
+    //    f(20);//32
+    //    fn()(10);//->先执行fn返回一个小的函数,然后把小的函数紧接着在执行,并且给n传递参数值为10
+    //    fn()(20);
+
+
+    function fn(i) {
+        return function (n) {
+            console.log(n + i++);
+        }
+    }
+    var f = fn(13);
+    f(12);//25
+    f(14);//28
+    fn(15)(12);//27
+    fn(16)(13);//29a
+</script>
+</body>
+</html>

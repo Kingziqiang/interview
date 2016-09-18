@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, div {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 18px;
+            -webkit-user-select: none;
+        }
+
+        #div1 {
+            margin: 20px auto;
+            width: 500px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            border: 1px dashed #08BECE;
+            cursor: pointer;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+
+<script type="text/javascript">
+    function addZero(value) {
+        return value < 10 ? "0" + value : value;
+    }
+
+    //Date:是时间对象，它也是对象数据类型中的一个细分
+    //GMT:格林尼治时间(经纬度都是0)
+    //中国是GMT+0800 东八区
+    //美国是UTC-0500 西五区
+
+    //获取的是当前自己电脑的时间(获取客户端的时间) ->只能做为简单的参考但是不能作为重要的参照依据,比如:抢购倒计时是不能用这个时间来进行处理的
+    function getNow() {
+        var nowTime = new Date();
+        var year = nowTime.getFullYear();
+        var month = nowTime.getMonth() + 1;//0-11 -> 1-12月
+        var day = nowTime.getDate();
+        var week = nowTime.getDay();//0-6 -> 周日-周六
+        var hour = nowTime.getHours();
+        var minute = nowTime.getMinutes();
+        var second = nowTime.getSeconds();
+        var msSecond = nowTime.getMilliseconds();
+
+        var weekStr = "日一二三四五六";
+        return year + "年" + addZero(month) + "月" + addZero(day) + "日 星期" + weekStr[week] + " " + addZero(hour) + "时" + addZero(minute) + "分" + addZero(second) + "秒";
+    }
+
+    var oDiv = document.getElementById("div1");
+    oDiv.innerHTML = getNow();
+
+    window.setInterval(function () {
+        oDiv.innerHTML = getNow();
+    }, 1000);
+</script>
+</body>
+</html>

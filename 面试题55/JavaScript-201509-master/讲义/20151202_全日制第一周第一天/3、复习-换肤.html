@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #ul1 {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 0 5px 5px;
+            width: 175px;
+            overflow: hidden;
+            background: #ddd;
+        }
+
+        #ul1 li {
+            float: left;
+            margin-right: 5px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+
+    </style>
+</head>
+<body>
+<ul id="ul1">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+
+<script type="text/javascript">
+    var ary = ["#ffe470", "#08BECE", "#ffeedd", "cornflowerblue", "darkgoldenrod"];
+    var oLis = document.getElementById("ul1").getElementsByTagName("li");
+    for (var i = 0; i < oLis.length; i++) {
+        oLis[i].style.backgroundColor = ary[i];
+
+        oLis[i].index = i;
+        oLis[i].onclick = function () {
+            document.body.style.backgroundColor = ary[this.index];
+        };
+    }
+</script>
+</body>
+</html>

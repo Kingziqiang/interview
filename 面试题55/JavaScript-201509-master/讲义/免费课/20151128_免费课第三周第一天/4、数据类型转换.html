@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //JS中的数据类型转换非常的混乱,一个类型可能在不同的语句中转换的规则也不一样,我们千万不要混在一起记忆
+
+    //1、将其他的数据类型转换为number类型
+    //Number() / parseInt / parseFloat / 在数学运算中(+、-、*、/)
+    //1)布尔类型中的 true->1 false->0
+    //2)字符串中的 ""->0 "12"->12 "aa"->NaN ...
+    //3)null->0    例如:12+null=12 但是12+undefined=NaN
+    //4)[]->0 []先转换为"",然后在变为数字0
+
+    //2、将其他数据类型转换为布尔类型
+    // ! / !! / 在条件中的
+    //1)只有 0、NaN、""、null、undefined 这五个值转换为布尔类型是false,其余的都是true
+    //![]->false
+    //!!"null"->true
+    //!!1->true
+    //!!2->true
+    //    if ("3px" * 3) {//"3px" * 3 -> NaN 条件不成立
+    //        console.log("ok");
+    //    }
+    //    if("3px"+3){//"3px" + 3 -> "3px3" 条件成立
+    //        console.log("ok");
+    //    }
+    //    if(oDiv){//页面中没有这个元素的结果是null,这个条件的意思判断的是元素是否存在
+    //        console.log("ok");
+    //    }
+
+
+    //3、在==进行数据类型比较的时候,遇到左右两边的值的数据类型不一样,浏览器会默认转换成一样的
+    //"12"==12 -> Number("12")==12 字符串==数字是字符串转换为数字
+    //转换规律：
+    // 对象==对象 比较的内存空间,内存空间不一样就不相等 例如：[]==[] ->false
+    // 对象==字符串 对象先转换为字符串(toString) 例如:[]=="" ->true
+    // 对象==布尔 两个都转换为数字,对象->字符串->数字 例如:
+    //    []==true -> false  //[]->0 true->1 0==1
+    //    []==false -> true  //[]->0 false->0 0==0
+    //    ![]==false -> true //![]->false  false==false
+    //对象==数字 对象转换为数字 例如:[]==1 ->false
+    //字符串==布尔 两边都转换为数字
+    //字符串==数字 字符串转换为数字
+    //布尔==数字 布尔转换为数字 例如：true==2 ->false
+    //null==undefined ->true  null===undefined ->false  null和undefined和其他任何的数据类型都不相等
+    //NaN和任何值都不相等,因为和自己都不相等 NaN==NaN ->false
+
+
+
+
+</script>
+</body>
+</html>

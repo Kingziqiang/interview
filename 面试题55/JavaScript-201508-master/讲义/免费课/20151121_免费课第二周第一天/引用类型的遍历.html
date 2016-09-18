@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    var obj  = {"name":"lily",age:18,gender:true,"width":"100px",fn:function(){},arr:[1,2,3],ele:document.body,0:"aa",1:"bb",2:"cc"}
+    //for in 可以把每个属性和值都打印出来
+
+    for(var attr in  obj){  //var attr这边attr表示一个变量,变化的属性
+//        obj.attr  //错误
+//        obj["attr"]  //就表示具体的某一个属性  错误
+//        obj['attr'] //错误
+//        obj{attr}//错误
+//        1.attr -->"name"
+//        2.attr -->age
+      console.log("属性:"+attr+"属性值"+obj[attr]);
+        //如果属性是数字的话,就先把数字遍历出来,再把其他字符串遍历出来
+    }
+</script>
+</body>
+</html>

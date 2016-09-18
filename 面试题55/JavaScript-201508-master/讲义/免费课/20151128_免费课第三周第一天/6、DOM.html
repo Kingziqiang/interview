@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="div1">
+    <ul>
+        <li name="box"></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <div>
+        <ul name="box">
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    //DOM:document object model 文档对象模型
+    // -> DOM相当于我们的家庭族谱,是用来描述节点和节点之间关系的
+    // -> DOM中还提供了给我们很多的属性和方法用来操作这些节点(获取、修改、增加、删除)
+
+    //1、获取
+    //1)document.getElementById("元素的ID") 同过元素的ID来获取这个元素对象
+    //对于这个方法来说它的上下文只能是document,因为一个页面中理论上ID和我们的身份证一样是唯一的
+    //如果说ID重复了,我们获取的永远是第一个
+    //a、在IE6/7中是不区分元素ID的大小写的
+    //b、在IE6/7中会把表单元素的name属性当做ID来用
+    //例如：<input name="tab/> <div id="tab"></div> 在IE6/7中获取的是第一个文本框 ->我们在项目中不要以大小写来区分不同的ID，也不要把表单元素的name和其他元素的ID写成同一个值
+
+    //2)context.getElementsByTagName("标签名") 通过元素的标签名获取一组元素集合(HTMLCollection),获取的集合也是一个类数组
+    //这个方法的上下文是可以自己指定的
+    //通过这个方法获取的子子孙孙辈分所有叫做这个标签名的
+
+    //3)document.getElementsByName("xxx") 把所有name属性的值为xxx的标签都获取到
+    //这个方法的上下文也只能是document
+    //在IE浏览器中,我们的这个方法只能操作表单元素(input...),只能把所有name=xxx的表单元素进行获取,而对于非表单元素是获取不到的 -> "这个方法一般只用来处理表单元素"
+    //console.log(document.getElementsByName("box").length);//在非IE下获取的是2,IE获取的是0
+
+    //4)context.getElementsByClassName("xxx") 在指定的上下文中，把所有class="xxx"的元素标签都获取到
+    //在IE6~8下兼容(不存在这个方法)
+    //由于我们写样式的时候大部分使用样式类名来操作,所以我们的这个方法非常的实用,我们正式课第三周会带领大家写一套兼容的方法来获取
+
+    //5)context.querySelector/context.querySelectorAll 通过各种选择器来获取我们的元素标签 querySelector获取一个(如果有多个获取的是第一个) querySelectorAll获取的是一个类数组集合
+    //在IE6~8下兼容(不存在这个方法) ->我们一般用这两个方法在移动端进行开发
+    //它使用的选择器和我们的css常用的选择器保持一致
+    //    document.querySelectorAll("div");//把当前页面作用所有的div都获取到
+    //    document.querySelectorAll("#tab li");//获取#tab下所有的li
+    //    document.querySelectorAll(".w1")
+    //    document.querySelectorAll("div[name=box]")
+
+    //6)document.body 获取整个body对象
+    //7)document.documentElement 获取整个HTML对象
+    //兼容所有的浏览器的，获取当前页面的宽度(curW)和高度(curH)
+    //var curW = document.documentElement.clientWidth || document.body.clientWidth;
+    //var curH = document.documentElement.clientHeight || document.body.clientHeight;
+</script>
+</body>
+</html>

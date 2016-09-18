@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<ul id="list">
+    <!--免费课-->
+    <li>1、数据类型(number、string、object、boolean、function)、操作语句、选项卡、99乘法表</li>
+    <li>2、数组、Math、DOM、Date、String、定时器</li>
+    <!--正式课-->
+    <li>1、预解释、作用域、闭包、this、单例模式、工厂模式、构造函数模式、原型链模式、继承、数组高级</li>
+    <li>2、call和apply、表格排序、原型链深入、正则基本语法、正则的捕获、正则的真实应用、表单验证</li>
+    <li>3、DOM盒子模型13个属性和2个方法、异步编程思想、图片延迟加载、DOM库(20几个方法)、选项卡高级</li>
+    <li>4、基础动画实现的原理、buffer动画、tween算法动画库、轮播图、jQuery的源码解析和实现原理</li>
+    <li>5、jQuery实战应用、DOM2级事件、事件对象、一些经典的案例、事件库、拖拽</li>
+    <li>6、高级事件库、观察者模式、高级拖拽</li>
+    <li>7、Ajax、nodejs、jsonp跨域</li>
+    <li>8、移动端综合实战开发</li>
+    <li>9、就业指导、移动端基础和高级知识、实战经验、js高级编程技巧</li>
+</ul>
+
+</body>
+</html>
+<script>
+    var oUl = document.getElementById("list");//得到是一个元素
+    var oLis = oUl.getElementsByTagName('li');
+    /*需求:四种颜色交替显示:purple,pink,green,orange*/
+    for(var i = 0;i<oLis.length;++i){
+        //i 从0 到 10
+        //break一定要写,不写的话会忽视条件判断,继续往下执行,只要遇到break
+        switch (i%4){   //i%4===0  ===绝对相等,类型也要相等
+            case 0 :
+                oLis[i].style.backgroundColor="purple";
+                break;
+            case 1 :
+                oLis[i].style.backgroundColor="pink";
+                break;
+            case 2 :
+                oLis[i].style.backgroundColor="green";
+                break;
+            case 3 :
+                oLis[i].style.backgroundColor="orange";
+                break;
+            default :
+                oLis[i].style.backgroundColor="red";
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+</script>

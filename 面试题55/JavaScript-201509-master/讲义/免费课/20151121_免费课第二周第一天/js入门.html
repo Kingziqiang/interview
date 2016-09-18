@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        #div1{
+            color: yellow;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="div1"  >非常高兴跟大家见面!</div>
+<!--
+1.ECMAscript 最核心部分 --js基本语法,变量,数据类型,控制语句,对象等核心内容
+2.DOM (document object model )文档对象模型 --提供了js操作页面内容的方法和接口
+3.BOM(browser object model )浏览器对象模型--提供了与浏览器交互的方法和接口
+-->
+<!--内嵌式-->
+<!--<script>
+    console.log('我是写在这的');//是用来调试用的,在控制台里面显示
+    alert("将内容在页面弹出")//也是调试用的
+    document.write('在浏览器窗口部分显示');//一般不怎么用
+</script>-->
+<!--外链式-->
+<!--<script src="index.js"></script>-->
+
+<script>
+    window.document.getElementById('div1');
+    document.getElementById('div1');
+    //window表示浏览器  在页面打开的时候会提供一个供js代码提供一个执行的全局环境,就称为全局作用域,window就是顶级作用域
+    //document表示网页的内容(文档),它是抽象的,就表示浏览器打开的一个网页
+    /*
+    * get :获得
+    * Element:元素(指的标签)
+    * By :通过
+    * Id :id名
+    * */
+
+    //window和document都是浏览器你的内置对象(天生就有的,不需要定义直接拿过来用就可以了)
+    window.document.documentElement //html元素
+    document.documentElement
+    window.document.body  //body元素
+    document.body
+    //.这个点就表示的.表示从属的关系
+
+    /*js控制页面元素的步骤
+    * 1.首先获取到这个元素
+    * 2.然后再进行内容样式的控制
+    * */
+    /*innerHTML和innerText都可以获取到内容或者改变内容,但是
+    * innerHTML可以识别标签,并且兼容所有浏览器
+    * innerText没法识别标签,firefox不支持
+    * */
+    document.getElementById('div1').style.color="red";
+    document.getElementById('div1').style.fontSize="20px";
+    document.getElementById('div1').innerHTML = "<a  href='http://www.baidu.com'>欢迎大家来到珠峰培训</a>";
+    document.getElementById('div1').innerHTML = "hello word";
+    document.getElementById('div1').style.backgroundColor='red';
+
+//    document.getElementById('div1').innerText = "<a  href='http://www.baidu.com'>欢迎大家来到珠峰培训</a>";
+    //这样的写法仅仅是用来控制行内式,行内样式的优先级是最高
+
+    /*什么是js表达式?
+    * 可以完成一个独立的功能,一个独立的脚本就叫作js表达式
+    * 如果;不写呢,也不会报错,但是有些情况是报错的,这些在以后的学习中都会慢慢的接触到,所以现在你就按照标准的来写就可以了
+    * */
+
+</script>
+</body>
+</html>

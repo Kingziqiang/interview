@@ -1,0 +1,95 @@
+1、复习的ECMAScript中的基础知识
+1)JS中的数据类型包含：基本数据类型和引用数据类型，基本数据类型中有 number、string、boolean、null、undefined 引用数据类型中有 object、function 而常用到的数组、正则、对象、时间...都是object对象数据类型的
+  区别：基本数据类型又称之为值类型,是直接的操作值的；引用数据类型操作的是对内存空间的引用地址；
+  var num1=12; var num2=num1; num2++;  num1->12
+
+  var ary1=[100,200];  ->ary1=xxxfff000
+  var ary2=ary1; ->ary2=xxxfff000
+  ary2[1]=1000; ->ary2通过地址找到内存空间,然后把索引为1的那一项的值修改为1000
+  ary1[1] ->1000
+
+2)JS检测数据类型的方法:
+a、typeof value ->检测value值的数据类型,返回的首先是一个字符串,其次才包含了对应的数据类型内容,例如:"number"、"object"...
+   局限性:typeof null -> "object"  不能使用typeof区分对象里细分的那几个值,例如,没有办法通过typeof检测是数组还是正则,因为不管哪一个返回的都是“object”
+   typeof typeof typeof [12,23] -> "string"
+
+b、instanceof、constructor、Object.prototype.toString.call()
+
+3)isNaN(value) 检测value是否是有效的数字,是有效数字返回false,不是有效数字返回的是true
+
+4)接收函数执行传递的值:设置形参变量、arguments函数内置的参数集合(类数组)
+
+5)将其他的数据类型转换为数字:Number()、parseInt()、parseFloat()
+
+
+2、复习的DOM中的基础知识
+1)有一个div:<div class=”w” name=”h” id=”div1”></div>我想获取这"一个"div你有几种解决办法(不考虑兼容)
+  document.getElementById("div1")
+  document.getElementsByClassName("w")[0]
+  document.getElementsByName("h")[0]
+  document.getElementsByTagName("div")[0]
+  document.querySelector("#div1")
+  document.querySelector(".w")
+  document.querySelector("div")
+  document.querySelector("div[name='h']")
+  ...
+
+2)屏幕宽度 document.documentElement.clientWidth||document.body.clientWidth
+  屏幕宽度 document.documentElement.clientHeight||document.body.clientHeight
+
+3)获取上一个哥哥"元素"节点
+  function prev(curEle){
+    //判断是否兼容previousElementSibling,兼容直接的使用这个属性获取,不兼容自己在编写while循环获取
+    if(curEle.previousElementSibling){
+       return curEle.previousElementSibling;
+    }
+    var pre=curEle.previousSibling;
+    while(pre && pre.nodeType!==1){
+        pre=pre.previousSibling;
+    }
+    return pre;
+  }
+
+4)var oDiv=document.createElement("div");
+  document.body.appendChild(oDiv);
+
+5)var oDiv2=oDiv.cloneNode(true);
+  document.body.insertBefore(oDiv2,oDiv);
+
+
+3、复习数组的基础知识
+1)删除最后一项: ary.pop()、ary.splice(ary.length-1,1)、ary.length--
+2)末尾增加元素: ary.push(100)、ary.splice(ary.length,0,100)、ary[ary.length]=100
+3)克隆: ary.slice()/ary.slice(0)、ary.concat()、ary.splice(0)
+4)排序: ary.sort(function(a,b){return a-b;});
+5)ary.slice(n-1,m-1+1) -> ary.slice(n-1,m)
+
+
+4、复习数据类型转换的规律
+[]==false -> 都转换为数字 0==0 -> true
+![]==false -> ![] -> false  false==false -> true
+[]==![] -> []==false -> 都转换为数字 0==0 -> true
+
+alert是把要输出的内容先转换为字符串然后在输出的
+
+答案:true、true、true、false、51、"false"、"true"、"ok"、""、true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

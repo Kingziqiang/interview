@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //    var jsPerson1 = {
+    //        name: "王小波",
+    //        age: 48,
+    //        writeJs: function () {
+    //            console.log("my name is " + this.name + ",i can write js 啦~~");
+    //        }
+    //    };
+    //
+    //    var jsPerson2 = {
+    //        name: "尹华芝",
+    //        age: 18,
+    //        writeJs: function () {
+    //            console.log("my name is " + this.name + ",i can write js 啦~~");
+    //        }
+    //    };
+
+    //单例模式虽然解决了分组的作用,但是不能实现批量的生产,属于手工作业模式->"工厂模式"
+    //把实现同一件事情的相同的代码放到一个函数中，以后如果在想实现这个功能，不需要从新的编写这些代码来了，只需要执行当前的函数即可-->"函数的封装" -->"低耦合高内聚":减少页面中的冗余代码,提高代码的重复利用率
+    function createJsPerson(name, age) {
+        var obj = {};
+        obj.name = name;
+        obj.age = age;
+        obj.writeJs = function () {
+            console.log("my name is " + this.name + ",i can write js 啦~~");
+        };
+        return obj;
+    }
+    var p1 = createJsPerson("王小波", 48);
+    p1.writeJs();
+
+    var p2 = createJsPerson("尹华芝", 18);
+    p2.writeJs();
+
+    //JS是一门轻量级的脚本"编程语言"(HTML+CSS不属于编程语言,属于标记语言)
+    //.net C# php Java c c++ vb vf object-c ....
+    //所有的编程语言都是面向对象开发的->类的继承、封装、多态
+    //继承:子类继承父类中的属性和方法
+    //多态:当前方法的多种形态->后台语言中:多态包含重载和重写
+    //    public void sum(int num1, int num2){
+    //
+    //    }
+    //    public void sum(String num1, int num2){
+    //
+    //    }
+    //    sum("1")
+
+    //    function sum(num1,num2){
+    //
+    //    }
+    //    function sum(num1){
+    //
+    //    }
+    //    sum(1);
+    //    sum(1,2);
+
+    //“JS中不存在重载”,方法名一样的话,后面的会把前面的覆盖掉,最后只保留一个
+    //"JS中有一个操作类似重载但是不是重载":我们可以根据传递参数的不一样的,实现不同的功能
+    function sum(num) {
+        if (typeof num === "undefined") {
+            return 0;
+        }
+        return num;
+    }
+    sum(100);
+    sum();
+
+    //重写：子类重写父类的方法
+</script>
+</body>
+</html>

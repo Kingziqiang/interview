@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //1、如何区分私有变量和全局变量?
+    //1)在全局作用域下声明(预解释的时候)的变量是全局变量;
+    //2)在"私有作用域中声明的变量"和"函数的形参"都是私有的变量;
+    //在私有作用域中,我们代码执行的时候遇到了一个变量,首先我们需要确定它是否为私有的变量,如果是私有的变量,那么和外面的没有任何的关系；如果不是私有的,则往当前作用域的上级作用域进行查找,如果上级作用域也没有则继续查找,一直找到window为止...(作用域链)
+
+    //2、当函数执行的时候(直接目的:让函数体中的代码执行),首先会形成一个新的私有的作用域,然后按照如下的步骤执行:
+    //1)如果有形参,先给形参赋值
+    //2)进行私有作用域中的预解释
+    //3)私有作用域中的代码从上到下执行
+    //...
+    //函数形成一个新的私有的作用域保护了里面的私有变量不受外界的干扰(外面修改不了私有的,私有的也修改不了外面的)-->"闭包"
+
+    //    console.log(total);//->undefined
+    //    var total = 0;
+    //    function fn(num1, num2) {
+    //        console.log(total);//->undefined
+    //        var total = num1 + num2;
+    //        console.log(total);//->300
+    //    }
+    //    fn(100, 200);
+    //    console.log(total);//->0
+
+
+    console.log(total);//->undefined
+    var total = 0;
+    function fn(num1, num2) {
+        console.log(total);//->total不是私有的,找全局下的total,也就是在这里出现的所有的total其实应该都是全局的 ->0
+        total = num1 + num2;//->全局的total=300
+        console.log(total);//->300
+    }
+    fn(100, 200);
+    console.log(total);//->300
+</script>
+</body>
+</html>

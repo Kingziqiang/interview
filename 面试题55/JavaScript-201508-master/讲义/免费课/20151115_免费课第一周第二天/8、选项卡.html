@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, div, ul, li {
+            margin: 0;
+            padding: 0;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+            font-size: 14px;
+            -webkit-user-select: none; /*禁止点击的时候选中文字*/
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        #tab {
+            margin: 20px auto;
+            width: 500px;
+        }
+
+        #tab ul {
+            position: relative;
+            top: 1px;
+        }
+
+        #tab ul li {
+            float: left;
+            margin-right: 10px;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border: 1px solid #08BECE;
+            cursor: pointer;
+        }
+
+        #tab ul li.select {
+            background: #ffe470;
+            border-bottom-color: #ffe470;
+        }
+
+        #tab div {
+            display: none;
+            clear: both; /*清除上面li的浮动对自己的影响*/
+            height: 150px;
+            line-height: 150px;
+            text-align: center;
+            border: 1px solid #08BECE;
+            background: #ffe470;
+        }
+
+        #tab div.select {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="tab">
+    <ul>
+        <li class="select">电影</li>
+        <li>动漫</li>
+        <li>综艺</li>
+    </ul>
+    <div class="select">007、幽灵档案、指环王</div>
+    <div>海贼王、火影、葫芦娃</div>
+    <div>奔跑吧兄弟、爸爸去哪、快乐大本营</div>
+</div>
+
+<script type="text/javascript">
+    //选项卡实现的原理:点击每一个页卡,实现对应内容的切换->给每一个li绑定点击事件,当点击的时候:
+    //1)首先让所有的li和对应的div的class都清空
+    //2)在让当前点击的这个li和对应的div的class="select"
+
+    //1、想要操作哪些元素,我们就先把这些元素都获取到
+    // ->操作的是#tab下的三个li和三个div
+    var oTab = document.getElementById("tab");
+    var oLis = oTab.getElementsByTagName("li");
+    var oDivs = oTab.getElementsByTagName("div");
+
+    //2、制定一个实现选项卡的功能
+    // ->1)首先让所有的li和对应的div的class都清空
+    // ->2)在让当前点击的这个li和对应的div的class="select"
+    function changeTab(nIndex) {
+        //1)首先让所有的li和对应的div的class都清空
+        for (var i = 0; i < oLis.length; i++) {
+            //oLis[i]->每一次循环获取当前的那个li
+            oLis[i].className = null;
+            oDivs[i].className = null;
+        }
+        //2)在让当前点击的这个li和对应的div的class="select"
+        //但是我们目前并不知道哪个是点击的,那么我们就定义一个形参变量nIndex(提供一个入口),当你点击执行这个方法的时候,把点击的那一个li的索引传进来即可-->nIndex当前点击li的索引
+        oLis[nIndex].className = "select";
+        oDivs[nIndex].className = "select";
+    }
+
+    //3、给每一个li绑定点击事件,在点击的时候执行changeTab这个方法,并且把当前点击的li的索引传递进来
+    //1)最笨的方式:一个个的给li绑定点击事件
+    //把function的定义部分当做一个值赋值给元素的点击事件,只有当我们手动点击这个元素的时候，这个function才会执行
+    //    oLis[0].onclick = function () {
+    //        changeTab(0);
+    //    };
+    //    oLis[1].onclick = function () {
+    //        changeTab(1);
+    //    };
+    //    oLis[2].onclick = function () {
+    //        changeTab(2);
+    //    };
+
+    //2)循环绑定的方式
+    //[错误的方式]
+    //    for (var i = 0; i < oLis.length; i++) {
+    //        oLis[i].onclick = function () {
+    //            changeTab(i);
+    //        }
+    //    }
+    //错误的原因:
+    //错误的在点击执行的时候，里面的i已经变为3来，而不是点击第一个是0，第二个是1..., why ?
+    //看图"选项卡"
+    //i=0 第一次循环 oLis[0].onclick=xxxfff000
+    //i=1 第二次循环 oLis[1].onclick=xxxfff111
+    //i=2 到三次循环 oLis[2].onclick=xxxfff222
+    //i=3 循环结束
+
+    //[解决办法]
+    //自定义属性模式:我们首先把每一个li的索引都存储到自己的一个自定义的属性上,当我们点击执行的时候，在把自己存储的那个索引拿出来用即可
+    //    for (var i = 0; i < oLis.length; i++) {
+    //        oLis[i].zhuFeng = i;//->把每一个li的索引存储到我们的zhuFeng这个自定义的属性上
+    //        oLis[i].onclick = function () {
+    //            //this->当前点击的这个li
+    //            changeTab(this.zhuFeng);
+    //        }
+    //    }
+
+    //[作用域闭包的方式]
+    //    for (var i = 0; i < oLis.length; i++) {
+    //        oLis[i].onclick = (function (i) {
+    //            return function () {
+    //                changeTab(i);
+    //            }
+    //        })(i);
+    //    }
+
+    for (var i = 0; i < oLis.length; i++) {
+        ~function (i) {
+            oLis[i].onclick = function () {
+                changeTab(i);
+            }
+        }(i);
+    }
+</script>
+</body>
+</html>

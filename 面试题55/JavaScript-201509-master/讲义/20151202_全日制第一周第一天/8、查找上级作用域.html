@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var total = 100;
+    function fn() {
+        var total = 10;
+        return function () {
+            console.log(total);
+        }
+    }
+    var f = fn();
+    f();
+    //输出的结果是 10 还是 100 ? 为什么 ?
+
+
+</script>
+</body>
+</html>

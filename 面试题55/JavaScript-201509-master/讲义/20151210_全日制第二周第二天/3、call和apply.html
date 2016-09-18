@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    function fn(num1, num2) {
+        console.log(this);
+    }
+    var ary = [];
+
+    //1、call ->改变方法中的this关键字
+    //作用:
+    //让"."前面的方法执行
+    //让方法中的this进行改变,变为第一个参数值
+
+    //语法:
+    // fn.call([this],parameter1,parameter2...)
+    // ->想让fn中的this是谁,第一个参数就传递谁(相反第一个参数值是什么,我们fn中的this就是谁)
+
+    //注意:
+    //在非严格模式下,第一个参数不传或者传递的是null/undefined,我们的this默认都是window，而其他的是啥,我们的this就是啥;
+    //在严格模式下,第一个参数不传默认的this是undefined,其他的传递啥,this就是啥;传递的是null,this就是null,传递的是undefined,this就是undefined...;
+    //fn(100, 200);//this->window num1=100 num2=200
+    //fn.call(100, 200);//this->100 num1=200 num2=undefined
+    //fn.call();//this->window  num1=undefined  num2=undefined
+    //fn.call(null);//this->window
+    //fn.call(undefined);//this->window
+
+    //fn.call(ary, 100, 200);//this->ary num1=100 num2=200
+
+
+    //2、apply ->也是用来改变this关键字的
+    //作用:
+    //让apply中"."前面的方法执行
+    //并且让方法中的this变为第一个参数的值
+
+    //语法:
+    // fn.apply([this],[parameter1,parameter2...])
+    // ->我们发现它的语法功能都和call非常的相似,但是它们有什么区别呢?
+    //call和apply有且只有一个区别，就是在传递函数的参数值的时候，call是一个个的分别传递值，而apply语法要求，需要把传递的值放到一个数组中一起传递给函数，但是虽然是这样写，也相当于分别的给形参赋值
+    //fn.call(null, 100, 200);//this->window num1=100,num2=200
+    //fn.apply(null, [100, 200]);//this->window num1=100,num2=200
+
+
+    //    function sum(ary1, ary2) {
+    //        //this->"珠峰"
+    //        console.log(ary1, ary2);
+    //    }
+    //    var a = [1];
+    //    var b = [2];
+    //    sum.call("珠峰", a, b);
+    //    sum.apply("珠峰", [a, b]);//[[1],[2]]
+</script>
+</body>
+</html>

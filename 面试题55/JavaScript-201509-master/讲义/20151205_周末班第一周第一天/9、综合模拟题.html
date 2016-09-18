@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var num = 20;
+    var obj = {
+        num: 30,
+        fn: (function (num) {
+            this.num *= 3;
+            num += 15;
+            var num = 45;
+            return function () {
+                this.num *= 4;
+                num += 20;
+                console.log(num);
+            }
+        })(num)//->把全局变量num的值20赋值给了自执行函数的形参,而不是obj下的30,如果想是obj下的30,我们需要写obj.num
+    };
+    var fn = obj.fn;
+    fn();//->65
+    obj.fn();//->85
+    console.log(window.num, obj.num);//->240、120
+</script>
+</body>
+</html>

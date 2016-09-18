@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //使用一次循环来完成我们的数组去重
+    //思想:
+    //var obj={};
+    //把数组中的每一项都当做一个对象的属性名和属性值进行存储 ->
+    //{1:1}
+    //{1:1,2:2}
+    //{1:1,2:2,3:3}
+    //接下来需要存储的是2,看原来的对象中是否存在这一项,不存在继续存储,存在的话说明数组中的这一项在之前出现过(这一项重复了),我们把这一项在数组中删除即可...
+    //如何区分对象中是否包含这个属性名2 -> obj[2]==2 获取obj[2]对应的属性值,如果有的话肯定也是2,如果没有是undefined,我们获取到属性值之后和2进行比较一下,如果相等说明对象中有这个属性
+
+    //优化前的
+    //    var ary = [1, 2, 3, 2, 3, 2, 3, 1, 2, 3];
+    //    var obj = {};
+    //    for (var i = 0; i < ary.length; i++) {
+    //        var cur = ary[i];
+    //        if (obj[cur] == cur) {
+    //            ary.splice(i, 1);
+    //            //"数组塌陷":使用splice删除当前项,后面每一项的索引都会往前提一位,我们删除后如果在i++,这样的话会空开一位比较不了
+    //            i--;
+    //            continue;
+    //        }
+    //        obj[cur] = cur;
+    //    }
+    //    obj = null;
+    //    console.log(ary);
+
+
+    //优化后的
+    //splice删除当前项后,后面每一项的索引都会重新的计算,如果后面有一百万项,是非常的消耗性能的->不能使用splice但是也可以把当前项删除掉?
+    //只把最后一项的值替换当前项,然后在把最后一项删除
+    //ary[ary.length-1] ->最后一项的值 ary.length-1是最后一项的索引
+    //ary.length--; ->删除最后一项
+    var ary = [1, 2, 3, 3, 3, 2, 3, 1, 2];
+    var obj = {};
+    for (var i = 0; i < ary.length; i++) {
+        var cur = ary[i];
+        if (obj[cur] == cur) {
+            ary[i] = ary[ary.length - 1];
+            ary.length--;
+            i--;
+            continue;
+        }
+        obj[cur] = cur;
+    }
+    obj = null;
+    console.log(ary);
+</script>
+</body>
+</html>

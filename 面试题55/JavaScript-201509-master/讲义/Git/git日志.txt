@@ -1,0 +1,47 @@
+1、初始化一个仓库  -> git init
+     $ cd /c  切换工作目录 change directory
+     $ pwd   输出当前工作目录 print working directory
+     $ ls        显示当前目录下面的文件
+     $ ls -a    显示当前目录下面的文件(包含隐藏文件)
+
+2、把本地文件添加到暂存区
+      git add example.html
+      git add -A  把工作区所有的变化全部提交到暂存区
+
+3、把暂存区的内容添加到历史区
+      git commit -m"提交说明" 
+      $ git log 查看历史
+      $ git status 查看工作区和暂存区的区别,查看暂存区和历史区的区别
+      红色表示工作区和暂存区的区别
+      绿色表示暂存区和历史区的区别
+
+4、添加远程仓库,此命令只需要执行一次
+     git remote add origin  git地址
+     
+     git remote -v 查看远程仓库的详细信息 
+     git remote rm 名字 删除远程仓库
+
+     把fork别人的仓库最新文件更新到本地
+     git remote add 名字  别人仓库git地址
+     git remote update 名字
+     git pull 名字 master  /  git rebase 名字 master  (不会变更到工作区)
+     
+5、从远程服务器上拉取代码
+     git pull origin master 
+
+     下载别人的仓库
+     git clone git地址
+
+6、把本地的代码推送到远程服服务器上.
+      git push origin master
+
+
+1)git reset --hard HEAD 当你本地做了修改,可以用这个命令取消掉所有的修改
+2)推送的时候本地至少有一个提交
+3)如果说远程仓库地址错了 git remote rm origin 
+4)每次修改都需要 add commit push
+
+
+
+
+

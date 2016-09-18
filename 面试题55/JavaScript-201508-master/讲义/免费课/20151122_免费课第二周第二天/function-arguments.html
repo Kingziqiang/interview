@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+ <!--
+ 每个方法都有两个内置对象:arguments和this
+ arguments是一个类数组,是一个对象类型的,它的作用是用来接收实参的,是参数的集合
+ -->
+ <script>
+     //callee   arguments.callee 指是函数本身,在后期学习递归调用的时候会用来
+     //length: 2  arguments.length 获得传进来参数的个数
+    //arguments 本身是一个参数的集合,以数字作为索引 arguments[0]获取到一个参数,arguments[1]就获取到第二个参数,以此类推
+//     var obj ={0:10,1:20}  obj[0]
+//    function sum(n1,n2){
+//        //console.dir(arguments);
+//        for(var i = 0;i<arguments.length;i++){
+//            console.log(arguments[i]);
+//        }
+////        for(var attr in arguments){
+////            console.log(arguments[attr]);
+////        }
+//
+//    }
+
+     function sum(n1,n2){//一旦你写了形参,如果没有给他赋值,它就是undefined
+//         arguments.length =2;
+//         console.log(n2);
+      // console.log(arguments.length);
+        var total = null;
+         if(arguments.length==1){//传了一个实参
+            total = n1;
+         }else if(arguments.length==2){//传了两个实参
+           total = n1+n2;
+         }
+         return total;
+     }
+    //console.log(sum()) ;
+     console.log(sum(10));
+     //console.log(sum(10,20));
+ </script>
+
+</body>
+</html>

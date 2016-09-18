@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var name = "china";
+    var age = 5000;
+    ~function (name, age) {
+        arguments[0] = "zhufeng";
+        age = age || this.age;
+        this.name = name;
+        console.log(name, age);
+    }(name);
+    console.log(name, age);
+
+
+    //    "use strict";//->使用严格模式
+    //    var name = "china";
+    //    var age = 5000;
+    //    ~function (name, age) {
+    //        arguments[0] = "zhufeng";
+    //        console.log(name);
+    //        name="peixun";
+    //        console.log(arguments[0]);
+    //    }(name);
+    //在JS非严格模式下(一般情况下都是非严格模式)，我们通过arguments修改参数的值会映射到形参变量上，例如上面这个题：arguments[0]="zhufeng"; 形参name的值也会跟着变为"zhufeng";同理name的值发生改变arguments[0]的值也会跟着改变(name和arguments[0]是紧紧的绑定到一起的)
+    //但是在JS严格模式下"use strict"，name和arguments[0]是独立分开的，互不影响
+</script>
+</body>
+</html>

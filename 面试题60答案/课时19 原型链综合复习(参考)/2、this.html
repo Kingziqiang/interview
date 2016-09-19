@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="div1"></div>
+<script type="text/javascript">
+    function Fn() {
+        this.x = 100;
+        this.getX = function () {
+            console.log(this.x);
+        }
+    }
+    Fn.prototype.getX = function () {
+        console.log(this.x);
+    };
+    Fn.prototype.setX = function (n) {
+        this.x = n;
+    };
+    var f1 = new Fn;
+
+    f1.getX();//this->f1,console.log(f1.x) 100
+    f1.__proto__.getX();//this->f1.__proto__,console.log(f1.__proto__.x) undefined
+
+    Fn.prototype.setX(300);//this->Fn.prototype,Fn.prototype.x = 300
+    f1.getX(); //100
+    f1.__proto__.getX(); //300
+
+    f1.setX(500);//this->f1,f1.x = 500 把私有的修改为500
+
+    f1.y = 300; //给f1本身增加一个私有的属性和f2没关系
+    f1.__proto__.y = 1000;//在原型上增加一个y=1000,f2也可以获取到这个y的值了
+
+    //1、看方法执行的时候,"."前面是谁,this就是谁
+    //2、把函数体中的this替换成分析的结果
+    //3、按照原型链的查找模式找到对应的值即可
+    //f1.getX();//->getX中的this是f1,console.log(f1.x)
+</script>
+</body>
+</html>

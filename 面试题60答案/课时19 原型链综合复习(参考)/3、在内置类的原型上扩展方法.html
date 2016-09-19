@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    var ary = [1, 2, 3, 2, 3, 2, 31, 2, 3, 4, 2, 3, 4, 1, 23];
+
+    //链式写法:执行完成某一个方法,不仅得到了想要的结果,而且返回值还需要是当前这个类的实例,只有这样才能一直链下去
+    //    ary.sort(function (a, b) {
+    //        return a - b;
+    //    }).reverse().slice(0,5).pop().push();//.push is not a function 因为pop执行完成的返回结果是删除的那个元素不是数组了
+    //    console.log(ary);
+
+    //基于内置类的原型扩展方法,我们需要注意的事项:我们自己编写的方法名最好加上特殊的前缀,防止把内置的方法覆盖掉
+    Array.prototype.myUnique = function unique() {
+        //this->ary 当前要操作的那个数组
+        var obj = {};
+        for (var i = 0; i < this.length; i++) {
+            var cur = this[i];
+            if (obj[cur] == cur) {
+                this[i] = this[this.length - 1];
+                this.length--;
+                i--;
+                continue;
+            }
+            obj[cur] = cur;
+        }
+        obj = null;
+
+        return this;//把去重后的数组返回,这样就可以实现链式写法了
+    };
+
+    ary.myUnique().sort(function (a, b) {
+        return a - b;
+    });//this->ary
+    console.log(ary);
+
+
+    //    Array.prototype.pop = function () {
+    //        //this->ary
+    //        this.length--;
+    //    };
+    //
+    //    ary.pop();//this->ary
+    //    console.log(ary);
+    //
+    //    ary.__proto__.pop();//this->ary.__proto__->Array.prototype
+    //    console.log(ary);
+</script>
+</body>
+</html>

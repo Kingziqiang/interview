@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题60答案</title>    
+</head>
+<body>
+	<h1>60 常用的六种继承方式？</h1>
+	<script type="text/javascript">	
+	    //1 原型继承
+	        /*原型继承：子类的原型指向父类的一个实例  父类的私有和公有方法都是子类的公有方法
+		    原型链问题1：问题来自包含引用类型值的原型，原先的实例属性变成了现在的原型属性，即父类的实例属性，变成子类的共享属性。
+		    原型链问题2：在创建子类型的实例时，不能向超类型的构造函数中传递参数。*/
+	    function A(){
+	        this.x = 100;
+	        this.y = 100;
+	    }
+	    A.prototype.getX = function (){}
+	    function B(){
+	        this.x = 100;
+	    }
+	    B.prototype = new A(); //B的原型重新赋值A的实例==>每个b实例都能通过自己的__proto__找到a上的所有的私有方法，并且还可以通过a.__proto__继续找到A.prototype上的所有属性 ==> A这个类上的方法相对于B都是公有方法
+	    B.prototype.constructor = B; //由于重新修改了B的原型导致默认原型上的constructor丢失，我们需要自己添加上
+	    var a = new A();
+	    var b = new B();
+	    console.log(a);
+	    console.log(b);
+	    console.log(b.y);
+
+
+	    //2  call继承
+	    //call继承  在子类构造函数中 父类.call(this)  父类的私有变成子类的私有
+	    function C(){
+	        this.x = 100; //d.x = 100
+	    }
+	    C.prototype.getX = function (){};
+	    function D(){
+	        C.call(this); //构造函数中的this就是当前实例  this ==> d     C.call(d);  ==> 把C中的this修改成d
+	    }
+	    var c = new C();
+	    var d = new D(); //
+	    console.dir(d); // d.x = 100
+
+
+	    //3 冒充对象继承
+	    //循环遍历父类实例，然后父类实例的私有方法全部拿过来添加给子类实例 ，如果不做hasOwnProperty判断那么就是把父类的公有的和私有的都拿过来当私有的
+	    function E(){
+	        this.x = 100;
+	        this.y = 200;
+	    }
+	    E.prototype.getX = function (){}
+	    function F(){
+	        var e = new E(); //e.x = 100;
+	        for(var attr in e){ //for in可以遍历到原型上的公有自定义属性
+	            //attr = x
+	            if(e.hasOwnProperty(attr)){ //如果这个判断不加，那么无论是公有的还是私有的都拿过来当私有的
+	                this[attr] = e[attr];//???  f['x'] = e['x'] ==> f.x = 100;
+	            }
+	            // e.propertyIsEnumerable() //可枚举属性  ==> 可以拿出来一一列举的属性
+	        }
+	    }
+	    var e = new E();
+	    var f = new F();
+	    console.dir(f);
+
+
+	    //4 混合继承
+	    //混合继承  原型+call  ==> 无论是私有的还是公有的都拿过来了 ==> 子类的原型上的多了一套父类私有属性,但是不会产生问题。因为子类的私有属性也有一套相同的通过call继承拿过来的
+	    function G(){
+	        this.x = 100;
+	    }
+	    G.prototype.getX = function(){};
+	    function H(){
+	        G.call(this);
+	    }
+	    H.prototype = new G();
+	    H.prototype.constructor = H;
+	    var g = new G();
+	    var h = new H();
+
+
+	    //5 中间件继承
+	    //中间件继承  M.prototype.__proto__ = K.prototype;  把父类的公有的当作子类的公有的
+	    function K(){
+	        this.x = 100;
+	    }
+	    K.prototype.getX = function (){};
+	    function M(){
+	    }
+	    M.prototype.__proto__ = K.prototype; //本来应该是直接指向Object.prototype。从K的原型上的__proto__也可以到Object.prototype==> 在K.prototype上停留了下，K.prototype就是一个中间件  父类的公有当作子类的公有
+	    var k = new K();
+	    console.log(k.x);//
+	    var m = new M();
+	    console.log(k.x);//
+
+	    //6 寄生混合式继承
+	    //寄生组合式继承  Object.create(obj)方法  ==> 是把obj当作别人家的原型  不兼容
+	    /*优点：
+		只调用一次SuperType构造函数，因此避免了在SubType.prototype上面创建不必要的多余的属性。
+		原型链保持不变，因此能正常使用instanceof和isPrototypeOf()。
+		YUI的YAHOO.lang.extend()方法采用了这种继承。*/
+	    //var obj1 = Object.create(o);
+	    function myCreate(o){
+	        function Fn(){};
+	        Fn.prototype = o;
+	        return new Fn();
+	    }
+	    function N(){
+	    }
+	    function P(){
+	        N.call(this);
+	    }
+	    P.prototype = myCreate(N.prototype); //这个函数运行完的返回结果 ==> 留下一个实例,这个实例的原型是传来的参数
+	    console.log(obj);
+		</script>
+</body>
+</html>

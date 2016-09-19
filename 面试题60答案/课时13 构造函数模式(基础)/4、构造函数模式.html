@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //    function createJsPerson(name, age) {
+    //        var obj = {};
+    //        obj.name = name;
+    //        obj.age = age;
+    //        obj.writeJs = function () {
+    //            console.log("my name is " + this.name + ",i can write js 啦!!");
+    //        };
+    //        return obj;
+    //    }
+    //    var p1 = createJsPerson("尹华芝", 18);
+    //    p1.writeJs();
+
+    //构造函数模式的目的就是为了创建一个自定义类,并且创建这个类的实例
+    function CreateJsPerson(name, age) {
+        //浏览器默认创建的对象就是我们的实例p1 -> this
+        this.name = name;//->p1.name=name
+        this.age = age;
+        this.writeJs = function () {
+            console.log("my name is " + this.name + ",i can write js 啦!!");
+        };
+        //浏览器在把创建的实例默认的进行返回
+    }
+    var p1 = new CreateJsPerson("尹华芝", 18);//CreateJsPerson->this p1
+    p1.writeJs();//writeJs->this p1
+
+    //    var res = CreateJsPerson("珠峰", 7);//这样写不是构造函数模式执行而是普通的函数执行 由于没有写return所以res=undefined  并且CreateJsPerson这个方法中的this是window
+    //    console.log(res);
+
+    var p2 = new CreateJsPerson("王小波", 48);
+    p2.writeJs();
+
+
+    //构造函数模式和工厂模式的区别?
+    //1、执行的时候
+    //普通函数执行->createJsPerson()
+    //构造函数模式->new CreateJsPerson()  通过new执行后,我们的CreateJsPerson就是一个类了
+    //而函数执行的返回值(p1)就是CreateJsPerson这个类的一个实例
+
+    //2、在函数代码执行的时候
+    //相同:都是形成一个私有的作用域,然后 形参赋值->预解释->代码从上到下执行 (类和普通函数一样,它也有普通的一面)
+    //不同:在代码执行之前,不用自己在手动的创建obj对象了,浏览器会默认的创建一个对象数据类型的值(这个对象其实就是我们当前类的一个实例)
+    //接下来代码从上到下执行，以当前的实例为执行的主体(this代表的就是当前的实例),然后分别的把属性名和属性值赋值给当前的实例
+    //最后浏览器会默认的把创建的实例返回
+
+
+    //创建一个数组:
+    //var ary = [];//字面量方式
+    //var ary = new Array();//实例创建的方式->构造函数模式执行的方式
+    //不管哪一种方式ary都是Array这个类的一个实例
+
+
+    //1、
+    //JS中所有的类都是函数数据类型的,它通过new执行变成了一个类,但是它本身也是一个普通的函数
+    //JS中所有的实例都是对象数据类型的
+
+    //2、
+    //在构造函数模式中,类中(函数体中)出现的this.xxx=xxx中的this是当前类的一个实例
+
+    //3、
+    //p1和p2都是CreateJsPerson这个类的实例,所以都拥有writeJs这个方法,但是不同实例之间的方法是不一样的
+    //在类中给实例增加的属性(this.xxx=xxx)属于当前实例的私有的属性,实例和实例之间是单独的个体,所以私有的属性之间是不相等的
+    console.log(p1.writeJs === p2.writeJs);//->false
+
+</script>
+</body>
+</html>

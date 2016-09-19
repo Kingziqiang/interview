@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    function Fn() {
+        this.x = 100;
+    }
+    var pro = Fn.prototype;
+    pro.a = function () {
+
+    };
+
+    //如果之前原型上存在一些方法的话,我们现在新创建的这个对象会把之前写的那些方法都给覆盖掉；所以浏览器内置类是禁止自己创建一个新对象来扩展原型上方法的,防止我们Array.prototype={}把内置的方法都干没了
+
+    //自己创建的对象中不会天生自带constructor，所以导致了我们f.constructor的结果是Object而不是我们认为的Fn了
+
+
+    Fn.prototype = {
+        constructor:Fn,
+        b: function () {
+
+        }
+    };
+    var f = new Fn;
+
+
+</script>
+</body>
+</html>

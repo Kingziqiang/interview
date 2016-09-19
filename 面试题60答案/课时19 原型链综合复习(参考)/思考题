@@ -1,0 +1,15 @@
+1、基于Number内置类扩展两个方法:plus、minus
+  (5).plus(3).minus(2) 5+3-2=6
+
+2、slice这个方法实现的非常强大，我们自己写一份mySlice实现和slice一模一样的功能(数组中现有的方法一个都不能用)
+
+   slice(n,m)
+   slice(n) slice(0)
+   slice()
+   n和m是负数
+   n>m
+   n或者m超出了整个数组的范围
+   ...
+
+
+

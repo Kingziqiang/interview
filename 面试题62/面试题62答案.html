@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题62案</title>    
+</head>
+<body>
+	<h1>62 如何批量在自定义类的原型上设置属性和方法？同时获取公有属性和私有属性的方法、只获取私有属性的方法、只获取公有属性的方法？内置类原型上的属性和方法能否被修改，如何基于原有的内置类增加方法？对象如何调动内置类的自带方法？画一个原型链继承图（包含Object和Function原型之间的关系）？通过”构造函数名.prototype.属性名”、在构造函数体内部通过”this.属性名”、通过”实例.属性名”或者”var 实例={属性名:属性值}”三种方式分别添加的属性是公有属性还是私有属性，谁可以访问？</h1>
+	<pre>	
+一、如何批量在自定义类的原型上设置属性和方法    
+    //只有浏览器天生给Fn.prototype开辟的堆内存里面才有constructor,而我们自己开辟的这个堆内存没有这个属性,这样constructor指向就不在是Fn而是Object了
+   //Fn.prototype={};
+   //console.log(f.constructor);//->没做任何处理之前 Object
+   var pro = Fn.prototype;//在创建新的之前，把原来的保存下来
+    Fn.prototype = {
+        constructor: Fn,//手动添加constructor属性，指向当前类本身
+        //批量设置属性
+        name:"cxh"
+        getName: function () {
+            console.log(name);
+        },
+        setName: function (_name) {
+            name=_name;
+        },
+        //此方法的功能是将原来原型的属性逐个添加到新原型上
+        recover: function () {
+            //this-->Fn.prototype
+            for (var key in pro) {
+                this[key] = pro[key];
+            }
+        }
+    };
+    Fn.prototype.recover();//新的创建完成后，我们在把原来的一个个的添加到新的里面
+     
+二、同时获取公有属性和私有属性的方式、只获取私有属性的方法、只获取公有属性的方法
+    1 通过in关键字同时获取公有属性和私有属性
+      in既可以检测私有的属性，也可以检测公有的属性。
+      <script type="text/javascript">      		
+	        function Test(){
+	            this.cons="构造函数内的私有属性";	            
+	        }	       
+	        Test.prototype.pro = "原型上的公有属性";
+	        var obj = new Test();
+	        obj.ins = "实例上的私有属性";	      	
+			for( var key in obj ) {
+			     console.log( key ); // cons ins pro
+			     //console.log( obj[key] ); //"构造函数内的私有属性" "实例上的私有属性" "原型上的公有属性" 
+			}
+	        console.log("cons" in obj);  //true
+	        console.log("pro" in obj);// true
+	        console.log("ins" in obj);//true
+      </script>
+    2 hasOwnProperty只获取私有属性
+       <script type="text/javascript">      		
+	        function Test(){
+	            this.cons="构造函数内的私有属性";	            
+	        }	       
+	        Test.prototype.pro = "原型上的公有属性";
+	        var obj = new Test();
+	        obj.ins = "实例上的私有属性";				 
+	        console.log(obj.hasOwnProperty("cons"));  //true，hasOwnProperty可以访问构造函数上的私又属性
+	        console.log(obj.hasOwnProperty("pro"));// false,hasOwnProperty无法访问原型上的公有属性
+	        console.log(obj.hasOwnProperty("ins"));//true，hasOwnProperty可以访问实例上的私有属性
+       </script>
+    3 没有只获取公有属性的内置方法
+      写一个方法hasPubProperty用来检测某一个属性attr是否为某个对象的公有属性
+      <script type="text/javascript">
+      		Object.prototype.hasPubProperty=function(attr) {
+		        return (attr in this) && !(this.hasOwnProperty(attr));
+		    }
+		     function Test(){
+	            this.cons="构造函数内的私有属性";	            
+	        }	       
+	        Test.prototype.pro = "原型上的公有属性";
+	        var obj = new Test();
+	        obj.ins = "实例上的私有属性";				 
+	        console.log(obj.hasPubProperty("cons"));  //false，hasPubProperty不能访问构造函数内的私有属性
+	        console.log(obj.hasPubProperty("pro"));// true,hasPubProperty只能访问原型上的公有属性
+	        console.log(obj.hasPubProperty("ins"));//false，hasPubProperty不能访问实例上的私有属性
+      </script>
+
+
+三、内置类原型上的属性和方法能否被修改，如何基于原有的内置类增加方法
+    1 对于内置类的原型，内置方法可以被修改, 但原型本身不能被修改。
+      1.1 内置方法可以被修改(类名.prototye.属性名可以被重新赋值)
+          <script type="text/javascript">
+          		 var obj = {name:"cxh"};
+			      console.log(obj.toString());//"[object Object]"，调用Object原型上默认的toString()方法
+			      Object.prototype.toString = function(){
+			      		return "god";
+			      }
+			      console.log(obj.toString());//"god"，调用修改后的toString()方法
+          </script>
+     1.2  原型本身不能被修改(类名.prototype不能被重新赋值)
+          <script type="text/javascript">
+                var obj = {name:"cxh"};
+			    console.log(obj.constructor);//function Object() { [native code] }，Object.prototype.constructor指向Object本身
+          		Object.prototype = {
+          			constructor:Array,
+                }
+                console.log(obj.constructor);//function Object() { [native code] }，Object.prototype的值修改失败，依然是原来的值 
+          </script>
+     1.3 给予原有的内置类增加方法，只需要通过"内置类.prototype.方法名"
+         给Object类的原型添加一个获取公有属性的方法，方便可以通过"对象名.方法名()"调用方法
+         <script type="text/javascript">
+	      		Object.prototype.hasPubProperty=function(attr) {//在内置类Object的原型上添加方法
+			        return (attr in this) && !(this.hasOwnProperty(attr));
+			    }
+			     function Test(){
+		            this.cons="构造函数内的私有属性";	            
+		        }	       
+		        Test.prototype.pro = "原型上的公有属性";
+		        var obj = new Test();
+		        obj.ins = "实例上的私有属性";				 
+		        console.log(obj.hasPubProperty("cons"));  //false，hasPubProperty不能访问构造函数内的私有属性
+		        console.log(obj.hasPubProperty("pro"));// true,hasPubProperty只能访问原型上的公有属性
+		        console.log(obj.hasPubProperty("ins"));//false，hasPubProperty不能访问实例上的私有属性
+		        console.log(obj.hasPubProperty===Object.prototype.hasPubProperty);//true，内置类原形上添加自定义方法成功
+         </script>
+     1.4 珠峰培训给原型起别名的方式与1.3完全一样，因为别名指向的是原型的引用地址，实际上操作的就是原型本身。
+              <script type="text/javascript">
+                    var objPro = Object.prototype;
+		      		objPro.hasPubProperty=function(attr) {//在内置类Object的原型上添加方法
+				        return (attr in this) && !(this.hasOwnProperty(attr));
+				    }
+				     function Test(){
+			            this.cons="构造函数内的私有属性";	            
+			        }	       
+			        Test.prototype.pro = "原型上的公有属性";
+			        var obj = new Test();
+			        obj.ins = "实例上的私有属性";				 
+			        console.log(obj.hasPubProperty("cons"));  //false，hasPubProperty不能访问构造函数内的私有属性
+			        console.log(obj.hasPubProperty("pro"));// true,hasPubProperty只能访问原型上的公有属性
+			        console.log(obj.hasPubProperty("ins"));//false，hasPubProperty不能访问实例上的私有属性
+			        console.log(obj.hasPubProperty===Object.prototype.hasPubProperty);//true，对象调用的其实是Object.prototype上新增的方法
+			        console.log(objPro.hasPubProperty===Object.prototype.hasPubProperty);//true，在别名行添加方法等价于在原型上添加引用方法
+			        console.log(objPro===Object.prototype);//true，别名和原型指向同一个引用地址，完全相等
+         </script>
+      1.5 对象如何调动内置类的自带方法
+          1.5.1 当对象所属类是内置类，或者对象所属类的父类是内置类时          
+                1.5.1.1 若基于原型连查找，在内置类原型的下级没有同名方法或属性，那么"对象.方法名()"可以直接调用内置类的自带方法
+                1.5.1.2 若基于原型链查找，在内置类原型的下级出现了同名方法或属性，那么"对象.方法名()"调用的是最低级别的方法，不再调用内置类原型上的同名方法。
+                此时需要通过"内置类.prototype.方法名.call(对象名)"直接调用内置类上的方法。
+          1.5.2 当对象所属类不是内置类，且对象所属类的父类也不是内置类时
+                通过"内置类.proto.call(对象名)"可以直接调用内置类的方法，并把this指向当前对象
+                <script type="text/javascript">
+                	 function mySort() {
+				        //我想把传进来的参数都进行排序-->排序我们可以使用数组的sort方法
+				        //sort是定义在Array的原型上的方法，只有Array这个类的实例才可以使用这个方法，只有数组才是Array的一个实例
+				        //arguments由于长得像数组，我们把它称之为类数组(但是不管多像它都不是数组)，它是一对象数据类型的值，它所属的类是Object-->arguments不能直接的使用sort方法
+				        Array.prototype.sort.call(arguments)				       
+				        console.log(arguments);
+				    }
+				    mySort(4,7,9,5,3,1,2);//[1, 2, 3, 4, 5, 7, 9],arguments类数组成功使用了数组原型内置的排序方法。
+                </script>
+       
+四、画一个原型链继承图（包含Object和Function原型之间的关系）
+    详见附件中"原型链关系图.jpg"
+    函数中Function类最大，所有函数都是Function的子类
+    对象中Object.prototype最大，Object.prototype没有上级原型
+    每一个函数(类也是函数)，既是函数数据类型，它也是一个对象数据类型-->函数的双面性
+    说它是函数，因为它可以执行形成私有的作用域
+    说它是对象，因为它也是开辟了一个堆内存，并且除了存储代码字符串以外，在堆内存上海天生自带了一些属性：prototype、__proto__
+    console.log(Object.__proto__ === Function.prototype);//true
+    console.log(Object.__proto__.__proto__ === Object.prototype);//true
+    console.log(Function.prototype.__proto__ === Object.prototype);//true
+    console.log(Function.__proto__ === Function.prototype);//true
+    console.log(Function.__proto__.__proto__=== Object.prototype);//true
+    console.log(Object.prototype.__proto__);//null
+
+五、通过”构造函数名.prototype.属性名”、在构造函数体内部通过”this.属性名”、通过”实例.属性名”或者”var 实例={属性名:属性值}”三种方式分别添加的属性是公有属性还是私有属性，谁可以访问？
+    5.1 通过”构造函数名.prototype.属性名”添加的属性是公有属性
+       <script type="text/javascript">
+       		function Fn(){};
+	        Fn.prototype.attr="原型上的公有属性";
+	        function Child(){};
+	        Child.prototype = new Fn();
+	        var f1 = new Fn();
+	        var f2 = new Fn();
+	        var c1 = new Child();
+	        var c2 = new Child();
+	        console.log(f1.attr);//"原型上的公有属性",类的实例都能访问类的原型上的属性
+	        console.log(f2.attr);//"原型上的公有属性"
+	        console.log(c1.attr);//"原型上的公有属性"，子类的实例都能访问类的原型上的属性
+	        console.log(c2.attr);//"原型上的公有属性"
+	        console.log(Fn.prototype.attr);//"原型上的公有属性"，类的原型能访问类的原型上的属性
+	        console.log(Child.prototype.attr);//"原型上的公有属性"，子类的原型都能访问类的原型上的属性
+       </script>       
+        类Fn的所有实例，或Fn的所有子类的所有实例，类Fn的原型Fn.prototype，子类的原型都可以访问公有属性attr
+    5.2 在构造函数体内部通过”this.属性名”添加的是私有属性
+        this.attr;
+        <script type="text/javascript">
+        	function Fn(){
+	            this.attr = "构造函数内部的私有属性";
+	        }
+	        var f1 = new Fn();
+	        var f2 = new Fn();
+	        console.log(f1.attr);//"构造函数内部的私有属性"
+	        console.log(f2.attr);//"构造函数内部的私有属性"	       
+        </script>
+         类Fn的所有实例(f1,f2....)都可以访问构造函数内定义的私有属性attr.
+    5.3 ”实例.属性名”添加的是私有属性
+        f1.attr;
+        <script type="text/javascript">
+        	function Fn(){};
+	        var f1 = new Fn();
+	        var f2 = new Fn();
+	        f1.attr = "实例的私有属性"
+	        console.log(f1.attr);//"构造函数内部的私有属性"
+	        console.log(f2.attr);//undefined,实例的私有属性只有当前实例可以放问，其它实例无法访问。  
+        </script>
+        实例f1的私有属性attr，只能通过实例f1获取。

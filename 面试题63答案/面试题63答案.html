@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题63答案</title>    
+</head>
+<body>
+	<h1>63 call和apply的作用、call和apply的区别、二者在严格模式和非严格模式下的语法区别？写一个获取最大值得方法，采用尽可能多的方法?实现同功能的？ call或apply方法，叫做myCall或myApply，当调用myCall或myApply方法时，可以实现与call或apply方法同样的效果（比如传入第一个参数可以修改this指向,第二个参数开始被当做普通参数传入方法）？</h1>
+	<pre>	
+一、call和apply 
+   1 call 方法 
+     call() 方法在使用一个指定的this值和若干个指定的参数值的前提下调用某个函数或方法.
+     1.1 语法         
+         fun.call(thisArg[, arg1[, arg2[, ...]]])
+         参数放在[]里面表示可选参数，所以第二个参数开始都是可选参数，可有可无
+     1.2 参数
+         1.2.1 thisArg
+               在fun函数运行时指定的this值。需要注意的是，指定的this值并不一定是该函数执行时真正的this值，如果这个函数处于非严格模式下，则指定为null和undefined的this值会自动指向全局对象(浏览器中就是window对象)，同时值为原始值(数字，字符串，布尔值)的this会指向该原始值的自动包装对象。
+         1.2.2 arg1, arg2, ...
+               指定的参数列表。
+     1.3 作用
+         1.3.1 当调用一个函数时，可以赋值一个不同的 this 对象。this 引用当前对象，即 call 方法的第一个参数。
+               在下面的例子中，当调用 greet 方法的时候，该方法的 this 值会绑定到obj对象。
+	           <script type="text/javascript">
+		         	function greet() {
+					  var reply = [this.person, 'Is An Awesome', this.role].join(' ');
+					  console.log(reply);
+					}
+					var obj = {
+					  person: 'Douglas Crockford', role: 'Javascript Developer'
+					};
+					greet.call(obj); // Douglas Crockford Is An Awesome Javascript Developer
+	           </script>		
+         1.3.2 通过 call 方法，你可以在一个对象上借用另一个对象上的方法，比如Object.prototype.toString.call([])，就是一个Array对象借用了Object对象上的方法。
+               <script type="text/javascript">
+                    [].toString();//""
+               		Object.prototype.toString.call([]);//"[object Array]"
+               </script>         
+   2 apply方法
+     apply() 方法在指定 this 值和参数（参数以数组或类数组对象的形式存在）的情况下调用某个函数。
+     2.1 语法
+         fun.apply(thisArg[, argsArray])
+         [, argsArray]，在语法描述时，中括号内的参数表示非必须，可有可无。
+     2.2 参数
+         2.2.1 thisArg
+               在 fun 函数运行时指定的 this 值。需要注意的是，指定的 this 值并不一定是该函数执行时真正的 this 值，如果这个函数处于非严格模式下，则指定为 null 或 undefined 时会自动指向全局对象（浏览器中就是window对象），同时值为原始值（数字，字符串，布尔值）的 this 会指向该原始值的自动包装对象。
+         2.2.2 argsArray
+               一个数组或者类数组对象，其中的数组元素将作为单独的参数传给 fun 函数。如果该参数的值为null 或 undefined，则表示不需要传入任何参数。从ECMAScript 5 开始可以使用类数组对象。浏览器兼容性请参阅本文底部内容。
+     2.3 作用
+         2.3.1 在调用一个存在的函数时，你可以为其指定一个 this 对象。 this 指当前对象，也就是正在调用这个函数的对象。 
+                <script type="text/javascript">
+		         	function greet() {
+					  var reply = [this.person, 'Is An Awesome', this.role].join(' ');
+					  console.log(reply);
+					}
+					var obj = {
+					  person: 'Douglas Crockford', role: 'Javascript Developer'
+					};
+					greet.call(obj); // Douglas Crockford Is An Awesome Javascript Developer
+	           </script>		
+	     2.3.2 通过 apply方法，你可以在一个对象上借用另一个对象上的方法.
+	           比如Object.prototype.toString.apply([])，就是一个Array对象借用了Object对象上的方法。
+               <script type="text/javascript">
+                    [].toString();//""
+               		Object.prototype.toString.apply([]);//"[object Array]"
+               </script>    
+         2.3.3 聪明的apply用法允许你在某些本来需要写成遍历数组变量的任务中使用内建的函数。
+               在接下里的例子中我们会使用Math.max/Math.min来找出一个数组中的最大/最小值。
+                <script type="text/javascript">
+		         	/* min/max number in an array */
+					var numbers = [5, 6, 2, 3, 7];
+					/* using Math.min/Math.max apply */
+					var max = Math.max.apply(null, numbers); //7,等价于Math.max(5, 6, 2, 3, 7)
+					var min = Math.min.apply(null, numbers);//2,等价于Math.mix(5, 6, 2, 3, 7)
+		         </script>
+   3 call和apply的异同
+     3.1 相同点
+         语法几乎完全相同，第一个参数都是用来改变this的
+     3.2 不同的
+         call方法接收的是一个参数列表，apply第二个参数接收的是一个包含多个参数的数组（或者类数组）。
+   4 call和apply在严格模式和非严格模式下的区别
+     4.1 在JS非严格模式下，我们用call/apply改变函数中的this关键字，如果没有传递任何的参数，或者第一个参数是null或者undefined，this默认都改变为window了
+         <script type="text/javascript">
+             function  test (){
+             	console.log(this);
+             }
+             test.call();//window
+             test.call(undefined);//window
+             test.call(null);//window
+         </script>
+     4.2 在JS严格模式下("use strict")，我们不传或者传递的是undefined，this都变为了undefined，如果传递的值是null，则this就是null
+          <script type="text/javascript">
+             "use strict";
+             function  test (){
+             	console.log(this);
+             }
+             test.call();//undefined
+             test.call(undefined);//undefined
+             test.call(null);//null
+         </script>
+
+二、写一个获取最大值的方法，采用尽可能多的方法
+    1、首先先给我们的数组进行排序(小->大),第一个和最后一个就是我们想要的最小值和最大值
+        <script type="text/javascript">
+        	var ary = [23, 34, 24, 12, 35, 36, 14, 25];
+	        ary.sort(function (a, b) {
+	            return a - b;
+	        });
+	        var min = ary[0];
+	        var max = ary[ary.length - 1];
+	        console.log(min, max);
+        </script>     
+    2、假设法:假设当前数组中的第一个值是最大值,然后拿这个值和后面的项逐一进行比较,如果后面某一个值比假设的还要大,说明假设错了,我们把假设的值进行替换...
+             ->和自定义属性一样,都是JS中最常用的编程思想
+        <script type="text/javascript">
+        	var ary = [23, 34, 24, 12, 35, 36, 14, 25];
+	        var max = ary[0], min = ary[0];
+	        for (var i = 1; i < ary.length; i++) {
+	            var cur = ary[i];
+	            cur > max ? max = cur : null;
+	            cur < min ? min = cur : null;
+	        }
+	        console.log(min, max);
+        </script>
+    3、使用Math中的max/min方法结合apply方法实现
+        <script type="text/javascript">
+        	var ary = [23, 34, 24, 12, 35, 36, 14, 25];
+		    var max = Math.max.apply(null, ary);
+		    var min = Math.min.apply(null, ary);
+		    console.log(min, max);
+        </script>
+    4、使用Math中的max/min方法结合eval方法实现
+       <script type="text/javascript">
+           /*
+              ary.toString(); ===》 "23, 34, 24, 12, 35, 36, 14, 25"
+              "Math.max(" + ary.toString() + ")" ===> "Math.max(23, 34, 24, 12, 35, 36, 14, 25)"
+               eval("Math.max(" + ary.toString() + ")") ===>  eval("Math.max(23, 34, 24, 12, 35, 36, 14, 25)")
+               eval方法可以将传入的第一个字符串参数变成表达式并执行
+               eval("Math.max(23, 34, 24, 12, 35, 36, 14, 25)")  ===> Math.max(23, 34, 24, 12, 35, 36, 14, 25)
+           */
+           var ary = [23, 34, 24, 12, 35, 36, 14, 25];
+       	   var max = eval("Math.max(" + ary.toString() + ")");
+           console.log(max);
+           var min = eval("Math.min(" + ary.toString() + ")");
+           console.log(min);
+       </script>
+  
+
+三、实现call或apply方法
+    要想实现call或apply方法，首先要弄清call或apply不同情形下的规则
+    1  关于call方法不同规则下的结果，详见附件《测试原生call方法.html》
+    2  关于自定义myCall方法模拟元素call方法的功能，详见附件《自定义myCall方法.html》

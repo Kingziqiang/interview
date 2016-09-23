@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>自定义myCall方法</title>
+ </head>
+ <body>
+  <script type="text/javascript"> 
+     //自定义myCall中用到的方法,将类数组转换成数组toArray方法和将基本数据类型转成包装类型toObject()方法
+      var utils={
+             toArray:function(args){ //将类数组转换成数组
+                   var arr=[];
+                   for(var i=0;i<args.length;i++){
+                        arr.push(args[i]);
+                   }
+                   return arr;
+              },
+             toObject:function(par){ //将基本数据类型转换成对象类型
+                  var thisType = typeof(par);
+                  var obj=par;     
+                  switch(thisType){
+                    case "number":
+                         obj=new Number(par);          
+                    break;
+                    case "string":
+                         obj=new String(par);
+                    break;
+                    case "boolean":
+                         obj=new Boolean(par);
+                    break;
+                    case "undefined":           
+                         obj=window;            
+                    break;
+                    default:
+                         obj=par;            
+                 }
+                 obj=(obj===null?window:obj);    
+                 return obj;
+            }         
+      }
+
+      //自定义数组转字符串方法toStr,为了保留字符串类型的引号
+      Array.prototype.toStr=function(){
+          var str = "";       
+          for(var i=0;i<this.length;i++){
+              if(i!=0){
+                 str+=","
+              }
+              if((typeof this[i]) ==="string"){
+                   str+="'"+this[i]+"'";
+              }else{
+                   str+=this[i];
+              }          
+          }
+          return str;
+      }
+     
+    //自定义myCall方法模拟call方法的功能
+    Function.prototype.myCall=function(){      
+       var args=utils.toArray(arguments);
+       var thisObj=utils.toObject(arguments[0]);
+       if(this===Function.prototype.myCall){   
+           for(var i=0;i<arguments.length;i++){
+                 if(arguments[i]!=Function.prototype.myCall){
+                           args=args.slice(i+2);                      
+                           thisObj=utils.toObject(arguments[i+1]);                     
+                           thisObj.this=arguments[i]; 
+                           if(typeof arguments[i]!=="function"){
+                           		 throw new Error("Function.prototype.call.call is not a function");
+                           }
+                           return eval("thisObj.this("+args.toStr(',')+")");  
+                 }
+           }       
+       }else if(this===Function.prototype){
+           //Function.prototype的值为空函数function(){}，改变空函数的this没有任何意义，给空函数传参也没有任何意义。
+           //我们完全可以省略下一面一行代码，因为不管以任何方式执行空函数都没有意义。
+           Function.prototype();//等价于;(function(){})()空函数执行,没有输出值也没有返回值           
+       }else{
+           args=args.slice(1);          
+           thisObj.this=this;
+           return eval("thisObj.this("+args.toStr()+")");        
+       } 
+    }  
+
+    //写一个测试函数test测试调用myCall方法的不同情形
+    var test = function(){ 
+        console.log("第"+arguments[0]+"种情况执行test：对应的this和argments分别被修改为：");
+        console.log("this ---> ",this); 
+        console.log("arguments ---> ",arguments);
+        return '已执行test';
+    } 
+    
+    //验证调用myCall方法的5种不同情形，this和参数变化
+    var fn1=test.myCall({"key1":"value1"},1,"6+1"); //等价于先将test中的方法变成{"key1":"value1"}，然后执行test(1,"6+1");
+    var fn2=test.myCall(0,2,"cxh"); //等价于先将test方法中的this变成2的包装类型，然后执行test(2,"cxb")     
+    var fn3 = Function.prototype.myCall(test,{"key3":"value3"},3);//
+    var fn4 = Function.prototype.myCall.myCall(test,{"key4":"value4"},4);//
+    var fn5 = Function.prototype.myCall.myCall(Function.prototype.myCall,Function.prototype.myCall,Function.prototype.myCall, 1,{"key5":"value5"},5);
+    var fn6 = Function.prototype.myCall.myCall.myCall(test,{"key6":"value6"},6);//
+    var fn7 = Function.prototype.myCall.myCall.myCall(Function.prototype.myCall,Function.prototype.myCall,Function.prototype.myCall, test,{"key7":"value7"},7);
+    var fn8 = Function.prototype.myCall(test,{"key8":"value8"},8);//
+    var fn9 = Function.prototype.myCall(Function.prototype.myCall,Function.prototype.myCall,Function.prototype.myCall, test,{"key9":"value9"},9);
+    //验证调用myCall方法，返回值情况
+    console.log("==================5种情况的返回值分别为：===================");
+    console.log("fn1:"+fn1);
+    console.log("fn2:"+fn2);
+    console.log("fn3:"+fn3);
+    console.log("fn4:"+fn4);
+    console.log("fn5:"+fn5);
+    console.log("说明第3种情况没有执行test，而是执行了Empyt函数所以没有任何输出值也没有返回值");
+
+    //总结：经测试，自定义myCall方法和原生call方法功能完全一致。
+ </script>
+ </body>
+</html>

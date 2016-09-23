@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>测试原生call方法</title>
+ </head>
+ <body>
+  <script type="text/javascript">      
+    var test = function(){ 
+        console.log("第"+arguments[0]+"种情况执行test：对应的this和argments分别被修改为：");
+        console.log("this ---> ",this); 
+        console.log("arguments ---> ",arguments);
+        return '已执行test';
+    } 
+
+
+    /*
+      console.log("==========call方法中的第一个参数如果为基本类型则进行了'new 包装类(基本类型数据)'转化：==========");
+      console.log("0--->",0);//0---> 0
+      console.log("(0)--->",(0));//(0)---> 0
+      console.log("Number(0)--->",Number(0));//Number(0)---> 0
+      console.log("new Number(0)--->",new Number(0));//new Number(0)---> Number {[[PrimitiveValue]]: 0}   
+    */
+    /*
+      0 基本数据类型的包装类型介绍：
+         0.1 基本数据类型的包装类型可以直接调用方法：
+              0.toString();//报错,本包装类型不能直接调用方法
+              (0).toString();//"0"
+              Number.toString();//"0"
+              Number.toString();//"0"
+         0.2 基本数据类型的包装类型可以直接添加属性
+              0.x = 9;//报错，基本数据类型不能直接添加属性
+              (0).x = 9;//成功添加属性
+              Number(0).x=9;//成功添加属性
+              new Number(0).x=9;//成功添加属性
+         0.3 如果希望下次访问基本数据类型的包装类型上添加的属性，应该用一个变量保存包装类型的引用
+             var num = new Number(0);
+             num.x = 9;
+             cosnsole.log(num.x);//9
+    */
+ 
+
+
+
+    
+
+    var fn1=test.call({"key1":"value1"},1,"6+1"); //等价于先将test中的方法变成{"key1":"value1"}，然后执行test(1,"6+1");
+    /*
+      1 当调用call方法的是普通函数，第一个参数是引用数据类型时,test..call(this,args)形式
+        1.1 先将引用数据类型的引用保存起来
+             var obj = {"key1":"value1"}
+        1.2 将test方法中的this改成第一个参数的包装类型
+            obj.test = test;
+        1.3 执行test，传入第二个参数
+            obj.test(2,"6+1");
+        1.4 this、argument和返回值
+            输出this为 {"key1":"value1"}
+            输出arguments为  [1,"6+1"]
+            返回值为 test函数的返回值
+    */
+    
+    var fn2=test.call(0,2,"cxh"); //等价于先将test方法中的this变成2的包装类型，然后执行test(2,"cxh")  
+    /*2 当调用call方法的是普通函数，第一个参数为基本数据类型时，test.call(this,args)形式      
+        2.1 先将基本数据类型转换成对应的包装类型
+            2 ---> var num = new Number(2); 
+        2.2 将test方法中的this改成第一个参数的包装类型
+            num.test = test;
+        2.3 执行test，传入第二个参数
+            num.test(2,"cxh");
+        2.4 this、argument和返回值
+            输出this为 Number(2)
+            输出arguments为 [2,"cxh""]
+            返回值为 test函数的返回值
+    */
+
+     var fn3 = Function.prototype.call(test,{"key3":"value3"},3,'Function.prototype.call(test,{"key3":"value3"},3)');//Function.prototype.call不管传入几个参数都不会输出任何语句，返回值为undefined
+     /*
+      3 当调用call方法的是Function.prototype时， Function.prototype.call(this,args)形式
+        3.1 Function.prototype是一个function Empty(){}函数 
+        3.1 将Empty函数中的this指向第一个参数test
+            test.Empty = Emyty;
+        3.3 执行Empyty
+            test.Empty(3);
+        3.4 this、argument、返回值
+            由于Empty是个空函数，内部没有任何可执行语句，所以不会输出任何值
+            Empty也没有返回值，当没有返回值时默认返回值为undefined
+    */   
+    
+
+     var fn4 = Function.prototype.call.call(test,{"key4":"value4"},4);//第一个参数代表要执行的函数，第二个参数代表this，第三个参数开始代表传入的参数
+     /*
+      4 当调用call方法的Function.prototype.call，Function.prototype.call.call(fn,this,args)形式
+        当出现调用call方法时出现两个或两个以上call，且第一个参数不是Function.prototype.call时。
+        第一个参数代表要执行的函数，第二个参数代表this，第三个参数开始代表传入的参数
+        4.1 先将第二个参数保存起来
+             var obj = {"key4":"value4"}
+        4.2 将第一个参数test方法中的this改成第二个参数
+            obj.test = test;
+        4.3 执行test，传入第三个参数及后续参数
+            obj.test(4,'Function.prototype.call.call(test,{"key4":"value4"},4)');
+        4.4 this、argument和返回值
+            输出this为 {"key4":"value4"}
+            输出arguments为  [4]
+            返回值为 test函数的返回值    */
+    
+
+    var fn5 = Function.prototype.call.call(Function.prototype.call,Function.prototype.call,Function.prototype.call, 1,{"key5":"value5"},5); 
+    /*
+      5 当调用call方法的Function.prototype.call，Function.prototype.call.call(Function.prototype.call,Ffn,this,args)形式
+        当出现调用call方法时出现两个或两个以上call，且第一个参数是Function.prototype.call时。
+        忽略从第一个参数开始连续为Function.prototype.call的参数，直到遇到第第一个不为Function.prototype.call的参数为止。
+        第一个不为Function.prototype.call的参数时test，则test代表要执行的函数，test后续的第二个参数代表this，test后续的第三个参数开始代表传入的参数
+        4.1 先将第1个不为Function.prototype.call的参数test的相邻后续参数保存起来
+             var obj = {"key5":"value5"}
+        4.2 将第一个不为Function.prototype.call的参数test方法中的this改成test后面相邻的参数
+            obj.test = test;
+        4.3 执行test，传入第三个不为Function.prototype.call的参数及后续参数
+            obj.test(5,'Function.prototype.call.call(Function.prototype.call,Function.prototype.call,Function.prototype.call, test,{"key5":"value5"},5)');
+        4.4 this、argument和返回值
+            输出this为 {"key5":"value5"}
+            输出arguments为 [5]
+            返回值为 test函数的返回值    
+    */
+    var fn6 = Function.prototype.call.call.call(test,{"key6":"value6"},6);//
+    var fn7 = Function.prototype.call.call.call(Function.prototype.call,Function.prototype.call,Function.prototype.call, test,{"key7":"value7"},7);
+      var fn8 = Function.prototype.call(test,{"key8":"value8"},8);//
+    var fn9 = Function.prototype.call(Function.prototype.call,Function.prototype.call,Function.prototype.call, test,{"key9":"value9"},9);
+    console.log("==================5种情况的返回值分别为：===================");
+    console.log("fn1:"+fn1);
+    console.log("fn2:"+fn2);
+    console.log("fn3:"+fn3);
+    console.log("fn4:"+fn4);
+    console.log("fn5:"+fn5);
+    console.log("说明第3种情况没有执行test，而是执行了Empyt函数所以没有任何输出值也没有返回值")
+    
+   </script>
+    
+</html>

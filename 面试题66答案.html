@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题65案</title>    
+</head>
+<body>
+	<h1>66 JSON语法可以表示哪几种类型的值？JSON表示简单值与Javascript简单值的区别？
+JSON对象与Javascript字面量的区别？JSON如何表示数组？JSON的意义？JSON.stringty()的作用和语法？JSON.parse()的作用和语法？把数据绑定到HTML页面中有几种方式，各自的优缺点?document.createDocumentFragment()方法的作用和语法？前后端处理大数据的流程？</h1>
+	<pre>	
+一、JSON语法可以表示哪几种类型的值
+    JSON中没有变量的概念也没有末尾分号
+    1 简单值
+      与Javascript语法相同，可以在JSON中表示字符串、数值、布尔值和null
+      不支持undefined.
+    2 对象
+      一种复杂数据类型，键值对形式。
+      采用Javascript对象字面量形式创建。
+      与Javascript对象不同的地方，是必须给属性加引号。
+    3 数组
+      数组也是一种赋复杂数据类型
+      采用Javascript数组字面量形式创建。
+    知识点回顾：创建引用数据类型的两种方式字面量和new 构造函数。
+                对象字面量：var obj1 = {name:"cxh"}
+                            var obj2 = new Object({name:"cxh"});                               
+                数组字面量：var arr1 = [1,2];
+                            var arr2 = new Array(1,2);
+
+二、JSON表示简单值与Javascript简单值的区别    
+    JSON中没有变量的概念也没有末尾分号
+    1 形式与数字类型一样
+    2 形式与布尔类型一样
+    3 形式与null一样
+    4 字符串类型，JSON必须使用双引号，Javascript单引号和双引号均可。
+    5 JSON不支持Javscript中的特殊值undefinded
+      JSON之所以不支持undefined,因为JSON适用不同编程语言传输数据，而undefined是javascript特有的。
+
+三、JSON对象与Javascript字面量的区别
+    JSON中没有变量的概念也没有末尾分号
+    JSON对象要求给属性加双引号，Javascript字面量属性可以没有引号，也可以是单引号或双引号。
+    1 Javscript对象字面量的属性表示形式有3种
+	    var obj1 = {name:"cxh"};
+	    var obj2 = {'name':"cxh"};
+	    var obj3 = {"name":"cxh"};
+	2 JSON对象属性的表示形式只有一种
+	    {"name":"cxh"}
+
+四、JSON如何表示数组
+    JSON中没有变量的概念也没有末尾分号
+    JSON采用Javscript中的数组字面量
+    1 Javasript数组字面量
+      var arr = [1,2,3];
+    2 JSON数组
+      [1,2,3]
+    3 数组和对象是JSON最常用的格式，二者结合可以构成更复杂的数据结构
+      [{id:1,name:"cxh"},{id:2,name:"ly"}];
+
+
+   
+五、JSON的意义
+    JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式，主要用于传送数据。
+    JSON 可以将 JavaScript 对象中表示的一组数据转换为字符串，然后就可以在函数之间轻松地传递这个字符串，或者在异步应用程序中将字符串从 Web 客户机传递给服务器端程序。
+    易于人阅读和编写，同时也易于机器解析和生成(一般用于提升网络传输速率)。
+    以下例子可以看出，JSON.stringify保留了数据原有的字面量形式，在传输数据时尤其有用。
+
+六、JSON.stringty()的作用和语法？
+    1 作用
+      将 JavaScript 值转换为 JavaScript 对象表示法 (Json) 字符串。
+    2 语法      
+      JSON.stringify(value [, replacer] [, space])
+      可传3个参数，第1个参数必须，第2个和第3个参数可选
+    3 参数
+      3.1value
+		必需。  
+		要转换的 JavaScript 值（通常为对象或数组）。
+		如果 value 参数对应有 toJSON 方法，则 JSON.stringify 将首先调用 toJSON 方法。  
+			<script type="text/javascript">
+				var obj = {id:1,name:"cxh",gf:"kn"};
+				 obj.toJSON = function(key)
+				 {
+				    var replacement = new Object();
+				    for (var val in this)
+				    {
+				        if (typeof (this[val]) === 'string')
+				            replacement[val] = this[val].toUpperCase();
+				        else
+				            replacement[val] = this[val]
+				    }
+				    return replacement;
+				};
+				var jsonText = JSON.stringify(obj);
+				document.write(jsonText);//{"id":1,"name":"CXH","gf":"KN"}
+			</script>    
+		如果toJSON方法不存在，则使用原始值。
+			<script type="text/javascript">
+				var obj = {id:1,name:"cxh",gf:"kn"};				 
+				var jsonText = JSON.stringify(obj);
+				console.log(jsonText);//{"id":1,"name":"cxh","gf":"kn"}
+			</script>    
+		接下来，如果提供 replacer 参数，则该值（原始值或 toJSON 返回值）将替换为 replacer 参数的返回值。
+			<script type="text/javascript">
+				var obj = {id:1,name:"cxh",gf:"kn"};
+				 obj.toJSON = function(key)
+				 {
+				    var replacement = new Object();
+				    for (var val in this)
+				    {
+				        if (typeof (this[val]) === 'string')
+				            replacement[val] = this[val].toUpperCase();
+				        else
+				            replacement[val] = this[val]
+				    }
+				    return replacement;
+				};
+				var arr = ["id","name"];				
+				var jsonText = JSON.stringify(obj, arr);
+				console.log(jsonText);//{"id":1,"name":"CXH"}
+			</script>      
+		最后，根据可选 space 参数向该值添加空格以生成最终的 JSON 文本。
+			<script type="text/javascript">
+				var obj = {id:1,name:"cxh",gf:"kn"};
+				 obj.toJSON = function(key)
+				 {
+				    var replacement = new Object();
+				    for (var val in this)
+				    {
+				        if (typeof (this[val]) === 'string')
+				            replacement[val] = this[val].toUpperCase();
+				        else
+				            replacement[val] = this[val]
+				    }
+				    return replacement;
+				};
+				var arr = ["id","name"];				
+				var jsonText = JSON.stringify(obj, arr,"\n");//加上第三个参数后默认有换行，传入"\n"再次换行意味着每个键值对前面插入一个空行
+				console.log(jsonText);//
+				/*
+				"{
+
+				"id": 1,
+
+				"name": "CXH"
+				}"
+				*/
+			</script> 	
+	  3.2 replacer
+		可选。  
+		用于转换结果的函数或数组。  
+		3.2.1 如果 replacer 为函数，则 JSON.stringify 将调用该函数，并传入每个成员的键和值。  使用返回值而不是原始值。  如果此函数返回 undefined，则排除成员。  根对象的键是一个空字符串：""。  
+		    <script type="text/javascript">
+		    	var continents = ["Europe","Asia", "Australia","Antarctica","North America","South America","Africa"];
+		    	function toUpper(key, value) {
+				    return value.toString().toUpperCase();
+				}
+				var jsonText = JSON.stringify(continents, toUpper);// "EUROPE,ASIA,AUSTRALIA,ANTARCTICA,NORTH AMERICA,SOUTH AMERICA,AFRICA"
+				console.log(jsonText);
+		    </script>
+		3.2.2 如果 replacer 是一个数组，则仅转换该数组中具有键值的成员。  成员的转换顺序与键在数组中的顺序一样。  当 value 参数也为数组时，将忽略 replacer 数组。  
+		     <script type="text/javascript">
+		     	var obj = {id:1,name:"cxh",gf:"kn"};
+		     	var arr = ["id","name"];				
+				var jsonText = JSON.stringify(obj, arr);
+				console.log(jsonText);//{ "id": 1,"name": "cxh" },只是输出了数组中包含的两个属性id和name				
+		     </script>
+	  3.3 space
+		可选。  
+		向返回值 JSON 文本添加缩进、空格和换行符以使其更易于读取。  
+		如果省略 space，则将生成返回值文本，而没有任何额外空格。
+		如果 space 是一个数字，则返回值文本在每个级别缩进指定数目的空格。  如果 space 大于 10，则文本缩进 10 个空格。
+			<script type="text/javascript">
+		     	var obj = {id:1,name:"cxh",gf:"kn"};
+		     	var arr = ["id","name"];				
+				var jsonText = JSON.stringify(obj, arr,10);
+				console.log(jsonText);//每个键值举例花括号缩进10个字符
+				/*
+				"{
+				          "id": 1,
+				          "name": "cxh"
+				}"*/				
+		     </script>  
+		如果 space 是一个非空字符串（例如“\t”），则返回值文本在每个级别中缩进字符串中的字符。
+		     <script type="text/javascript">
+		     	var obj = {id:1,name:"cxh",gf:"kn"};
+		     	var arr = ["id","name"];				
+				var jsonText = JSON.stringify(obj, arr,"\t");
+				console.log(jsonText);//"\t"使每个键值举例花括号缩进4个字符
+				/*
+				"{
+				    "id": 1,
+				    "name": "cxh"
+				}"*/				
+		     </script>  
+		如果 space 是长度大于 10 个字符的字符串，则使用前 10 个字符。
+	4 应用
+	    4.1 Array.prototype.toString()和JSON.stringify()方法在转换对象和数组时的不同
+		    <script type="text/javascript">
+		    	var obj = {name:"cxh"};
+		    	obj.toString();//"[object Object]"
+		        JSON.stringify(obj);//"{"name":"cxh"}"
+		        var arr1 = [obj,2,"cxh"];
+		        var str1 = arr.toString();//[object Object],2,cxh
+		        var str2 =JSON.stringify(arr);//[{"name":"cxh"},"2","cxh"]
+		        var str3 = str2.substring(1,str2.length-1);//{"name":"cxh"},"2","cxh"	       
+		    </script>
+	    4.2 数组转换成字符串时，如何保留所有元素原有的数据类型和形式
+		    <script type="text/javascript">
+		    	 //数组转换成字符串是，如何保留了所有参数的原有数据类型
+		        function arrayForEval(ary){
+		        	var str = "";
+		        	for(var i=0;i<ary.length;i++){
+		        	    str+=",";//每一项前面加上逗号        	
+		        		if(typeof ary[i]==="string"){
+		        			str+=JSON.stringify(ary[i]);
+		        		}else if(typeof ary[i]==="object"){
+		        			str+=JSON.stringify(ary[i]);
+		        		}else{
+		        			str+=ary[i];
+		        		}
+		        	}
+		        	str = str.slice(1);//删除第一个逗号
+		        	return str;
+		        }
+		        var arr1 = [{"name":"cxh"},2,"cxh",function fn(){}];
+		        var str1 = arr1.toString();//"[object Object],2,cxh,function fn(){}", 对象被转换的面目全非，字符串"cxh"转换成了不存在的变量名cxh
+		        var str2 = arrayForEval(arr1);//"{"name":"cxh"},2,"cxh",function fn(){}"，自定义方法arrayForEval完美地保留字所有元素原有的形式
+		        function test(){
+		        	console.log("this是：",this);
+		        	console.log("arguments是：",arguments);
+		        }
+		        var str3 = "test.call("+str2+")";//"test.call({"name":"cxh"},2,"cxh",function fn(){})"
+		        eval(str3);
+		        //this是： Object {name: "cxh"}
+		        //arguments是： [2, "cxh", function]
+		    </script>
+
+七、JSON.parse()的作用和语法
+    1 作用
+      JSON.parse() 方法可以将一个 JSON 字符串解析成为一个 JavaScript 值。在解析过程中，还可以选择性的修改某些属性的原始解析值。
+    2 语法  
+      JSON.parse(text[, reviver])
+    3 参数
+      3.1 text 必须
+		要解析的 JSON 字符串，可以查看 JSON 一文了解 JSON 的语法。
+		<script type="text/javascript">
+			JSON.parse('{}');              // {}
+			JSON.parse('true');            // true
+			JSON.parse('"foo"');           // "foo"
+			JSON.parse('[1, 5, "false"]'); // [1, 5, "false"]
+			JSON.parse('null');            // null
+		</script>
+	  3.2 reviver 可选
+		一个函数，用来转换解析出的属性值。
+		如果指定了 reviver 函数，则解析出的 JavaScript 值（解析值）会经过一次转换后才将被最终返回（返回值）。
+		当遍历到最顶层的值（解析值）时，传入 reviver 函数的参数会是空字符串 ""（因为此时已经没有真正的属性）和当前的解析值（有可能已经被修改过了），当前的 this 值会是 {"": 修改过的解析值}，在编写 reviver 函数时，要注意到这个特例。
+		3.2.1 当存在多层对象嵌套时,同级从左到右，不同级从内到外输出
+		      解析值本身以及它所包含的所有属性，会按照一定的顺序（从最最里层的属性开始，一级级往外，最终到达顶层，也就是解析值本身）分别的去调用 reviver 函数，在调用过程中，当前属性所属的对象会作为 this 值，当前属性名和属性值会分别作为第一个和第二个参数传入 reviver 中。如果 reviver 返回 undefined，则当前属性会从所属对象中删除，如果返回了其他值，则返回的值会成为当前属性新的属性值。
+		      <script type="text/javascript">
+		      		JSON.parse('{"a": 1, "b": 2,"c": {"d": 4, "e": {"f": 6}}}', function (k, v) {
+					    console.log(k,v,this); // 输出当前的属性名，从而得知遍历顺序是从内向外的，最后一个属性名会是个空字符串。
+					    return v;       // 返回原始属性值，相当于没有传递 reviver 参数。
+					});
+					//函数的最终返回值是当k===""时，v的值
+					/*
+					k的值   value的值                           this的值
+					a 		1 									{a: 1, b: 2, c: {"d": 4, "e": {"f": 6}}}
+					b 		2 									{a: 1, b: 2, c:  {"d": 4, "e": {"f": 6}}}
+					d 		4 									{d: 4, e:  {"f": 6}}
+					f 		6 									{f: 6}
+					e 		{f: 6} 								{d: 4, e:  {"f": 6}}
+					c 		{d: 4, e: {"f": 6}}  				{a: 1, b: 2, c: {d: 4, e: {"f": 6}}}
+				   "" {a: 1, b: 2, c: {"d": 4, "e": {"f": 6}}}  {"": {a: 1, b: 2, c: {"d": 4, "e": {"f": 6}}}}
+					*/
+		      </script>
+		3.2.1 当只有一层对象时,按照从到右的顺序返回
+		      <script type="text/javascript">
+		      		JSON.parse('{"a": 1,"b":2}', function (k, v) {
+		      			console.log(k,v,this);
+					    if(k === '') return v;     // 如果到了最顶层，则直接返回属性值，
+					    return v * 2;              // 否则将属性值变为原来的 2 倍。
+					});                            // {a: 2, b: 4}
+					/*
+					k的值   v的值       this的值
+					a 		1  			{a: 1, b: 2}
+					b 		2  			{a: 2, b: 2}
+				   "" 	{a: 2, b: 4} 	{"": {a: 2, b: 4}}
+					*/
+		      </script>
+   4 返回值
+		从 text 字符串解析出的一个 Object。
+   5 浏览器兼容性
+     PC端Chrome完全兼容、Firefox (Gecko)3.5、IE8、Opera10.5、Safari4.0及其以上版本浏览器兼容。
+
+八、把数据绑定到HTML页面中有几种方式    
+    弄清下列3种数据绑定榜示的优缺点，首先要弄清什么是回流和重绘制
+    0  回流与重绘
+       DOM Tree 和样式结构体组合后构建render tree, render tree类似于DOM tree，但区别很大，render tree能识别样式.
+       0.1 回流：
+           当render tree中的一部分(或全部)因为元素的规模尺寸，布局，隐藏等改变而需要重新构建。这就称为回流(reflow)。每个页面至少需要一次回流，就是在页面第一次加载的时候。在回流的时候，浏览器会使渲染树中受到影响的部分失效，并重新构造这部分渲染树，完成回流后，浏览器会重新绘制受影响的部分到屏幕中，该过程成为重绘。
+       0.2. 重绘：
+            当render tree中的一些元素需要更新属性，而这些属性只是影响元素的外观，风格，而不会影响布局的，比如background-color。则就叫称为重绘。
+       0.3 注意：
+           回流必将引起重绘，而重绘不一定会引起回流。
+       0.4 回流何时发生：
+           当页面布局和几何属性改变时就需要回流。下述情况会发生浏览器回流：
+			0.4.1、添加或者删除可见的DOM元素；
+			0.4.2、元素位置改变；
+			0.4.3、元素尺寸改变——边距、填充、边框、宽度和高度
+			0.4.4、内容改变——比如文本改变或者图片大小改变而引起的计算值宽度和高度改变；
+			0.4.5、页面渲染初始化；
+			0.4.6、浏览器窗口尺寸改变——resize事件发生时；
+    1 把HTML标签在JS中进行字符串拼接，最后在把拼接好的字符串赋值也元素的innerHTML属性
+      1.1 示例
+      	<!DOCTYPE html>
+		<html>
+		<head>
+		    <meta charset="UTF-8">
+		    <title></title>		  
+		    <style type="text/css">
+		    	 .hover {
+		            background: #FFE0E9;
+		        }
+		    </style>  
+		</head>
+		    <body>
+				<ul id="ul1">
+				    <li>html</li>
+				    <li>css</li>
+				    <li>javascript</li>				    
+				</ul>      
+		        <script type="text/javascript">
+		            var oUl = document.getElementById("ul1");
+		            var oLis = oUl.getElementsByTagName("li");
+				    for (var i = 0; i < oLis.length; i++) {
+				        oLis[i].onmouseover = function () {
+				            this.className = "hover";
+				        };
+				        oLis[i].onmouseout = function () {
+				            this.className = "";
+				        };
+				    }		            
+		            var data = ["node","react","angular"];
+			        var str = "";
+			        for (var i = 0; i < data.length; i++) {
+			            str += "<li>" + data[i] + "</li>";
+			        }
+			        //在添加下面一行代表之前，鼠标滑过变色事件时有效果得，一但添加下面一行代码原来的事件就无效了
+			        oUl.innerHTML += str;		                  
+		        </script>
+		    </body>
+		 </html>
+     1.2 优点：把需要添加的元数都拼接好，一次性添加到我们的页面中，引发一次回流  
+     1.3 缺点：
+         我新增加5条数据,但是之前的li上绑定的事件都没有了。
+         因为每一次innerHTML都是相当于把之前的元素标签当做字符串获取出来，然后在和新的字符串进行拼接，最后在把字符串放到页面中，浏览器会从新的把字符串渲染解析成为对应的标签，所以之前元素绑定事件都没了。    
+
+    2 利用DOM中提供的createElement动态创建元素标签，并且通过appendChild添加到指定容器中
+      2.1 示例
+            <!DOCTYPE html>
+			<html>
+			<head>
+			    <meta charset="UTF-8">
+			    <title></title>		  
+			    <style type="text/css">
+			    	 .hover {
+			            background: #FFE0E9;
+			        }
+			    </style>  
+			</head>
+			    <body>
+					<ul id="ul1">
+					    <li>html</li>
+					    <li>css</li>
+					    <li>javascript</li>				    
+					</ul>      
+			        <script type="text/javascript">
+			            var oUl = document.getElementById("ul1");
+			            var oLis = oUl.getElementsByTagName("li");
+					    for (var i = 0; i < oLis.length; i++) {
+					        oLis[i].onmouseover = function () {
+					            this.className = "hover";
+					        };
+					        oLis[i].onmouseout = function () {
+					            this.className = "";
+					        };
+					    }			        
+			            var data = ["node","react","angular"];
+				         for (var i = 0; i < data.length; i++) {
+				            var oLi = document.createElement("li");
+				            oLi.innerHTML = data[i];
+				            oUl.appendChild(oLi);
+				        }				                      
+			        </script>
+			    </body>
+			 </html>       
+       2.2 优点：只是往oUl的末尾追加元素，对于之前的元素没有任何的影响
+       2.3 缺点：每一次循环，创建一个li立即的放到容器中引发一次回流，循环3次就引发3次回流
+     3 在处理大数据绑定的时候，采用文档碎片的方式来进行优化（推荐方式）
+       3.1 示例
+            <!DOCTYPE html>
+			<html>
+			<head>
+			    <meta charset="UTF-8">
+			    <title></title>		  
+			    <style type="text/css">
+			    	 .hover {
+			            background: #FFE0E9;
+			        }
+			    </style>  
+			</head>
+			    <body>
+					<ul id="ul1">
+					    <li>html</li>
+					    <li>css</li>
+					    <li>javascript</li>				    
+					</ul>      
+			        <script type="text/javascript">
+			            var oUl = document.getElementById("ul1");
+			            var oLis = oUl.getElementsByTagName("li");
+					    for (var i = 0; i < oLis.length; i++) {
+					        oLis[i].onmouseover = function () {
+					            this.className = "hover";
+					        };
+					        oLis[i].onmouseout = function () {
+					            this.className = "";
+					        };
+					    }			        
+			           var frg = document.createDocumentFragment();//创建一个文档碎片-->创建了一个临时的存储容器
+					    for (var i = 0; i < data.length; i++) {
+					        var oLi = document.createElement("li");
+					        oLi.innerHTML = data[i];
+					        frg.appendChild(oLi);//每一次循环创建的li不急着往页面上增加，先放到文档碎皮中
+					    }
+					    oUl.appendChild(frg);//最后把整个文档碎片一起添加到页面中,只引发一次回流，并且对之前的元素没有任何的影响
+					    frg = null;//为了节省浏览器的存储空间，我们用完这个文档碎片后，把它清空一下			                      
+			        </script>
+			    </body>
+		 3.2 优点：
+		     3.2.1 只引发一次回流
+		     3.2.2 对之前的元素没有影响
+		 3.3 缺点：没有缺点。
+			 </html>
+
+九、document.createDocumentFragment()方法的作用和语法
+    1 作用     
+      因为文档片段存在与内存中，并不在DOM树中，所以将子元素插入到文档片段时不会引起页面回流(reflow)(对元素位置和几何上的计算)。因此，使用文档片段document fragments 通常会起到优化性能的作用(better performance)。
+    2 语法
+      var docFragment = document.createDocumentFragment();//docFragment 是一个对空文档片段 DocumentFragment 对象的引用。
+    3 步骤
+      DocumentFragments 是一些DOM节点。它们不是DOM树的一部分。
+      3.1 通常的使用场景是创建一个文档片段
+          var frg = document.createDocumentFragment();
+      3.2 然后将创建的DOM元素插入到文档片段中
+          frg.appendChild(oLi);
+      3.3 最后把文档片段插入到DOM树中。
+          oUl.appendChild(frg);
+      3.4 在DOM树中，文档片段会被替换为它所有的子元素。
+    4 示例,见第八大题第3小节
+      <script type="text/javascript">
+      		var ul = document.getElementsByTagName("ul")[0]; // assuming it exists
+			var docfrag = document.createDocumentFragment();
+			var browserList = ["Internet Explorer", "Mozilla Firefox", "Safari", "Chrome", "Opera"];
+			browserList.forEach(function(e) {
+			  var li = document.createElement("li");
+			  li.textContent = e;
+			  docfrag.appendChild(li);
+			});
+			ul.appendChild(docfrag);
+			// a list with well-known web browsers
+      </script>
+    5 浏览器兼容性
+      documentFragment 被所有主流浏览器支持，甚至是IE 6。所以，没有理由不用。
+  
+十、 前后端处理大数据的流程？
+    前后端处理大数据的流程大致：后台定义一个请求的接口，每一次只返回一定数量的数据，前端第一次先把返回的全部请求过来，用文档碎片的方式绑定到页面上，然后当第一批数据绑定完成后，先让用户看到页面，当用户滚动屏幕时然后再分批依次请求剩下的数据。
+    关于图片延迟加载在第四周动画部分会用到这种前端大数据处理思想。
+    前后端数据交互的方式主要有如下5总：
+    1 HTML赋值
+	   1.1 输出到 Element 的 value 或 data-name
+		<input type="hidden" value="<?php echo $user_avatar;?>" />
+		<div data-value="<?php echo $user_avatar;?>"></div>
+	   1.2 渲染结果
+		<input type="hidden" value="https://avatars1.githubusercontent.com/u/3949015?v=3&s=40" />
+		<div data-avatar="https://avatars1.githubusercontent.com/u/3949015?v=3&s=40"></div>
+       1.3 使用 JS 获取
+		$('input').val();
+		// http://jquery.bootcss.com/jQuery.data/
+		$('div').data('avatar');
+	   1.4 优点：
+		不占用全局变量，由 JS 自由获取。
+       1.5 使用建议：适合传递简单数据，也非常适合多个简单数据与 Element 绑定关系。
+       1.6 示例
+			<ul>
+				<li>nimojs <span data-userid="1" >删除</span></li>
+				<li>nimo22 <span data-userid="2" >删除</span></li>
+				<li>nimo33 <span data-userid="3" >删除</span></li>
+				<li>nimo44 <span data-userid="4" >删除</span></li>
+				<li>nimo55 <span data-userid="5" >删除</span></li>
+			</ul>
+			<script>
+			$('span').on('click',function(){
+			    $.post('/ajax/remove/',$(this).data('userid'),function(data){
+			        // ...
+			    })
+			})
+			</script>
+	2 JS赋值
+	  2.1 将数据填充到 <script> 的 JavaScript 变量声明中。
+		   <script>
+			var user_avatar = "<?php echo $user_avatar;?>";
+			// 渲染结果
+			// var user_avatar = "https://avatars1.githubusercontent.com/u/3949015?v=3&s=40";
+			</script>
+	   2.2 或使用 Smarty 后端模板引擎：
+			<script>
+			var user_avatar = "{$user_avatar}";
+			</script>
+	   2.3 优点：
+			传递数据非常方便。前端直接调用 user_avatar 变量使用数据。
+
+	   2.4 缺点：
+			为了传递一个字符串数据占用了全局变量 user_avatar，当有很多数据需要传输时则会占用很多全局变量。
+	        如果返回数据存在换行将会导致JS报错
+			// 渲染结果有换行符
+			var user_id = "
+			https://avatars1.githubusercontent.com/u/3949015?v=3&s=40";
+			// Uncaught SyntaxError: Unexpected token ILLEGAL
+	   2.5 优化：
+			可以通过指向的某一个变量存放所有后端返回的内容，最小程度占用全局变量。例：
+			// PHP 代码
+			var SERVER_DATA = {
+			    username: {$username},
+			    userid: {$userid},
+			    title: {$title}
+			}
+			// 渲染结果
+			var SERVER_DATA = {
+			    username: "NimoChu",
+			    userid: 1,
+			    title: 'F2E'
+			}
+	   2.6 使用建议：
+			需要最快速度传递数据给 JS 并十分确定此数据稳定时，使用此方式。数据格式复杂的建议使用script填充JSON 或AJAX获取JSON 方法。
+	3 script填充JSON
+	  3.1 填充 JSON 数据到 <script> 标签中，前端通过 DOM 获取 JSON字符串并解析成对象。
+		<script type="text/template" id="data">{"username":"nimojs","userid":1}</script>
+		<script>
+		var data = JSON.parse($('#data').html());
+		//{username:"nimojs",userid:1}
+		</script>
+	  3.2 优点：
+	      页面加载完成后就可以获取到数据。不占用全局变量，可传递大量数据集合。
+	  3.3 缺点：
+		  数据量特别大时会导致页面初次加载变慢。变慢并不只是文件大小导致的，也因为服务器查询数据并返回合集是需要时间，可使用AJAX获取JSON完成按需加载和加载等待。
+	  3.4 使用建议：
+			适合传递在DOM加载完成时就需要用到的大量数据集合。例如：前端控制页面渲染，后端将JSON数据源填充到 script由前端使用 JavaScript模板引擎进行页面渲染。
+	4 AJAX获取JSON
+	  4.1 使用 AJAX 获取JSON数据
+			<span id="showdata">查看资料</span>
+			<div style="display:none;" id="box">
+			    <h2>用户信息</h2>
+			    <p id="info"><img src="loading.gif" /></p>
+			</div>
+			$('#showdata').on('click',function(){
+			    $('#box').show();
+			    $.getJSON('/ajax/userdata/',function(oData){
+			        // oData = {"username":"nimojs","userid":1}
+			        $('#info').html('用户名：' + oData.username + '<br>用户ID：' + oData.userid);
+			    })
+			})
+	 4.2 这是一个通过AJAX 获取用户资料的示例。流程如下：
+		 4.2.1 页面上只显示查看资料
+		 4.2.2 用户点击查看资料
+		 4.2.3 显示用户信息和 loading 图片
+		 4.2.4 向服务器发送获取用户信息的AJAX请求
+		 4.2.5 服务器返回JSON字符串，$.getJSON 自动将返回的 JSON字符串转换为对象
+		 4.2.6 填充内容到 <p id="info">
+	 4.3 优点：
+		不占用全局变量和 DOM 节点，可以自由控制获取数据的触发条件（页面加载完成时、用户点击查看资料时或用户点击某个按钮时）。当开始获取数据时可使用 loading 图片占位提示用户数据正在读取。防止页面加载所有数据导致的页面加载缓慢。
+	 4.4 缺点：
+		会产生额外的HTTP请求。不能在DOM加载完成以后立即获取，需要发送请求-接收响应。
+	 4.5 使用建议：
+		适合加载非主要信息、设定触发条件（用户点击查看资料时），并提供友好的数据读取等待提示。
+5 WebSocket实时传输数据
+	如果将 AJAX请求和响应比喻成给服务器发短信和等待服务器回复短信，而 WebSocket 就如同和服务器打电话。
+6 总结
+	每种情况都有每种情况的用处，没有绝对正确的方法。根据实际情况灵活的选择获取数据方式。
+    补充知识：
+   

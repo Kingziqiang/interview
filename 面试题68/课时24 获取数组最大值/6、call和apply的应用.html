@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训-数组的最大值和最小值</title>
+</head>
+<body>
+<script type="text/javascript">
+    //->1、李小燕思想：首先先给我们的数组进行排序(小->大),第一个和最后一个就是我们想要的最小值和最大值
+    //    var ary = [23, 34, 24, 12, 35, 36, 14, 25];
+    //    ary.sort(function (a, b) {
+    //        return a - b;
+    //    });
+    //    var min = ary[0];
+    //    var max = ary[ary.length - 1];
+    //    console.log(min, max);
+
+    //->2、假设法:假设当前数组中的第一个值是最大值,然后拿这个值和后面的项逐一进行比较,如果后面某一个值比假设的还要大,说明假设错了,我们把假设的值进行替换...
+    //->和自定义属性一样,都是JS中最常用的编程思想
+    //    var ary = [23, 34, 24, 12, 35, 36, 14, 25];
+    //    var max = ary[0], min = ary[0];
+    //    for (var i = 1; i < ary.length; i++) {
+    //        var cur = ary[i];
+    //        cur > max ? max = cur : null;
+    //        cur < min ? min = cur : null;
+    //    }
+    //    console.log(min, max);
+
+
+    //->3、冀彦瑞思想：使用Math中的max/min方法实现
+    var ary = [23, 34, 24, 12, 35, 36, 14, 25];
+    var max = Math.max.apply(null, ary);
+    var min = Math.min.apply(null, ary);
+    console.log(min, max);
+
+    //->以下代码实现不了
+    //    var min = Math.min(ary);
+    //    console.log(min);//->NaN
+    //    console.log(Math.min(23, 34, 24, 12, 35, 36, 14, 25));//->12 它是在执行的时候,把需要比较的那堆数一个个的传递进来,这样才可以得到最后的结果,一下放一个ary数组进来是不可以的
+
+    //->第一次尝试
+    //    Math.min([23, 34, 24, 12, 35, 36, 14, 25])
+    //    //->join/toString ->"23,34,24,12,35,36,14,25"
+    //    //->eval("23,34,24,12,35,36,14,25") ->25 只获取到了最后一项的值
+    //    Math.min(23, 34, 24, 12, 35, 36, 14, 25)
+
+    //->第二次尝试->江鹏思想
+    //"Math.max(" + ary.toString() + ")" //->"Math.max(23,34,24,12,35,36,14,25)" 首先不要管其他的,先把我们最后要执行的代码都变为字符串,然后把数组中的每一项的值分别的拼接到这个字符串中
+    //    var max = eval("Math.max(" + ary.toString() + ")");
+    //    console.log(max);
+    //    var min = eval("Math.min(" + ary.toString() + ")");
+    //    console.log(min);
+
+
+    //->5、eval:把一个字符串变为JS表达式执行
+    //例如：
+    //eval("12+23+34+45") ->114
+
+    //->6、括号表达式
+    //    function fn1() {
+    //        console.log(this);
+    //    }
+    //    function fn2() {
+    //        console.log(this);
+    //    }
+    //    var obj = {name: "珠峰培训", fn: fn2};
+    //;(fn1,fn2)();//->2 ->只有fn2执行了 ->(x1,x2,x3...)括号表达式,一个括号中出现多项内容,中间用“,”隔开,但是我们最后获取到的结果只有最后一项
+    //(fn2,obj.fn)();//->执行的是obj.fn，但是执行的时候里面的this变为了window而不是obj
+    //(obj.fn)();//->this还是obj
+</script>
+</body>
+</html>

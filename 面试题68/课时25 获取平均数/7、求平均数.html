@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //-> arguments.sort();//->Uncaught TypeError: arguments.sort is not a function arguments是一个类数组集合,它不是数组,不能直接使用数组的方法
+    //    function avgFn() {
+    //        //->1、将类数组转换为数组
+    //        var ary = [];
+    //        for (var i = 0; i < arguments.length; i++) {
+    //            ary[ary.length] = arguments[i];
+    //        }
+    //
+    //        //->2、给数组排序,去掉开头和结尾,剩下的是求平均数
+    //        ary.sort(function (a, b) {
+    //            return a - b;
+    //        });
+    //        ary.shift();
+    //        ary.pop();
+    //
+    //        return (eval(ary.join("+")) / ary.length).toFixed(2);
+    //    }
+
+    //    //->模拟内置的slice实现数组克隆的功能
+    //    Array.prototype.mySlice = function () {
+    //        //this->当前要操作的这个数组
+    //
+    //        //内置的代码
+    //        var ary = [];
+    //        for (var i = 0; i < this.length; i++) {
+    //            ary[ary.length] = this[i];
+    //        }
+    //
+    //        //我自己写的一份把arguments转换为数组的代码
+    //        var ary = [];
+    //        for (var i = 0; i < arguments.length; i++) {
+    //            ary[ary.length] = arguments[i];
+    //        }
+    //
+    //
+    //        return ary;
+    //    };
+    //    var ary = [12, 23, 34];
+    //    var newAry = ary.mySlice();
+    //    console.log(newAry);
+
+    //    function avgFn() {
+    //        //->1、将类数组转换为数组:把arguments克隆一份一模一样的数组出来
+    //        //->借用数组原型上的slice方法,当slice执行的时候,让方法中的this变为我要处理的arguments,实现将类数组arguments转换为数组
+    //        var ary = Array.prototype.slice.call(arguments);
+    //        //ary = [].slice.call(arguments);
+    //
+    //        ary.sort(function (a, b) {
+    //            return a - b;
+    //        });
+    //        ary.shift();
+    //        ary.pop();
+    //        return (eval(ary.join("+")) / ary.length).toFixed(2);
+    //    }
+
+
+    function avgFn() {
+        Array.prototype.sort.call(arguments, function (a, b) {
+            return a - b;
+        });
+        [].shift.call(arguments);
+        [].pop.call(arguments);
+        return (eval([].join.call(arguments, "+")) / arguments.length).toFixed(2);
+    }
+    var res = avgFn(9.8, 9.7, 10, 9.9, 9.0, 9.8, 3.0);
+    console.log(res);
+</script>
+</body>
+</html>

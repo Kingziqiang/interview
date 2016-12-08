@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题68案</title>    
+</head>
+<body>
+	<h1>68 函数的三种角色？Call、apply和bind的区别。</h1>
+	<pre>	
+一、函数的三种角色
+    1 "普通函数"：它本身就是一个普通的函数,执行的时候形成私有的作用域(闭包),形参赋值,预解释,代码执行,执行完成后栈内存销毁/不销毁
+      <script type="text/javascript">
+            var c = 9;
+      		function sum(a,b){
+      			var c = a+b;
+      			return c;
+      		}
+      		console.log(sum(1,2));//3
+      		console.log(c);//9
+      </script>
+    2 "类"：它有自己的实例,也有一个叫做prototype属性是自己的原型,它的实例都可以指向自己的原型
+      类名（构造函数名）首字母大写
+      <script type="text/javascript">
+      		function Person(name,age){
+      			this.name=name;
+      			this.getName=function(){
+      				console.log(this.name);
+      			}
+      		}
+      		var per1 = new Person("cxh");
+      		var per2 = new Person("bill");
+      		per1.getName();//cxh
+      		per2.getName();//bill
+      		console.log(Person.prototype===per1.__proto__);//true
+      </script>
+    3 "普通对象"：和var obj={}中的obj一样,就是一个普通的对象,它作为对象可以有一些自己的私有的属性,也可以通过__proto__找到Function.prototype
+      <script type="text/javascript">
+      		function fn(){};
+       		fn.x = 1;
+       		fn.y = 2;
+       		console.log(fn.x,fn.y);//1 2
+       		console.log(fn.__proto__===Function.prototype);//true
+      </script>       		
+二、Call、apply和bind的区别 
+   1 call 方法 
+     call() 方法在使用一个指定的this值和若干个指定的参数值的前提下调用某个函数或方法.
+     1.1 语法         
+         fun.call(thisArg[, arg1[, arg2[, ...]]])
+         参数放在[]里面表示可选参数，所以第二个参数开始都是可选参数，可有可无
+     1.2 参数
+         1.2.1 thisArg
+               在fun函数运行时指定的this值。需要注意的是，指定的this值并不一定是该函数执行时真正的this值，如果这个函数处于非严格模式下，则指定为null和undefined的this值会自动指向全局对象(浏览器中就是window对象)，同时值为原始值(数字，字符串，布尔值)的this会指向该原始值的自动包装对象。
+         1.2.2 arg1, arg2, ...
+               指定的参数列表。
+     1.3 作用
+         1.3.1 当调用一个函数时，可以赋值一个不同的 this 对象。this 引用当前对象，即 call 方法的第一个参数。
+               在下面的例子中，当调用 greet 方法的时候，该方法的 this 值会绑定到obj对象。
+	           <script type="text/javascript">
+		         	function greet() {
+					  var reply = [this.person, 'Is An Awesome', this.role].join(' ');
+					  console.log(reply);
+					}
+					var obj = {
+					  person: 'Douglas Crockford', role: 'Javascript Developer'
+					};
+					greet.call(obj); // Douglas Crockford Is An Awesome Javascript Developer
+	           </script>		
+         1.3.2 通过 call 方法，你可以在一个对象上借用另一个对象上的方法，比如Object.prototype.toString.call([])，就是一个Array对象借用了Object对象上的方法。
+               <script type="text/javascript">
+                    [].toString();//""
+               		Object.prototype.toString.call([]);//"[object Array]"
+               </script>         
+   2 apply方法
+     apply() 方法在指定 this 值和参数（参数以数组或类数组对象的形式存在）的情况下调用某个函数。
+     2.1 语法
+         fun.apply(thisArg[, argsArray])
+         [, argsArray]，在语法描述时，中括号内的参数表示非必须，可有可无。
+     2.2 参数
+         2.2.1 thisArg
+               在 fun 函数运行时指定的 this 值。需要注意的是，指定的 this 值并不一定是该函数执行时真正的 this 值，如果这个函数处于非严格模式下，则指定为 null 或 undefined 时会自动指向全局对象（浏览器中就是window对象），同时值为原始值（数字，字符串，布尔值）的 this 会指向该原始值的自动包装对象。
+         2.2.2 argsArray
+               一个数组或者类数组对象，其中的数组元素将作为单独的参数传给 fun 函数。如果该参数的值为null 或 undefined，则表示不需要传入任何参数。从ECMAScript 5 开始可以使用类数组对象。浏览器兼容性请参阅本文底部内容。
+     2.3 作用
+         2.3.1 在调用一个存在的函数时，你可以为其指定一个 this 对象。 this 指当前对象，也就是正在调用这个函数的对象。 
+                <script type="text/javascript">
+		         	function greet() {
+					  var reply = [this.person, 'Is An Awesome', this.role].join(' ');
+					  console.log(reply);
+					}
+					var obj = {
+					  person: 'Douglas Crockford', role: 'Javascript Developer'
+					};
+					greet.call(obj); // Douglas Crockford Is An Awesome Javascript Developer
+	           </script>		
+	     2.3.2 通过 apply方法，你可以在一个对象上借用另一个对象上的方法.
+	           比如Object.prototype.toString.apply([])，就是一个Array对象借用了Object对象上的方法。
+               <script type="text/javascript">
+                    [].toString();//""
+               		Object.prototype.toString.apply([]);//"[object Array]"
+               </script>    
+         2.3.3 聪明的apply用法允许你在某些本来需要写成遍历数组变量的任务中使用内建的函数。
+               在接下里的例子中我们会使用Math.max/Math.min来找出一个数组中的最大/最小值。
+                <script type="text/javascript">
+		         	/* min/max number in an array */
+					var numbers = [5, 6, 2, 3, 7];
+					/* using Math.min/Math.max apply */
+					var max = Math.max.apply(null, numbers); //7,等价于Math.max(5, 6, 2, 3, 7)
+					var min = Math.min.apply(null, numbers);//2,等价于Math.mix(5, 6, 2, 3, 7)  
+			    </script>
+	3 bind方法
+	  bind()方法会创建一个新函数，当这个新函数被调用时，它的this值是传递给bind()的第一个参数, 它的参数是bind()的其他参数和其原本的参数.
+      3.1 语法
+           fun.bind(thisArg[, arg1[, arg2[, ...]]])
+      3.2 参数
+          3.2.1 thisArg
+                当绑定函数被调用时，该参数会作为原函数运行时的 this 指向。当使用new 操作符调用绑定函数时，该参数无效。
+          3.2.2 arg1, arg2, ...
+                当绑定函数被调用时，这些参数加上绑定函数本身的参数会按照顺序作为原函数运行时的参数。
+      3.3 示例
+          3.3.1 创建一个跟调用函数一样的新函数，新函数中的this被修改为bind第一个参数。
+          		<script type="text/javascript">
+          			var bar = function(){
+						console.log(this.x);
+					}
+					var foo = {
+						x:1
+					}
+					bar(); // undefined
+					var func = bar.bind(foo);
+					func(); // 1
+          		</script>
+          		这里我们创建了一个新的函数 func，当使用 bind() 创建一个绑定函数之后，它被执行的时候，它的 this 会被设置成 foo ， 而不是像我们调用 bar() 时的全局作用域。
+          3.3.2 连续多次绑定bind，只有第一次有效。
+                <script type="text/javascript">
+					var bar = function(){
+					    console.log(this.x);
+					}
+					var foo = {
+					    x:1
+					}
+					var sed = {
+					    x:2
+					}
+					var func = bar.bind(foo).bind(sed);
+					func(); //1					  
+					var fiv = {
+					    x:3
+					}
+					var func = bar.bind(foo).bind(sed).bind(fiv);
+					func(); //1
+                </script>
+                答案是，两次都仍将输出 1，而非期待中的 2 和 3 。原因是，在Javascript中，多次 bind() 是无效的。更深层次的原因， bind() 的实现，相当于使用函数在内部包了一个 call / apply ，第二次 bind() 相当于再包住第一次 bind() ,故第二次以后的 bind 是无法生效的。
+      3.4 浏览器兼容性
+          Chrome7+、Firefox (Gecko)4.0 (2)+、IE9、Opera11.60+、Safari5.1+
+    4 三者的区别
+        <script type="text/javascript">
+            var name = "god";
+        	var obj = {
+			    name:"cxh"
+			};			  
+			var fn = {
+			    getName: function(major,job) {
+			        return this.name+","+major+","+job;
+			    }
+			}  
+			console.log(fn.getName.bind(obj,"computer","architect"));  //function (major,job) {return this.name+","+major+","+job;}
+			console.log(fn.getName.bind(obj,"computer","architect")());  //cxh,computer,architect
+			console.log(fn.getName.bind(obj)("computer","architect"));  //cxh,computer,architect
+			console.log(fn.getName.call(obj,"computer","architect"));    //cxh,computer,architect
+			console.log(fn.getName.apply(obj,["computer","architect"]));   //cxh,computer,architect
+        </script>
+        4.1 相同点
+            4.1.1 apply 、 call 、bind 三者都是用来改变函数的this对象的指向的；
+		    4.1.2 apply 、 call 、bind 三者第一个参数都是this要指向的对象，也就是想指定的上下文；
+		    4.1.3apply 、 call 、bind 三者都可以利用后续参数传参；
+		4.2 不同的
+		    4.2.1 第二个参数不同
+                   call和bind方法第二个参数接收的是一个参数列表，
+                   apply第二个参数接收的是一个包含多个参数的数组（或者类数组）。
+		    4.2.2 返回值不同
+		         bind 是返回对应函数，便于稍后调用；fn.bind()();bind后两对号才会执行函数,如果bind后只有一对括号则表示新涵的引用。
+		         apply 、call 则是立即调用。fn.apply()或fn.call();后一对括号会立刻执行函数
+
+
+
+   

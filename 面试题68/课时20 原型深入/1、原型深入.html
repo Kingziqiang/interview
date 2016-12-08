@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="div1">
+    <p name="n1"></p>
+
+    <p name="n1"></p>
+
+    <p name="n2"></p>
+
+    <p name="n3"></p>
+
+    <p name="n2"></p>
+
+</div>
+<script type="text/javascript">
+    var oDiv = document.getElementById("div1");
+    //    var list=oDiv.getElementsByName("n1");//->Uncaught TypeError: oDiv.getElementsByName is not a function
+    //    console.log(list);
+
+    var list = document.getElementsByName("n1");
+    console.log(list);
+
+    //回去后把 window、document、div、a 的原型链一级级的结构画出来,画出来之后,每一级原型上都有哪些属性和方法,哪些兼容哪些不兼容,这个方法是做什么用的?
+</script>
+
+
+</body>
+</html>

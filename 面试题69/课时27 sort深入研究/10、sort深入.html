@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //var ary = [10, 19, 14, 34, 23, 1, 14, 16, 26, 2];
+
+    //    ary.sort(function (a, b) {
+    //        return 1;//->不管a和b谁大,每一次都返回一个恒大于零的数,也就是每一次a和b都要交换位置,最后的结果就是原有数组倒过来排列了==>reverse
+    //    });
+    //    console.log(ary);
+
+
+    //ary.sort();//->这样只能处理10以内的数字排序
+    //    ary.sort(function (a, b) {
+    //        //a->每一次执行匿名函数的时候,找到的数组中的当前项
+    //        //b->当前前的后一项
+    //
+    //        //return a - b;//->升序 如果a>b,返回的>0,a和b交换位置
+    //        //return b - a;//->降序 如果b>a,返回的>0,a和b交换位置
+    //        //->return的是一个>0 / <=0的数，大于0让a和b交换一下位置，小于等于0原来的位置不动
+    //    });
+
+    //->回调函数：把一个方法A当做参数值传递给另外一个函数B，然后在B执行的过程中，我们随时根据需求让A方法执行
+    //    function A(){
+    //
+    //    }
+    //    function B(fn){
+    //        fn();
+    //        fn();
+    //        fn();
+    //    }
+    //    B(A);
+
+
+    //    var ary = [
+    //        {name: "郭军贺", age: 78},
+    //        {name: "姜章涛", age: 13},
+    //        {name: "王梦缘", age: 107},
+    //        {name: "陈旭", age: 256}
+    //    ];
+    //->给二维数组排序,按照年龄由小到大进行排序
+    //    ary.sort(function (a, b) {
+    //        return parseFloat(a.age) - parseFloat(b.age);
+    //    });
+    //    console.log(ary);
+
+    //->由大到小
+    //    ary.sort(function (a, b) {
+    //        return (parseFloat(a.age) - parseFloat(b.age)) * -1;
+    //    });
+    //    console.log(ary);
+
+
+    var ary = [
+        {name: "郭军贺", age: 78},
+        {name: "姜章涛", age: 13},
+        {name: "王梦缘", age: 107},
+        {name: "陈旭", age: 256}
+    ];
+    ary.sort(function (a, b) {
+        return a.name.localeCompare(b.name);
+    });
+    console.log(ary);
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //我们在JS中使用try、catch进行浏览器的异常信息捕获
+
+    //console.log(num);//->Uncaught ReferenceError: num is not defined 在JS中本行报错,下面代码都不在执行了
+    //console.log("ok");
+
+    //->我们16行代码执行报错,如果用try\catch捕获了异常信息,不影响下面的代码继续执行；如果try中的代码执行出错了,会默认的去执行catch中的代码；
+    //    try {
+    //        console.log(num);
+    //    } catch (e) {//->形参必须要写,我们一般起名为e
+    //        console.log(e.message);//->num is not defined 可以收集当前代码报错的原因
+    //    }
+    //    console.log("ok");
+
+    //    try {
+    //        //<js code>
+    //    } catch (e) {
+    //        //如果代码报错执行catch中的代码
+    //    } finally {
+    //        //一般不用：不管try中的代码是否报错,都要执行finally中的代码
+    //    }
+
+    //有时候即想捕获到错误的信息，又想不让下面的代码继续执行
+    try {
+        console.log(num);
+    } catch (e) {
+        //console.log(e.message); ->可以得到错误的信息,把其进行统计
+
+        //->手动抛出一条错误信息,终止代码执行
+        throw new Error("当前网络繁忙，请稍后在试~~");
+//        new ReferenceError ->引用错误
+//        new TypeError ->类型错误
+//        new RangeError ->范围错误
+    }
+    console.log("ok");
+</script>
+</body>
+</html>

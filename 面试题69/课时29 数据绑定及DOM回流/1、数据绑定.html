@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>数据绑定</title>
+    <style type="text/css">
+        body, ul, li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #ul1 {
+            margin: 10px auto;
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #008000;
+        }
+
+        #ul1 li {
+            position: relative;
+            padding-left: 28px;
+            height: 35px;
+            line-height: 35px;
+
+            /*一行文字超出后自动进行截取*/
+            text-overflow: ellipsis; /*ellipsis:截取后以...作为省略 clip:没有省略号*/
+            white-space: nowrap; /*强制不换行*/
+            overflow: hidden; /*溢出隐藏*/
+        }
+
+        #ul1 li span {
+            display: block;
+            position: absolute;
+            top: 6px;
+            left: 0;
+            width: 21px;
+            height: 21px;
+            line-height: 20px;
+            text-align: center;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            border-radius: 50%;
+        }
+
+        #ul1 li span.bg {
+            background: #ff3333;
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<ul id="ul1">
+    <li><span class="bg">01</span>从习近平讲话看下一步反腐倡廉工作着力点</li>
+    <li><span class="bg">02</span>李克强主持国务院常务会议再推简政放权</li>
+    <li><span class="bg">03</span>从习近平讲话看下一步反腐倡廉工作着力点</li>
+</ul>
+
+<script type="text/javascript" src="../json/json-bind.js"></script>
+<script type="text/javascript">
+    var oUl = document.getElementById("ul1");
+    var oLis = oUl.getElementsByTagName("li");
+    for (var i = 0; i < oLis.length; i++) {
+        oLis[i].onmouseover = function () {
+            this.style.backgroundColor = "pink";
+        };
+        oLis[i].onmouseout = function () {
+            this.style.backgroundColor = "";
+        };
+    }
+
+    //1、利用动态创建元素节点和把它追加到页面中的方式实现数据绑定
+    //    for (var i = 0; i < ary.length; i++) {
+    //        var cur = ary[i];
+    //        var oLi = document.createElement("li");
+    //        oLi.innerHTML = "<span>" + (i + 4) + "</span>" + cur.title;
+    //        oUl.appendChild(oLi);
+    //    }
+    //优势：把需要动态绑定的内容一个个的追加到页面中,对原来的元素没有任何的影响
+    //弊端：每当创建一个li,我们就添加到页面中,引发一次DOM的回流,最后引发回流的次数过多，影响我们的性能
+
+    //2、字符串拼接的方式：首先循环需要绑定的数据，然后把需要动态绑定的标签以字符串的方式拼接到一起，拼接完成后，最后统一的添加到页面中 ->"字符串拼接绑定数据是我们以后工作中最常用的一种绑定数据的方式" ->模板引擎数据绑定(jade、kTemplate、angular.js、backbone.js...)
+    //    var str = "";
+    //    for (var i = 0; i < ary.length; i++) {
+    //        var cur = ary[i];
+    //        str += "<li>";
+    //        str += "<span>" + (i + 4) + "</span>";
+    //        str += cur.title;
+    //        str += "</li>";
+    //    }
+    //    oUl.innerHTML += str;//->oUl.innerHTML=oUl.innerHTML(把之前的三个li以字符串的方式获取到)+str;(拼接完成的整体还是字符串,最后在把字符串统一的添加到页面中，浏览器还需要把字符串渲染成为对应的标签)
+
+    //弊端：我们把新拼接的字符串添加到#ul1中,原有的三个li的鼠标滑过效果都消失了(原来标签绑定的事件都消失了)
+    //优势：事先把内容拼接好,最后统一添加到页面中,只引发一次回流
+
+
+    //JS中DOM深入知识:
+    //->回流(重排 reflow):当页面中的HTML结构发生改变(增加、删除元素、位置发生改变...)，浏览器都需要从新的计算一遍最新的DOM结构，从新的对当前的页面进行渲染
+
+    //->重绘:某一个元素的部分样式发生改变了(背景颜色),浏览器只需要重新的渲染当前的元素即可
+
+
+    //3、文档碎片
+    var frg = document.createDocumentFragment();//->创建一个文档碎片,相当于临时创建了一个容器
+    for (var i = 0; i < ary.length; i++) {
+        var cur = ary[i];
+
+        var oLi = document.createElement("li");
+        oLi.innerHTML = "<span>" + (i + 4) + "</span>" + cur.title;
+        frg.appendChild(oLi);
+    }
+    oUl.appendChild(frg);
+    frg = null;
+</script>
+</body>
+</html>

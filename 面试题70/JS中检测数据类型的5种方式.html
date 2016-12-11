@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JS中检测数据类型的5种方式</title>    
+</head>
+<body>
+	<h1>总结学过的检测数据类型方法（要能够检测引用数据类型的细分）</h1>
+	<pre>	
+一、typeof 用来检测数据类型的运算符
+    1 语法
+      typeof value
+    2 返回值
+      首先是一个字符串,其次里面包含了对应的数据类型,例如:"number"、"string"、"boolean"、"undefined"、"symbol"、object"、"function"
+    3 局限性:
+       3.1 所有的函数都被检测成“function”类型，不能检测类的具体细分
+       3.2 所有的实例，检测的不管是数组还是正则都返回的是"object",所以typeof不能判断一个值是否为数组
+    4 特例
+      4.1 null被检测成object类型
+          typeof null ->"object"
+      4.2 两个及以上typeof，返回值都是字符串
+          console.log(typeof typeof typeof [12, 23]);//->"string"
+    5 示例
+      <script type="text/javascript">
+      	    console.log("<-- 1 typeof 检测数据类型: -->");
+		    console.log('typeof "foo" = '+typeof "foo");//"string"
+		    console.log('typeof 1 = '+typeof 1);//"number"
+		    console.log('typeof true = '+typeof true);//"boolean"
+		    console.log('typeof undefined = '+typeof undefined);//"undefined"
+		    console.log('typeof null= '+typeof null);//"object"
+		    console.log('typeof [] = '+typeof []);//"object"
+		    console.log('typeof {} = '+typeof {});//"object"
+		    console.log('typeof /abc/g = '+typeof /abc/g);//"object"
+		    console.log('typeof new Function() = '+typeof new Function());//"function"
+      </script>
+
+二、instanceof/constructor
+    1 检测某一个实例是否属于某一个类
+	->我们使用instanceof/constructor可以检测数组和正则了
+	console.log([] instanceof Array);//->true
+	console.log(/^$/ instanceof RegExp);//->true
+	console.log([] instanceof Object);//->true
+	console.log([].constructor === Array);//->true
+	console.log([].constructor === Object);//->false 我们的constructor可以避免instanceof检测的时候,用Object也是true的问题
+	console.log({}.constructor === Object);
+    2 局限性：
+      2.1 用instanceof检测的时候,只要当前的这个类在实例的原型链上(可以通过原型链__proto__找到它),检测出来的结果都是true
+          var oDiv = document.getElementById("div1");
+		//HTMLDivElement->HTMLElement->Element->Node->EventTarget->Object
+		console.log(oDiv instanceof HTMLDivElement);//->true
+		console.log(oDiv instanceof Node);//->true
+		console.log(oDiv instanceof Object);//->true
+	  2.2 基本数据类型的值是不能用instanceof来检测的
+	    console.log(1 instanceof Number);//->false
+		2.2.1 对于引用数据类型来说,我们两种方式创建出来的都是所属类的实例,而且都是对象数据类型的值,是没有区别的
+				var ary = [];
+				var ary = new Array;
+		2.2.2 对于基本数据类型来说,虽然不管哪一种方式创建出来的都是所属类的一个实例(在类的原型上定义的方法都可以使用),但是字面量方式创建出来的是基本数据类型,而实例方式创建出来的是对象数据类型
+				var num1 = 1;
+				var num2 = new Number("1");
+				console.log(typeof num1,typeof num2);//->"number" "object"
+     3 在类的原型继承中,instanceof检测出来的结果其实是不准确的
+	    function Fn() {}	    
+		var f = new Fn; //{}，Fn的实例是没有属性的空对象。
+		console.log(f instanceof Array);//->false f不是一个数组,它就是一个普通的实例(普通的对象)
+		//->虽然我们的Fn继承了Array,但是f没有length和数字索引哪些东西,所以f应该不是数组才对,但是用instanceof检测的结果却是true,因为f虽然不是数组,但是在f的原型链上可以找到Array
+		function Fn() {
+		}
+		Fn.prototype = new Array;//->Fn子类继承了Array这个父类中的属性和方法
+		var f = new Fn;
+		console.log(f instanceof Array);//->true
+
+三、constructor 用来检测某个实例是否属于某种类型，不能检测基本数据类型。
+    /*fn上没有constructor属性，则向上一级查找，fn.__prototype__=fun1.prototype
+    fun1.prototype.constructor=fun1; constructor指向函数本身*/
+    1 示例
+	    <script type="text/javascript">
+	    	 console.log("<-- 3 constructor 检测数据类型: -->");
+		     function fun1(){}	    
+		     var fn=new fun1()
+		     console.log("fn.constructor = "+fn.constructor);//fun1
+	    </script>
+	2 局限性
+      数字类型、null、undefined不能用constructor来检测的，但是数字类型的包装类型可以检测
+	  console.log("1.constructor = "+1.constructor);//报错
+      console.log("(1).constructor = "+fn.constructor);//Number
+      console.log("null.constructor = "+null.constructor);//报错
+      console.log("undefined.constructor = "+undefined.constructor);//报错
+
+四、Object.prototype.toString.call(value) 
+  ->找到Object原型上的toString方法,让方法执行,并且让方法中的this变为value(value->就是我们要检测数据类型的值)
+    1 toString:一个方法,转换为字符串数据类型用的方法
+      1.1 每一个数据类型所属类的原型上都有toString方法,例如:Number.prototype/String.prototype/Array.prototype/Function.prototype...
+      1.2 除了Object上的toString,其他类原型上的toString都是把当前的数据值转换为字符串的意思
+      1.3 null和undefined比较的特殊:他们所属类Null/Undefined的原型上也有toString,只不过不让我们用而已,不仅如此其实类的原型都给屏蔽了
+      1.4 HTML元素对象的toString:虽然它的原型链很长,但是在其它类的原型上都没有toString,只有在最底层Object.prototype这上才有
+          var oDiv = document.getElementById("div1");
+          oDiv.toString();//->调用的其实也是Object.prototype.toString...
+    2 alert、document.write这两种输出的方式其实都是把要输出的内容先转换为字符串,然后在输出的
+      alert([]);//->""
+      alert(true);//->"true"
+      alert({});//->"[object Object]"这个就要调用Object.prototype上的toString了 
+    3 Object.prototype.toString是用来返回对应值的所属类信息的
+	  var oDiv = document.getElementById("div1");
+	  var obj = {};
+	  oDiv.toString();//->"[object HTMLDivElement]"
+	  obj.toString();//->"[object Object]"
+	4 原理	  
+	 //->obj首先找到原型上toString方法,并且让toString执行,toString方法执行的时候,里面的this是obj,同理oDiv.toString(),toString方法中的this是oDiv
+     //->执行toString方法,返回当前方法中this的数据类型 ->"[object 当前this的直属类]",例如:"[object HTMLDivElement]"/"[object Object]"
+     Object.prototype.toString.call(12);//->执行原型上的toString,并且让方法中的this变为12,也就相当于返回的是12的直属类的信息 ->"[object Number]"
+     Object.prototype.toString.call("cxh");//->"[object String]"
+    5 示例
+      <script type="text/javascript">
+      	    console.log("<-- 4 Object.prototype.toString.call() 检测数据类型: -->");
+		    console.log("{}.toString.call(1) = " + {}.toString.call(1));//[object Number]
+		    console.log("{}.toString.call(NaN) = " + {}.toString.call(NaN));//[object Number]
+		    console.log("{}.toString.call('123') = " + {}.toString.call("123"));//[object String]
+		    console.log("{}.toString.call(true) = " + {}.toString.call(true));//[object Boolean]
+		    console.log("{}.toString.call(window) = " + {}.toString.call(window));//[object global]
+		    console.log("{}.toString.call(document) = " + {}.toString.call(document));//[object HTMLDocument]
+		    console.log("{}.toString.call(null) = " + {}.toString.call(null));//[object Null]
+		    console.log("{}.toString.call(fn) = " + {}.toString.call(fn));//[object Object]
+		    console.log("{}.toString.call(fun1) = " + {}.toString.call(fun1));//[object Function]
+		    console.log("{}.toString.call(undefined) = " + {}.toString.call(undefined));//[object Undefined]
+		    console.log("{}.toString.call({}) = " + {}.toString.call({}));//[object Object]
+		    console.log("{}.toString.call([]) = " + {}.toString.call([]));//[object Array]
+		    console.log("{}.toString.call(Math) = " + {}.toString.call(Math));//[object Math]
+		    console.log("{}.toString.call(new Date()) = " + {}.toString.call(new Date()));//[object Date]
+		    console.log("{}.toString.call(new Error()) = " + {}.toString.call(new Error()));//[object Error]
+		    console.log("{}.toString.call(/\d/g) = " + {}.toString.call(/\d/g));//[object RegExp]
+		    function test (){
+		        console.log("{}.toString.call(arguments): " + {}.toString.call(arguments)); //[object Arguments]
+		    }
+		    test();
+      </script>
+    6 自定义数组检测方法
+      numObj只列举了一种HTML类型，因为不同的Html元素对应不同的类型，太多了不一一例讲。
+      <script type="text/javascript">
+      	~function () {
+			var utils = {},
+			numObj = {
+				isNumber: "Number",
+				isString: "String",
+				isBoolean: "Boolean",
+				isNull: "Null",
+				isUndefined: "Undefined",
+				isObject: "Object",
+				isArray: "Array",
+				isFunction: "Function",
+				isRegExp: "RegExp",
+				isDate: "Date",
+				isGlobal:"global",
+				isHTMLDocument:"HTMLDocument",				
+				isMath:"Math",
+				isError:"Error",
+				isArguments:"arguments"
+			}, 
+			isType = function () {
+				var outerArg = arguments[0];
+				return function () {
+					var innerArg = arguments[0], reg = new RegExp("^\\[object " + outerArg + "\\]$", "i");
+					return reg.test(Object.prototype.toString.call(innerArg));
+				}
+			};
+			for (var key in numObj) {
+				if (numObj.hasOwnProperty(key)) {
+					utils[key] = isType(numObj[key]);
+				}
+			}
+			window.$type = utils;
+		}();
+		//console.log($type);
+		var ary = [];
+		console.log($type.isAry(ary));//->true
+		console.log($type.isFun(ary));//->false
+      </script>
+   7 相对完美的检测数据类型方式。
+
+五、 prototype和__proto__检测(兼容性太差不推荐，IE11以下版本浏览器不兼容)
+	  console.log([].__proto__===Array.prototype);//true;
+	  console.log([].__proto__===Object.prototype);//false;
+	  当且检测当前类和当前类的实例时才为true.子类或父类、无关类的实例跟当前类匹配都为false
+	  局限性：
+	  1 兼容性太差了，IE11以下版本都不支持
+	  2 数字类型、null、undefined不能用constructor来检测的，但是数字类型的包装类型可以检测
+		  console.log("1.__proto__ = "+1.__proto__);//报错
+	      console.log("(1).__proto__ = "+(1).__proto__);//Number
+	      console.log("''.__proto__ = "+''.__proto__);//String
+	      console.log("true.__proto__ = "+true.__proto__);//Boolean
+	      console.log("null.__proto__ = "+null.__proto);//报错
+	      console.log("undefined.__proto__ = "+undefined.__proto__);//报错

@@ -1,0 +1,387 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题71答案</title>    
+</head>
+<body>
+	<h1>71 字面量和实例创建正则有何区别？正则修饰符有哪些及其含义？正则元字符有哪些及其含义？正则原型上的方法有哪些及其用法？字符串原型上与正则有关的方法有哪些及其用法？捕获和分组捕获，以及捕获时候的贪婪性和懒惰性的解决办法？</h1>
+	<pre>	
+		 一、字面量和实例创建正则有何区别
+	         1、字面量方式
+	            var reg1 = \.at\;
+	            var reg2 = \.at\i;
+	         2、构造函数创建实例方式
+	            var reg1 = new RegExp("\\.at");
+	            var reg2 = new RegExp("\\.at","i");
+	         3 区别
+	           3.1 实例方式在某些情况下要对字符进行双重转义
+	               字符\在字符串中被转义为\\
+	               <script type="text/javascript">
+	               		var reg1 = \\d\g;
+	               		var reg2 = new RegExp("\\d","g");
+	               </script>
+	           3.2 正则表达式字面量会始终共享同一个RegExp实例，而使用构造函数创建的每一个新RegExp实例都是一个新实例.
+	               注意：Ecmacript5已结消除了这一差异，统一为每次创建一个新的实例。
+	               <script type="text/javascript">
+	               		var reg1 = null;
+	               		reg1 = /cxh/g;
+	               		for(var i=0;i<3;i++){
+	               			//reg1 = /cxh/g;
+	               			console.log("字面量方式创建的正则第"+i+"次匹配索引为："+reg1.lastIndex);
+	               			console.log(reg1.test("cxhknly"));	               			
+	               		}
+	               		/*
+	               			字面量方式创建的正则第0次匹配索引为：0 true
+	               			字面量方式创建的正则第1次匹配索引为：0 true  在Ecmacript5之前的低版本浏览器中输出3 false
+	               			字面量方式创建的正则第2次匹配索引为：0 true
+	               		*/
+	               		var reg2 = null;
+	               		for(var j=0;j<3;j++){
+	               			reg2 = new RegExp("cxh","g");
+	               			console.log("构造函数方式创建的正则第"+j+"次匹配索引为："+reg2.lastIndex);
+	               			console.log(reg2.test("cxhknly"));	               			
+	               		}
+	               		/*
+	               			构造函数方式创建的正则第0次匹配索引为：0 true
+	               			构造函数方式创建的正则第1次匹配索引为：0 true
+	               			构造函数方式创建的正则第2次匹配索引为：0 true
+	               		*/
+	               </script>
+	     
+	     二、正则修饰符有哪些及其含义
+	         1 g：表示全局模式，即模式将被应用于所有字符串，而非在发现第一个匹配项时立即停止；
+	         2 i: 表示不区分大小写模式，即在到大一行文字末尾是还会继续查找下一行中是否存在与模式匹配的项。
+	         3 m: 表示多行模式，即到达下一行文本末尾时还会继续查找下一行中是否存在与模式匹配的项。
+	     
+		 三、正则元字符有哪些及其含义
+		    参见电子书
+            1 \	
+              将下一个字符标记为一个特殊字符、或一个原义字符、或一个后向引用、或一个八进制转义符。例如，'n' 匹配字符 "n"。'\n' 匹配一个换行符。序列 '\\' 匹配 "\" 而 "\(" 则匹配 "("。
+            2 ^	
+              匹配输入字符串的开始位置。如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 '\n' 或 '\r' 之后的位置。
+            3 $	
+              匹配输入字符串的结束位置。如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 '\n' 或 '\r' 之前的位置。
+            4 *	
+              匹配前面的子表达式零次或多次。例如，zo* 能匹配 "z" 以及 "zoo"。 * 等价于{0,}。
+            5 +	
+              匹配前面的子表达式一次或多次。例如，'zo+' 能匹配 "zo" 以及 "zoo"，但不能匹配 "z"。+ 等价于 {1,}。
+            6 ?	
+              匹配前面的子表达式零次或一次。例如，"do(es)?" 可以匹配 "do" 或 "does" 中的"do" 。? 等价于{0,1}。
+            7 {n}	
+               n 是一个非负整数。匹配确定的 n 次。例如，'o{2}' 不能匹配 "Bob" 中的 'o'，但是能匹配 "food" 中的两个 o。
+            8 {n,}	
+              n 是一个非负整数。至少匹配n 次。例如，'o{2,}' 不能匹配 "Bob" 中的 'o'，但能匹配 "foooood" 中的所有 o。'o{1,}' 等价于 'o+'。'o{0,}' 则等价于 'o*'。
+            9 {n,m}	
+               m 和 n 均为非负整数，其中n <= m。最少匹配 n 次且最多匹配 m 次。如， "o{1,3}" 将匹配 "fooooood"中的前三个 o。'o{0,1}' 等价于 'o?'。请注意在逗号和两个数之间不能有空格。
+            10 ?	
+               当该字符紧跟在任何一个其他限制符 (*, +, ?, {n}, {n,}, {n,m}) 后面时，匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。例如，对于字符串 "oooo"，'o+?' 将匹配单个 "o"，而 'o+' 将匹配所有 'o'。
+            11 .	
+               匹配除 "\n" 之外的任何单个字符。
+            12 (pattern)	
+               匹配pattern 并获取这一匹配。在JScript 中则使用 $1…$9 属性。要匹配圆括号字符，请使用 '\(' 或'\)'。
+            13 (?:pattern)	
+                匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用"或" 字符 (|) 来组合一个模式的各个部分是很有用。例如， 'industr(?:y|ies) 就是一个比'industry|industries' 更简略的表达式。
+            14 (?=pattern)	 
+                正向预查，在任何匹配 pattern 的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如， 'Windows (?=95|98|NT|2000)' 能匹配 "Windows 2000" 中的"Windows" ，但不能匹配 "Windows 3.1" 中的 "Windows"。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始。
+            15 (?!pattern)	
+               负向预查，在任何不匹配的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如'Windows (?!95|98|NT|2000)' 能匹配 "Windows 3.1" 中的 "Windows"，但不能匹配 "Windows 2000" 中的 "Windows"。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始
+            16 x|y	
+               匹配 x 或 y。例如，'z|food' 能匹配 "z" 或 "food"。'(z|f)ood' 则匹配 "zood" 或 "food"。
+            17 [xyz]	
+               字符集合。匹配所包含的任意一个字符。例如， '[abc]' 可以匹配 "plain" 中的 'a'。
+            18 [^xyz]	
+               负值字符集合。匹配未包含的任意字符。例如， '[^abc]' 可以匹配 "plain" 中的'p'。
+            19 [a-z]	
+               字符范围。匹配指定范围内的任意字符。例如，'[a-z]' 可以匹配 'a' 到 'z' 范围内的任意小写字母字符。例如:[a-z]   [A-Z]   [0-9]
+            20 [^a-z]	
+               负值字符范围。匹配任何不在指定范围内的任意字符。例如，'[^a-z]' 可以匹配任何不在 'a' 到 'z' 范围内的任意字符。
+            21 \b	
+                匹配一个单词边界，也就是指单词和空格间的位置。例如， 'er\b' 可以匹配"never" 中的 'er'，但不能匹配 "verb" 中的 'er'。  
+            22 \B	
+                匹配非单词边界。'er\B' 能匹配 "verb" 中的 'er'，但不能匹配 "never" 中的 'er'。
+            23 \cx	
+                匹配由x指明的控制字符。例如， \cM 匹配一个 Control-M 或回车符。 x 的值必须为 A-Z 或 a-z 之一。否则，将 c 视为一个原义的 'c' 字符。
+            24 \d	
+                匹配一个数字字符。等价于 [0-9]。
+            25 \D	
+                匹配一个非数字字符。等价于 [^0-9]。
+            26 \f	
+                匹配一个换页符。等价于 \x0c 和 \cL。
+            27 \n	
+                匹配一个换行符。等价于 \x0a 和 \cJ。
+            28 \r	
+                匹配一个回车符。等价于 \x0d 和 \cM。
+            29 \s	
+                匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]。
+            30 \S	
+                匹配任何非空白字符。等价于 [^ \f\n\r\t\v]。
+            31 \t	
+                匹配一个制表符。等价于 \x09 和 \cI。
+            32 \v	
+                匹配一个垂直制表符。等价于 \x0b 和 \cK。
+            33 \w	
+                匹配包括下划线的任何单词字符。等价于'[A-Za-z0-9_]'。
+            34 \W	
+                匹配任何非单词字符。等价于 '[^A-Za-z0-9_]'。
+            35 \xn	
+                匹配 n，其中 n 为十六进制转义值。十六进制转义值必须为确定的两个数字长。例如， '\x41' 匹配"A"。'\x041' 则等价于 '\x04' & "1"。正则表达式中可以使用 ASCII 编码。.
+            36 \num	
+                匹配 num，其中 num 是一个正整数。对所获取的匹配的引用。例如，'(.)\1' 匹配两个连续的相同字符。
+            37 \n	
+                标识一个八进制转义值或一个后向引用。如果 \n 之前至少 n 个获取的子表达式，则 n 为后向引用。否则，如果 n 为八进制数字 (0-7)，则 n 为一个八进制转义值。
+            38 \nm	标识一个八进制转义值或一个后向引用。如果 \nm 之前至少有is preceded by at least nm 个获取得子表达式，则 nm 为后向引用。如果 \nm 之前至少有 n 个获取，则 n 为一个后跟文字 m 的后向引用。如果前面的条件都不满足，若  n 和 m 均为八进制数字 (0-7)，则 \nm 将匹配八进制转义值 nm。
+            39 \nml	如果 n 为八进制数字 (0-3)，且 m 和 l 均为八进制数字 (0-7)，则匹配八进制转义值 nml。 
+            40 \un	匹配 n，其中 n 是一个用四个十六进制数字表示的 Unicode 字符。例如， \u00A9 匹配版权符号 (?)。
+
+	     四、正则原型上的方法有哪些及其用法  
+	        1 test()方法
+	          test() 方法执行一个检索，用来查看正则表达式与指定的字符串是否匹配。返回 true 或 false。
+		        1.1 语法
+	                reg.test(str)
+	            1.2 参数
+	                str:用来与正则表达式匹配的字符串
+	            1.3 返回值
+	                布尔值 true 或 false。	            
+	                <script type="text/javascript">	                	
+						var reg1=/cxh/g;
+						var str1 = "cxhknly";
+						var str2 = "hiahia";
+						reg1.test(str1);//true
+						reg1.test(str2);//false
+	                </script>
+	        2 exec()方法
+	          exec() 方法为指定的一段字符串执行搜索匹配操作。它的返回值是一个数组或者 null。
+	          1.1 语法
+	              reg.exec(str)
+	          1.2 参数
+	              str：要用正则表达式匹配的字符串。
+	          1.3 返回值
+	              1.3.1 如果成功匹配，exec 方法返回一个数组，并且更新正则表达式对象的属性。
+	                    1.3.1.1 返回的数组包括匹配的字符串作为第一个元素，
+                                result[0] 匹配的全部字符串															
+								result.index	匹配到的字符位于原始字符串的索引值
+								result.input	原始字符串
+	                            <script type="text/javascript">
+	                            	var reg = /cxh/;//匹配cxh三个连续字符
+									var str='kncxhly';
+									var result = reg.exec(str);
+									console.log(result);//["cxh", index: 2, input: "kncxhly"]
+	                            </script>
+	                    1.3.1.2 如果包含分组，则返回的数组第二个元素开始对应一个成功匹配被捕获的字符串的捕获分组（匹配到的小括号的内容）
+	                            result[0] 匹配的全部字符串								
+								result [1], ...[n ]	括号中的分组捕获								
+								result.index	匹配到的字符位于原始字符串的索引值
+								result.input	原始字符串
+	                            <script type="text/javascript">
+	                            	var reg = /(\d)\w/; //匹配一个数字加一个字母
+									var str='cxh.1a.2b.3c';
+									var result = reg.exec(str);
+									console.log(result);//["1a", "1", index: 4, input: "cxh.1a.2b.3c"]
+	                            </script>
+	              1.3.2 如果匹配失败，exec 方法将返回  null。
+	                    		<script type="text/javascript">
+	                            	var reg = /\d/;//匹配一个数字
+									var str='cxh';
+									var result = reg.exec(str);
+									console.log(result);//null
+	                            </script>
+	  
+      五、字符串原型上与正则有关的方法有哪些及其用法
+          1 match方法
+            当字符串匹配到正则表达式（regular expression）时，match() 方法会提取匹配项。
+            1.1 语法
+                str.match(regexp);
+            1.2 参数
+                regexp：一个正则表达式对象。如果传入一个非正则表达式对象，则会隐式地使用 new RegExp(obj) 将其转换为正则表达式对象。
+            1.3 返回值
+                array：一个包含匹配结果的数组，如果没有匹配项，则返回 null。
+            1.4 示例
+                <script type="text/javascript">  
+				    var str = "ThIS isn't me";   
+				    var reg = /is/ig;  
+				    var ret = str.match(reg);  
+				    alert(ret); //IS, is  
+				    console.log(ret); //["IS", "is"]   
+				</script>   
+          2 replace方法
+            replace() 方法使用一个替换值（replacement）替换掉一个匹配模式（pattern）在原字符串中某些或所有的匹配项，并返回替换后的新的字符串。这个替换模式可以是一个字符串或者一个 RegExp，替换值可以是一个字符串或者一个函数。
+			2.1 语法
+			    str.replace(regexp|substr, newSubStr|function)
+			2.2 参数
+			    2.2.1 regexp (pattern)
+			          一个 RegExp 对象。该正则所匹配的内容会被第二个参数的返回值替换掉。
+			    2.2.2 substr (pattern)
+			          一个要被 newSubStr 替换的字符串。
+			    2.2.3 newSubStr (replacement)
+			          用于替换掉第一个参数在原字符串中的匹配部分的 String。该字符串中可以内插一些特殊的变量名。参考下面的使用字符串作为参数。
+			    2.2.4 function (replacement)
+			          一个用来创建新子字符串的函数，该函数的返回值将替换掉第一个参数匹配到的结果。参考下面的指定一个函数作为参数。
+			2.3 返回值
+			     一个部分或全部匹配由替代模式所取代的新的字符串。
+			2.4 说明
+				该方法并不改变调用它的字符串本身，而只是返回一个新的替换后的字符串。
+				在进行全局的搜索替换时，正则表达式需包含 g 标志。
+		    2.5 示例
+		        当参数为字符串的情况太简单了，仅举例当第一个参数为正则表达式，第二个参数为函数的情况。
+		        2.5.1 两个参数都为字符串时
+		              <script type="text/javascript">
+		              		var str1 = "cxh";
+		              		var str2 = str1.replace("x","d");
+		              		console.log(str1);//cxh
+		              		console.log(str2);//cdh
+		              </script>
+		        2.5.2 第一个参数是正则，第二个参数是字符串
+		             <script type="text/javascript">  
+					    var str = "i love china!";  
+					    var pattern = /i/g;  
+					    var ret = str.replace(pattern, "I");  
+					    alert(ret); //I love chIna!  
+					 </script>  
+			   2.5.3 第一个参数是正则，第二个参数是函数
+			         2.5.3.1 当没有正则分组时
+					         函数的参数说明
+					         function fn(match,offset,string){
+
+					         }
+					         match	匹配的子串。（等价于$&。）							
+							 offset	匹配到的子字符串在原字符串中的偏移量。（比如，如果原字符串是“abcd”，匹配到的子字符串时“bc”，那么这个参数将时1）
+							 string	被匹配的原字符串。
+							 例1 找到字符串中的小写字母，给它在后边加上小括号来注明它在str字符串中的位置。比如str中的第一个a，它出现在str字符串的第一个索引位置中，则a变成a(1)。下面的str最终得到的结果是Xa(1)ZZc(4)Ud(6)Fe(8)
+							 <script type="text/javascript">
+							 	
+								var str="XaZZcUdFe";
+								var reg=/[a-z]/g;//注意：全文替换必须加g
+								str=str.replace(reg,function(){
+									return arguments[0]+"("+arguments[1]+")";
+									//arguments.length的值是3，在reg没有分组的情况下length属性肯定是3.
+									//其中arguments[0]是正则捕获查找到的内容；arguments[1]是正则查找到的内容在str这个字符串中的索引位置；arguments[2]是str字符串本身（叫输入字符串）
+									//这个匿名函数被自动执行四次，每一次arguments里的值分别是：
+									//第一次：arguments[0]是a，arguments[1]是1，arguments[2]是原字符str本身
+									//第二次：arguments[0]是c，arguments[1]是4，arguments[2]是原字符str本身
+									//第三次：arguments[0]是，arguments[1]是6，arguments[2]是原字符str本身
+									//第四次：arguments[0]是e，arguments[1]是8，arguments[2]是原字符str本身
+									
+								})
+								alert(str);//弹出 Xa(1)ZZc(4)Ud(6)Fe(8)
+							 </script>
+					 2.5.3.2 当有正则分组时
+					         函数的参数说明
+					         function fn(match,p1,p2,...,offset,string){
+
+					         }
+					         match	匹配的子串。（等价于$&。） 
+							 p1,p2, ...	假如replace()方法的第一个参数是一个RegExp 对象，则代表第n个括号匹配的字符串。（等价于$1，$2等。）
+							 offset	匹配到的子字符串在原字符串中的偏移量。（比如，如果原字符串是“abcd”，匹配到的子字符串时“bc”，那么这个参数将时1）
+							 string	被匹配的原字符串。
+							 例2 找出下面字符串中两个连着出现的数字，用它们的和将它们替换。比如第一次找到4和5，用9替换，第二次找到的是8和9，用17替换，第三次找到的是7和2，用9替换，最终生成的字符串是96a17b9cs
+							 <script type="text/javascript">
+							 	var str="456a89b72cs";
+								var reg=/(\d)(\d)/g;
+								str=str.replace(reg,function(){
+									return Number(arguments[1])+Number(arguments[2]);
+									});
+								alert(str);//弹出96a17b9cs
+									//上面replace里的匿名函数会被自动执行三次（因为匹配到了三次）；
+									//每次执行，arguments.length都是5;arments[0]是总正则查找到的字符串，arguments[1]是第一个分组查找到的内容，arguments[2]是第二个分组查找到的内容，arguments[3]是总正则查找到的内容在str这个字符串中的索引位置，arguments[4]是str这个字符串本般
+									//第一次这五个参数的值分别是：arguments[0]是"45",arguments[1]是"4",arguments[2]是"5",arguments[3]是0，arguments[4]是"456a89b72cs"；
+									//第二次这五个参数的值分别是：arguments[0]是"89",arguments[1]是"8",arguments[2]是"9",arguments[3]是4，arguments[4]是"456a89b72cs"；
+									//第三次这五个参数的值分别是：arguments[0]是"45",arguments[1]是"4",arguments[2]是"5",arguments[3]是0，arguments[4]是"456a89b72cs"
+				             </script>
+
+          3 search方法
+            search() 方法执行一个查找，看该字符串对象与一个正则表达式是否匹配。
+			3.1 语法
+			    str.search(regexp)
+			3.2 参数
+			    regexp
+			    一个正则表达式（regular expression）对象。如果传入一个非正则表达式对象，则会使用 new RegExp(obj) 隐式地将其转换为正则表达式对象。
+			3.3 返回执
+			    如果匹配成功，则 search() 返回正则表达式在字符串中首次匹配项的索引。否则，返回 -1。
+			3.4 示例
+			    <script type="text/javascript">
+			    	<script type="text/javascript">  
+					    var str = "This isn't me";  
+					    var reg = /is/;  
+					    var ret = str.search(reg);  
+					    alert(ret);//2  
+					</script>  
+			    </script>
+          4 split方法
+            split() 方法通过把字符串分割成子字符串来把一个 String 对象分割成一个字符串数组。
+			4.1 语法
+				str.split([separator][, limit])
+			4.2 参数
+			    4.2.1 separator
+			          指定用来分割字符串的字符（串）。separator 可以是一个字符串或正则表达式。 如果忽略 separator，则返回整个字符串的数组形式。如果 separator 是一个空字符串，则 str 将会把原字符串中每个字符的数组形式返回。
+			    4.2.2 limit
+			          一个整数，限定返回的分割片段数量。split 方法仍然分割每一个匹配的 separator，但是返回的数组只会截取最多 limit 个元素。
+			    4.2.3 返回值
+			          split 方法返回一个数组。
+			    4.2.4 示例
+			          4.2.4.1 当第一个参数是字符串时
+			                <script type="text/javascript">
+			                	var str="1+2+3+4+5";
+			                	var arr2 = str.split("+");//省略第二个参数，返回全部数组元素 
+			                	console.log(arr2);//["1", "2", "3","4","5"]
+			                	var arr2 = str.split("+",3);//返回第二个参数指定数量的数组元素
+			                	console.log(arr2);//["1", "2", "3"]
+			                </script>
+			          4.2.4.2 当第一个参数是正则时 
+			               <script type="text/javascript">
+			               		<script type="text/javascript">  
+								    var  str = 'http://www.baidu.com/';  
+								    var  reg = /\W/;  
+								    var  ret = str.split(reg);  
+								    console.log(ret); //["http", "", "", "www", "baidu", "com", ""]   
+								</script> 
+			               </script>
+
+		六 捕获和分组捕获
+		   正则中的分组指的就是子正则
+		   假设exec方法的返回值是result.则result数组的第一个项和最后两项有固定含义，从第二项开始的恶中间项代表分组捕获的结果。
+		   result[0] 匹配的全部字符串								
+		   result [1], ...[n ]	括号中的分组捕获								
+		   result.index	匹配到的字符位于原始字符串的索引值
+		   result.input	原始字符串
+		   <script type="text/javascript">
+		   	   reg1 = /c.+/; 
+			   reg2 = /(c).+/; 
+			   str='cxh'; 
+			   console.log(reg1.exec(str));//["cxh", index: 0, input: "cxh"]
+			   console.log(reg2.exec(str));//["cxh", "c", index: 0, input: "cxh"]
+		   </script>		   
+			这次的结果是整个串cxh，加上上面的括号这后，这个正则的意思是，如果字符串的开头是c，那么匹配开头的c以及其后的所有的非换行字符。
+			返回的结果后面多出来一个“c“，这是()内的c所匹配的内容(这个叫分组或子正则)。
+
+	    七 捕获时候的贪婪性和懒惰性的解决办法
+	       1 贪婪性
+	         如果指定匹配数量范围,比如2到4个，则正则能匹配4个就不会只匹配2个体现了正则的贪婪性
+	         <script type="text/javascript">
+	         	 reg1 = /a{2,4}/;
+		         str='aaaaacc';
+		         console.log(reg1.exec(str));//["aaaa", index: 0, input: "aaaaacc"]
+	         </script>	       
+	         解决办法：问号加在量词的后边，则表示非贪婪匹配,按最小数量匹配
+	         <script type="text/javascript">
+	         	 reg2 = /a{2,4}?/;
+		         str='aaaaacc';
+		         console.log(reg2.exec(str));//["aa", index: 0, input: "aaaaacc"]
+	         </script>	         
+	       2 懒惰性
+	         正则不加修饰符g时，只匹配一次，匹配到了则返回停止.体现了正则的 贪婪性
+	         <script type="text/javascript">
+	         	reg1 = /a/;
+		         str='aba'; 
+		         console.log(str.match(reg1));//["a", index: 0, input: "aba"]
+	         </script>	         
+             加模式匹配符g，则可匹配多次。
+              <script type="text/javascript">
+	         	reg2 = /a/g;
+		         str='aba'; 
+		         console.log(str.match(reg2));//["a", "a"]
+	         </script>	   
+	</pre>
+  </body>
+</html>
+  

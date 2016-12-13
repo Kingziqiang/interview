@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题72答案</title>    
+</head>
+<body>
+	<h1>72 前10个元字符的用法及举例。 </h1>
+	<pre>	
+一 \	
+   将下一个字符标记为一个特殊字符、或一个原义字符、或一个后向引用、或一个八进制转义符。例如，'n' 匹配字符 "n"。'\n' 匹配一个换行符。序列 '\\' 匹配 "\" 而 "\(" 则匹配 "("。
+    <script type="text/javascript">
+         //1 \在正则字面量中不需要转义，在字符串中需要转义
+		   var reg1 = /\c/;
+		   var reg2 = /\\c/;
+		   var reg3 = /\\/;
+		   console.log(reg1.test("\\c"));//true
+		   console.log(reg2.test("\\c"));//true
+		   console.log(reg3.test("\\"));//true
+		 //2 用构造函数创建正则，\不需要转义 
+		   var reg4 = new RegExp("\c");
+		   var reg5 = new RegExp("\\c");
+		   var reg6 = new RegExp("\\");
+		   var reg7 = new RegExp("\\\\");
+		   console.log(reg4.test("\\c"));//true
+		   console.log(reg5.test("\\c"));//true
+		   //console.log(reg6.test("\\"));//报错，Invalid regular expression: /\/: \ at end of pattern(…)
+		   console.log(reg7.test("\\\\"));//true
+		 //3 只有\时语法错误,无法通过编辑
+		   //var reg8 = /\/;
+		   //var reg9 = new RegExp("\");
+   	    //4 其他元字符需要转义的会在后面介绍   	     
+    </script>
+
+    	
+
+二 ^	
+  匹配输入字符串的开始位置。如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 '\n' 或 '\r' 之后的位置。
+  <script type="text/javascript">
+  	  // 1 当^位于正则的起始位置时，表示字符必须以^后的内容开头
+  	     var reg1 = /^a/
+  	     console.log(reg1.test("ab"));//true
+  	     console.log(reg1.test("ba"));//fasle
+  	     var reg2 = /^a\nb/
+  	     console.log(reg2.test("a\na")); //false
+  	     console.log(reg2.test("a\nb")); //true
+         var reg3 = /^a\nb/m
+  	     console.log(reg3.test("a\na")); //false
+  	     console.log(reg3.test("a\nb")); //true
+  	  // 2 当^位于正则的非起始位置时，需要转义才能匹配原来的字符
+  	     var reg4 = /a^/;
+   		 var reg5 = /a\^/;
+   		 console.log(reg4.test("a^"));//false
+   		 console.log(reg5.test("a^"));//true
+     // 3 当^位于[]内的第一个位置时，表示取反,不能出现^后面的字符
+         var reg6 = /[^abc]/;
+         console.log(reg6.test("a"));//false
+         console.log(reg6.test("b"));//false
+         console.log(reg6.test("c"));//false
+         console.log(reg6.test("d"));//true
+     // 4 当^位于[]内的非第一个元素时，表示^本身
+         var reg7 = /[a^b]/;
+         console.log(reg7.test("a"));//true
+         console.log(reg7.test("b"));//true
+         console.log(reg7.test("^"));//true
+         console.log(reg7.test("c"));//false
+  </script>
+
+三 $	
+  匹配输入字符串的结束位置。如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 '\n' 或 '\r' 之前的位置。
+  <script type="text/javascript">
+  	 // 1 当$位于正则的结束位置时，表示字符必须以$前的内容结尾
+  	     var reg1 = /a$/
+  	     console.log(reg1.test("ab"));//false
+  	     console.log(reg1.test("ba"));//true
+  	     var reg2 = /a\nb$/
+  	     console.log(reg2.test("a\na")); //false
+  	     console.log(reg2.test("a\nb")); //true
+         var reg3 = /a\nb$/m
+  	     console.log(reg3.test("a\na")); //false
+  	     console.log(reg3.test("a\nb")); //true
+  	  // 2 当^位于正则的非起始位置时，需要转义才能匹配原来的字符
+  	     var reg4 = /$a/;
+   		 var reg5 = /\$a/;
+   		 console.log(reg4.test("$a"));//false
+   		 console.log(reg5.test("$a"));//true
+  </script>
+
+四 *	
+  匹配前面的子表达式零次或多次。例如，zo* 能匹配 "z" 以及 "zoo"。 * 等价于{0,}。
+  <script type="text/javascript">
+  	// 1 当*位于正则的非起始位置时，表示*前面的字符可以出现0次或多次
+  	     var reg1 = /a*/
+  	     console.log(reg1.test("cxh"));//true
+  	     console.log(reg1.test("a"));//true
+  	     console.log(reg1.test("aa"));//true  	    
+  	  // 2 当*位于正则的起始位置是表示多行注释，需要转义表达原来字符
+  	     //var reg2 = /*a/;
+   		 var reg2 = /\*a/;
+   		 console.log(reg2.test("*a"));//true
+   	  // 3 当用构造函数定义正则，且当*位于正则的起始位置是表示多行注释，需要双重转义表达原来字符
+   	     //var reg3 = new RegExp("*a");
+   	     //var reg4 = new RegExp("\*a");
+   	     var reg5 = new RegExp("\\*a");   	     
+   		 //console.log(reg3.test("*a"));//报错，Invalid regular expression: /*a/: Nothing to repeat(…)
+   		 //console.log(reg4.test("*a"));//报错，Invalid regular expression: /*a/: Nothing to repeat(…)
+   		 console.log(reg5.test("*a"));//true
+  </script>
+
+五 +	
+  匹配前面的子表达式一次或多次。例如，'zo+' 能匹配 "zo" 以及 "zoo"，但不能匹配 "z"。+ 等价于 {1,}。
+    <script type="text/javascript">
+  	// 1 当*位于正则的非起始位置时，表示*前面的字符可以出现0次或多次
+  	     var reg1 = /a+/
+  	     console.log(reg1.test("cxh"));//false
+  	     console.log(reg1.test("a"));//true
+  	     console.log(reg1.test("aa"));//true  	    
+  	  // 2 当*位于正则的起始位置没有意义，需要转义表达原来字符
+  	     //var reg2 = /*a/;
+   		 var reg2 = /\+a/;
+   		 console.log(reg2.test("*a"));//true
+   	  // 3 当用构造函数定义正则，且当*位于正则的起始位置时没有意义，需要双重转义表达原来字符
+   	     //var reg3 = new RegExp("+a");
+   	     //var reg4 = new RegExp("\+a");
+   	     var reg5 = new RegExp("\\+a");   	     
+   		 //console.log(reg3.test("+a"));//报错，Invalid regular expression: /+a/: Nothing to repeat(…)
+   		 //console.log(reg4.test("+a"));//报错，Invalid regular expression: /+a/: Nothing to repeat(…)
+   		 console.log(reg5.test("+a"));//true
+  </script>
+
+六 ?	
+  匹配前面的子表达式零次或一次。例如，"do(es)?" 可以匹配 "do" 或 "does" 中的"do" 。? 等价于{0,1}。
+  <script type="text/javascript">
+  	// 1 当*位于正则的非起始位置时，表示*前面的字符可以出现0次或多次
+  	     var reg1 = /a?b/
+  	     console.log(reg1.test("cxhb"));//true
+  	     console.log(reg1.test("ab"));//true
+  	     console.log(reg1.test("b"));//true  	    
+  	  // 2 当*位于正则的起始位置没有意义，需要转义表达原来字符
+  	     //var reg2 = /?a/;
+   		 var reg2 = /\?a/;
+   		 console.log(reg2.test("?a"));//true
+   	  // 3 当用构造函数定义正则，且当*位于正则的起始位置时灭有意义i，需要双重转义表达原来字符
+   	     //var reg3 = new RegExp("?a");
+   	     //var reg4 = new RegExp("\?a");
+   	     var reg5 = new RegExp("\\?a");   	     
+   		 //console.log(reg3.test("?a"));//报错，Invalid regular expression: /?a/: Nothing to repeat(…)
+   		 //console.log(reg4.test("?a"));//报错，Invalid regular expression: /?a/: Nothing to repeat(…)
+   		 console.log(reg5.test("?a"));//true
+  </script>
+
+七 {n}	
+  n 是一个非负整数。匹配确定的 n 次。例如，'o{2}' 不能匹配 "Bob" 中的 'o'，但是能匹配 "food" 中的两个 o。
+  <script type="text/javascript">
+  	// 1 当{n}位于正则的非起始位置时，表示{n}前面的字符可以出现n次
+  	     var reg1 = /ab{2}c/
+  	     console.log(reg1.test("abc"));//false
+  	     console.log(reg1.test("ac"));//fasle
+  	     console.log(reg1.test("abbc"));//true
+  	     console.log(reg1.test("abbbc"));//false  	       	    
+  	  // 2 当{n}位于正则的起始位置时没有意义，需要转义表达原来字符
+  	     //var reg2 = /{2}a/; 
+   		 var reg3 = /\{2}a/;
+   		 //console.log(reg2.test("{2}a"));//报错，Invalid regular expression: /{2}a/: Nothing to repeat(…)
+   		 console.log(reg3.test("{2}a"));//true
+   	  // 3 当用构造函数定义正则，且当{n}位于正则的起始位置时没有意义，需要双重转义表达原来字符
+   	     //var reg4 = new RegExp("{2}a");
+   	     //var reg5 = new RegExp("\{2}a");
+   	     var reg5 = new RegExp("\\{2}a");   	     
+   		 //console.log(reg3.test("{2}a"));//报错，Invalid regular expression: /{2}a/: Nothing to repeat(…)
+   		 //console.log(reg4.test("{2}a"));//报错，Invalid regular expression: /{2}a/: Nothing to repeat(…)
+   		 console.log(reg5.test("{2}a"));//true
+  </script>
+
+
+八 {n,}	
+  n 是一个非负整数。至少匹配n 次。例如，'o{2,}' 不能匹配 "Bob" 中的 'o'，但能匹配 "foooood" 中的所有 o。'o{1,}' 等价于 'o+'。'o{0,}' 则等价于 'o*'。
+  <script type="text/javascript">
+  	// 1 当{n,}位于正则的非起始位置时，表示{n}前面的字符至少出现n次
+  	     var reg1 = /ab{2,}c/
+  	     console.log(reg1.test("abc"));//false
+  	     console.log(reg1.test("ac"));//fasle
+  	     console.log(reg1.test("abbc"));//true 
+  	     console.log(reg1.test("abbbc"));//true  
+  	      console.log(reg1.test("abbbbc"));//true 	  	    
+  	  // 2 当{n,}位于正则的起始位置时没有意义，需要转义表达原来字符
+  	     //var reg2 = /{2,}a/; 
+   		 var reg3 = /\{2,}a/;
+   		 //console.log(reg2.test("{2,}a"));//报错，Invalid regular expression: /{2,}a/: Nothing to repeat(…)
+   		 console.log(reg3.test("{2,}a"));//true
+   	  // 3 当用构造函数定义正则，且当{n,}位于正则的起始位置时没有意义，需要双重转义表达原来字符
+   	     //var reg4 = new RegExp("{2,}a");
+   	     //var reg5 = new RegExp("\{2,}a");
+   	     var reg5 = new RegExp("\\{2,}a");   	     
+   		 //console.log(reg3.test("{2,}a"));//报错，Invalid regular expression: /{2,}a/: Nothing to repeat(…)
+   		 //console.log(reg4.test("{2,}a"));//报错，Invalid regular expression: /{2,}a/: Nothing to repeat(…)
+   		 console.log(reg5.test("{2,}a"));//true
+  </script>
+
+
+九 {n,m}	
+  m 和 n 均为非负整数，其中n <= m。最少匹配 n 次且最多匹配 m 次。如， "o{1,3}" 将匹配 "fooooood"中的前三个 o。'o{0,1}' 等价于 'o?'。请注意在逗号和两个数之间不能有空格。
+   <script type="text/javascript">
+  	// 1 当{n,m}位于正则的非起始位置时，表示{n}前面的字符至出现n到m
+  	     var reg1 = /ab{2,3}c/
+  	     console.log(reg1.test("abc"));//false
+  	     console.log(reg1.test("ac"));//fasle
+  	     console.log(reg1.test("abbc"));//true 
+  	      console.log(reg1.test("abbbc"));//true  
+  	       console.log(reg1.test("abbbbc"));//false 	  	    
+  	  // 2 当{n,m}位于正则的起始位置时没有意义，需要转义表达原来字符
+  	     //var reg2 = /{2,3}a/; 
+   		 var reg3 = /\{2,3}a/;
+   		 //console.log(reg2.test("{2,3}a"));//报错，Invalid regular expression: /{2,3}a/: Nothing to repeat(…)
+   		 console.log(reg3.test("{2,3}a"));//true
+   	  // 3 当用构造函数定义正则，且当{2,3}位于正则的起始位置时没有意义，需要双重转义表达原来字符
+   	     //var reg4 = new RegExp("{2,3}a");
+   	     //var reg5 = new RegExp("\{2,3}a");
+   	     var reg6 = new RegExp("\\{2,3}a");   	     
+   		 //console.log(reg3.test("{2,3}a"));//报错，Invalid regular expression: /{2,3}a/: Nothing to repeat(…)
+   		 //console.log(reg4.test("{2,3}a"));//报错，Invalid regular expression: /{2,3}a/: Nothing to repeat(…)
+   		 console.log(reg6.test("{2,3}a"));//true
+  </script>
+
+
+十 ?	
+  当该字符紧跟在任何一个其他限制符 (*, +, ?, {n}, {n,}, {n,m}) 后面时，匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。例如，对于字符串 "oooo"，'o+?' 将匹配单个 "o"，而 'o+' 将匹配所有 'o'。	
+  <script type="text/javascript">
+  	// 1 当+后面不加？时，默认贪婪模式
+  	     var reg1 = /ab+/
+  	     console.log("abbc".match(reg1));//["abb", index: 0, input: "abbc"]  	        
+  	 // 2 当+后面加？时，修改为非贪婪模式
+  	     var reg2 = /ab+?/
+  	     console.log("abbc".match(reg2));//["ab", index: 0, input: "abbc"]   
+  	 // 3 当用构造函数定义正则，且当+?位于正则的起始位置时没有意义，需要双重转义表达原来字符
+   	     //var reg3 = new RegExp("+?a");
+   	     //var reg4 = new RegExp("\+?a");
+   	     var reg5 = new RegExp("\\+?a");   	     
+   		 //console.log(reg3.test("+?a"));//报错，Invalid regular expression: /+?a/: Nothing to repeat(…)
+   		 //console.log(reg4.test("{+?a"));//报错，Invalid regular expression: /+?a/: Nothing to repeat(…)
+   		 console.log(reg5.test("+?a"));//true 	  
+  </script>	 
+	</pre>
+  </body>
+</html>
+  

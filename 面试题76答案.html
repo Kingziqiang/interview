@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>面试题76答案</title>    
+</head>
+<body>
+	<h1>76 正则的 3个标志（修饰符）的用法及举例? RegExp实例属性用法及举例，通过每次执行exec方法，观察lastIndex值得变化规律？RegExp构造函数属性，及$n的用法举例？分组引用\n的用法及举例，str="11113555554999922222255555"去掉重复数字? </h1>
+	<pre>	
+一 正则的 3个标志（修饰符）的用法及举例
+   1 g：表示全局模式，即模式将被应用于所有字符串，而非在发现第一个匹配项时立即停止；
+   	 <script type="text/javascript">
+   	 	var reg1 = /[a-z]/;
+   	 	console.log("abc".match(reg1));//["a", index: 0, input: "abc"]
+   	 	var reg2 = /[a-z]/g;
+   	 	console.log("abc".match(reg2));//["a", "b", "c"]
+   	 </script>
+   2 i: 表示不区分大小写模式，即在到大一行文字末尾是还会继续查找下一行中是否存在与模式匹配的项。
+   	<script type="text/javascript">
+   	 	var reg1 = /[A-Z]/g;
+   	 	console.log("abc".match(reg1));//null
+   	 	var reg2 = /[A-Z]/gi;
+   	 	console.log("abc".match(reg2));//["a", "b", "c"]
+   	 </script>
+   3 m: 表示多行模式，即到达下一行文本末尾时还会继续查找下一行中是否存在与模式匹配的项。
+     3.1 如果目标字符串中不含有换行符\n，即只有一行，那么/m修饰符没有任何意义。
+     		<script type="text/javascript">
+     			var reg1 = /^[a-z]+$/g;
+		   	 	console.log("abcdefg".match(reg1));//["abcdefg"]
+		   	 	var reg2 = /^[a-z]+$/gm;
+		   	 	console.log("abcdefg".match(reg2));//["abcdefg"]
+     		</script>
+     3.2 如果正则表达式中不含有^或$匹配字符串的开头或结尾，那么/m修饰符没有任何意义。
+     		<script type="text/javascript">
+     			var reg1 = /[a-z]+/g;
+		   	 	console.log("abc\ndef\rg".match(reg1));//["abc", "def", "g"]	
+		   	 	var reg2 = /[a-z]+/gm;
+		   	 	console.log("abc\ndef\rg".match(reg2));//["abc", "def", "g"]
+     		</script>
+     3.3 只有当目标字符串含有\n，而且正则表达式中含有^或$的时候，/m修饰符才有作用。
+         3.3.1 如果 multiline 为 false，那么“^”与字符串的开始位置相匹配，而“$”与字符串的结束位置相匹配。
+         	<script type="text/javascript">
+		   	 	var reg1 = /^[a-z]+$/g;
+		   	 	console.log("abc\ndef\rg".match(reg1));//null 			   	 	
+		   	 </script>	
+         3.3.2 如果 multiline 为 true，那么“^”与字符串开始位置以及“\n”或“\r”之后的位置相匹配，而“$”与字符串结束位置以及“\n”或“\r”之前的位置相匹配。
+	    	<script type="text/javascript">
+		   	 	var reg2 = /^[a-z]+$/gm;
+		   	 	console.log("abc\ndef\rg".match(reg2));//["abc", "def", "g"]
+		   	 </script>	
+
+二 RegExp实例属性用法及举例，通过每次执行exec方法，观察lastIndex值得变化规律
+  1 RegExp实例的属性
+      global:布尔值，表示是否设置了g标识
+      ignoreCase：布尔值，表示是否设置了i标识
+      lastIndex：整数，表示开始搜索下一个匹配项的字符串位置，从0算起
+      multiline：布尔值，表示是否设置了m标志
+      source：正则表达式的字符串表示，按照字面量形式而非构造函中的字符串模式
+  2 示例
+    2.1 不加g
+	    <script type="text/javascript">
+	    	var reg1=/(\d)[a-z]/;
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 0 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c.kn"));//["1a", "1", index: 4, input: "cxh.1a.2b.3c.kn"]
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 0 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c.kn"));//["1a", "1", index: 4, input: "cxh.1a.2b.3c.kn"]
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 0 false "(\d)[a-z]"  	
+	    </script>
+     2.2 加g，且最后一次匹配时，匹配到的字符不是字符串的最后一个字符，3c后还有.kn
+	    <script type="text/javascript">
+	    	var reg1=/(\d)[a-z]/g;
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 0 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c.kn"));//["1a", "1", index: 4, input: "cxh.1a.2b.3c.kn"]
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 6 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c.kn"));//["2b", "2", index: 7, input: "cxh.1a.2b.3c.kn"]
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 9 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c.kn"));//["3c", "3", index: 10, input: "cxh.1a.2b.3c.kn"]
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 12 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c.kn"));//null,上次lastIndex=12位于字母k前面的.，从字母k前面的.开始索引向后查招找不数字字母的组合。
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 0 false "(\d)[a-z]"，重写初始化lastIndex=0
+	    	console.log(reg1.exec("cxh.1a.2b.3c.kn"));//["1a", "1", index: 4, input: "cxh.1a.2b.3c.kn"], 开始第二轮匹配
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 6 false "(\d)[a-z]"
+	    </script>
+	  2.3 加g，且最后一次匹配时，匹配到的字符是字符串的最后一个字符，3c后没有其他字符，跟2.2完全一样
+	      从下面的例子可以看出3c中的c是字符串中的最后一个字符，索引为11,c之后没有字符，但执行最后一次匹配后，lastIndex依然变成12.
+	    <script type="text/javascript">
+	    	var reg1=/(\d)[a-z]/g;
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 0 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c"));//["1a", "1", index: 4, input: "cxh.1a.2b.3c.kn"]
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 6 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c"));//["2b", "2", index: 7, input: "cxh.1a.2b.3c.kn"]
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 9 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c"));//["3c", "3", index: 10, input: "cxh.1a.2b.3c.kn"]
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 12 false "(\d)[a-z]"
+	    	console.log(reg1.exec("cxh.1a.2b.3c"));//null,上次lastIndex=12位于字母k前面的.，从字母k前面的.开始索引向后查招找不数字字母的组合。
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 0 false "(\d)[a-z]"，重写初始化lastIndex=0
+	    	console.log(reg1.exec("cxh.1a.2b.3c"));//["1a", "1", index: 4, input: "cxh.1a.2b.3c.kn"], 开始第二轮匹配
+	    	console.log(reg1.global,reg1.ignoreCase,reg1.lastIndex,reg1.multiline,reg1.source);//true false 6 false "(\d)[a-z]"
+	    </script>
+   3 lastIndex的变化规律    
+     3.1 正则的方法(比如exec)， 从lastIndex处开始查找。如果从lastIndex索引处开始到字符串末尾没有匹配字符则返回null(exec方法）或者false（test方法）。否则返回匹配的字符或者true.
+     3.2 如果不加修饰符g，则lastIndex的值永远为0.如果加了g，则遵循下属规则：
+     3.3 在执行正则的方法之前，lastIndex的初始值为0.
+     3.4 第n次执行正则的方法之后，lastIndex的值变为第n次匹配的字符之后的紧邻位置的索引。
+     3.5 执行最后一次匹配之后，lastIndex的值变为最后一次匹配的字符之后的紧邻位置的索引，因为从lastIndex索引处到字符串末尾没有匹配字符，所以执行正则方法返回null或者false。
+     3.6 如果上次执行正则的返回值时null或false,这次lastIndex的值重新初始化为0,回到3.3步。
+
+三 RexExp构造函数的属性	
+   1 RegExp构造函数的属性
+   	长属性名	短属性名	说明
+   	 input 			$_  	最近一次要匹配的字符串
+   	 lastMatch 		$&		插入匹配的子串。
+   	 leftContext 	$`		插入当前匹配的子串左边的内容。
+	 rightContext	$'		插入当前匹配的子串右边的内容。   	
+	 lastParen		$+  	最近一次匹配的捕获组
+	  //$* 经谷歌、IE均未实现，而Firefox则可以正常获取该属性
+	 multiline 		$*  	布尔值，表示所有表达式是否都使用多行模式
+	 <script type="text/javascript">
+	 	var reg1=/([a-z])[a-z]{2}/;
+	 	var str = "a.cxh.b";
+	 	if(reg1.test(str)){
+	 		console.log(RegExp.input,RegExp.$_);//a.cxh.b a.cxh.b
+	 		console.log(RegExp.lastMatch,RegExp["$&"]);//cxh cxh
+	 		console.log(RegExp.leftContext,RegExp["$`"]);//a. a.
+	 	    console.log(RegExp.rightContext,RegExp["$'"]);//b .b
+	 	    console.log(RegExp.lastParen,RegExp["$+"]);//c c
+	 	    console.log(RegExp.multiline,RegExp["$*"]);//undefined undefined
+	 	}
+	 </script>
+   2 替换字符串可以插入下面的特殊变量名：
+	    //$n 既可以作为replace方法第二个参数字符串中的值"&1"形式，又可以构造函数的属性RegExp.$1形式获取
+	    $n	假如第一个参数是 RegExp对象，并且 n 是个小于100的非负整数，那么插入第 n 个括号匹配的字符串。
+	    //&&、$&、$`、$'只能作为replace方法第二个参数字符串中的值"$$"、"$&"、"$`"、"$'"形式获取
+	    $$	插入一个 "$"。
+		$&	插入匹配的子串。
+		$`	插入当前匹配的子串左边的内容。
+		$'	插入当前匹配的子串右边的内容。
+		//$_只能以构造函数属性RegExp.$_形式获取
+		$_  最近一次要匹配的字符串
+		$+  最近一次匹配的捕获组
+	    //$* 经谷歌、IE均未实现值为undefined，而Firefox则可以正常获取该属性的布尔值
+	    $*  布尔值，表示所有表达式是否都使用多行模式
+			 <script type="text/javascript">
+			 	 <script type="text/javascript">
+		    	var reg1=/\d([a-z])/;		    	
+		    	console.log("cxh.1a.2b.3c.kn".replace(reg1,"$1"));//cxh.1.2.3.kn
+		    	console.log("cxh.1a.2b.3c.kn".replace(reg1,"$1".toUpperCase()));//cxh.1.2.3.kn
+		    	console.log("cxh.1a.2b.3c.kn".replace(reg1,"$1.toUpperCase()"));//cxh.1.2.3.kn
+		    	console.log("cxh.1a.2b.3c.kn".replace(reg1,RegExp.$1.toUpperCase()));//cxh.1.2.3.kn
+		    	console.log("cxh.1a.2b.3c.kn".replace(reg1,"$$"));//cxh.$.$.$.kn
+		        console.log("cxh.1a.2b.3c.kn".replace(reg1,"$&"));//xh.1a.2b.3c.kn
+		        console.log("cxh.1a.2b.3c.kn".replace(reg1,"$`"));//cxh.cxh..cxh.1a..cxh.1a.2b..kn
+		        console.log("cxh.1a.2b.3c.kn".replace(reg1,"$'"));//cxh..2b.3c.kn..3c.kn..kn.kn         
+		        console.log("cxh.1a.2b.3c.kn".replace(reg1,"$_"));//cxh.$_.$_.$_.kn
+		        console.log("cxh.1a.2b.3c.kn".replace(reg1,RegExp["$_"]));//cxh.cxh.1a.2b.3c.kn.cxh.1a.2b.3c.kn.cxh.1a.2b.3c.kn.kn
+		        console.log("cxh.1a.2b.3c.kn".replace(reg1,RegExp.$_));//cxh.cxh.1a.2b.3c.kn.cxh.1a.2b.3c.kn.cxh.1a.2b.3c.kn.kn
+		         console.log("cxh.1a.2b.3c.kn".replace(reg1,RegExp["$+"]));//cxh.3.3.3.kn
+		          console.log("cxh.1a.2b.3c.kn".replace(reg1,RegExp["$*"]));//cxh.undefined.undefined.undefined.kn
+		        var result1 = "cxh.1a.2b.3c.kn".replace(reg1,function(){
+		       	    console.log(RegExp.$1);
+		       	    /*
+		       	    	3
+		       	    	3
+		       	    	3
+		       	    */  
+		       	    return RegExp.$1;
+		       });//"cxh.3.3.3.kn"
+		         var result2 = "cxh.1a.2b.3c.kn".replace(reg1,function(){
+		       	    console.log(arguments[0],arguments[1],arguments[2],arguments[3]);
+		       	    /* 匹配的字符串   匹配次数  在原字符中索引    原字符串
+		       	    	1a 				1 		4   			cxh.1a.2b.3c.kn 
+		       	    	2b 				2 		7    			cxh.1a.2b.3c.kn 
+		       	    	3c 				3 		10   			cxh.1a.2b.3c.kn 
+		       	    */  
+		       	    return arguments[0]+"c";
+		       });//"cxh.1ac.2bc.3cc.kn"
+		        console.log("cxh.1a.2b.3c.kn".replace(reg1,"$*"));//cxh..2b.3c.kn..3c.kn..kn.kn      
+		    	console.log("cxh.1a.2b.3c.kn".replace(reg1,"$1"));//cxh.1.2.3.kn
+		    	console.log("cxh.1a.2b.3c.kn".replace(reg3,"$2$1"));//cxh.a1.b2.c3.kn
+		    	console.log("cxh.1a.2b.3c.kn".replace(reg3,"$1$2"));//cxh.1a.2b.3c.kn
+		    </script>
+	 </script>
+
+四 分组引用\num的用法及举例，str="11113555554999922222255555"去掉重复数字? 	
+   1 分组引用用法举例
+	     \num 
+	    匹配 num，其中 num 是一个正整数。对所获取的匹配的引用。例如，'(.)\1' 匹配两个连续的相同字符。
+	    分组引用，最常用场景用来就对称数 ，回文 。
+	    <script type="text/javascript">
+	        var reg1 = /^(.)\1$/;
+	        console.log(reg1.test("aa"));//true
+	        console.log(reg1.test("##"));//true
+	        console.log(reg1.test("ab"));//false
+	        var reg2= /^(.)(.)(.).\3\2\1$/;
+	        console.log(reg2.test("处处飞花飞处处"));//true
+	        console.log(reg2.test("凤落梧桐梧落凤"));//true
+	        console.log(reg2.test("风送花香红满地"));//false
+	    </script>  
+	2 去除连续重复字符
+	  	<script>	
+			var str="11113555554999922222255555";
+			//去掉连续重复的数字
+			str=str.replace(/(\w)\1+/g,"$1");
+			alert(str);
+		</script>      
+	</pre>
+  </body>
+</html>

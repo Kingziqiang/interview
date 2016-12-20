@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>77</title>    
+</head>
+<body>
+	<h1>写出所有的量词元字符、特殊元字符、普通元字符？总结问号的作用？具有特殊意义的元字符？[]需要注意的细节知识点？分组的三个作用？
+完成下列正则：
+1 邮编
+2 手机号或 固话
+3 身份证号
+4 时间
+5 求一个字符串中出现次数最多的字符？
+6 把一个字符串中所有单词的首字母大写。
+7 将小写的中文数字替换成大写的中文数字
+8 模拟模板引擎的实现
+9 通过网址获取queryURLParameter
+    var str = "http://www.caoxiaohan.com/index.htm?name=cxh&id=2004001";
+    把URL中的参数都获取到，并且保存成如下格式:
+    var obj = [name: "cxh", uid: "20140001"};</h1>
+	<pre>	
+一 写出所有的量词元字符、特殊元字符、普通元字符
+   元字符的用法见《面试题75答案》
+   此种分类方法珠峰自定义，列出来只是为了明白老师的意思，非官方分类。
+   1 量词元字符
+      量词元字符是特殊元字符的子集，量词元字符有6个，特殊元字符有40个
+      1.1 *	
+        匹配前面的子表达式零次或多次。例如，zo* 能匹配 "z" 以及 "zoo"。 * 等价于{0,}。
+      1.2 +	
+        匹配前面的子表达式一次或多次。例如，'zo+' 能匹配 "zo" 以及 "zoo"，但不能匹配 "z"。+ 等价于 {1,}。
+      1.3 ?	
+         匹配前面的子表达式零次或一次。例如，"do(es)?" 可以匹配 "do" 或 "does" 中的"do" 。? 等价于{0,1}。
+      1.4  {n}	
+          n 是一个非负整数。匹配确定的 n 次。例如，'o{2}' 不能匹配 "Bob" 中的 'o'，但是能匹配 "food" 中的两个 o。
+      1.5 {n,}	
+         n 是一个非负整数。至少匹配n 次。例如，'o{2,}' 不能匹配 "Bob" 中的 'o'，但能匹配 "foooood" 中的所有 o。'o{1,}' 等价于 'o+'。'o{0,}' 则等价于 'o*'。
+      1.6 {n,m}	
+        m 和 n 均为非负整数，其中n <= m。最少匹配 n 次且最多匹配 m 次。如， "o{1,3}" 将匹配 "fooooood"中的前三个 o。'o{0,1}' 等价于 'o?'。请注意在逗号和两个数之间不能有空格。
+   2 特殊元字符
+   	 面试题75答案中的40个元字符都是特殊元字符。
+   3 普通元字符
+     正则表达式//之间的字符都是元字符，除了特殊元字符意外的字符都是普通元字符。
+     比如字母，数字，汉字，标点符号等。
+     var reg1=/abc/; 
+   4 上述分类实际上是错误的,是周啸天的又一次误导
+     正则表达式语言由两种基本字符类型组成：原义（正常）文本字符和元字符。
+     周啸天所说的特殊元字符实际上就是元字符,而周啸天所说的的普通元字符就是文本字符.
+     非要把元字符前面加上"特殊"二字勉强不算错，但把原义字符说成是普通元字符是很严重的概念错误。
+   5 正则的正确分类应该按功能分类
+     5.1 匹配单个字符的元字符
+         5.1.1 . 
+               点号 匹配单个任意字符
+		 5.1.2 […] 
+		       字符组 匹配单个列出的字符
+		 5.1.3 [^…] 
+		       排除型字符组 匹配单个未列出的字符
+		 5.1.4 \char 
+		       转义字符 若char是元字符,或转义序列无特殊含义时,匹配char对应的普通字符
+		       比如5.6.5中的进制位字符，或者原义字符\c \x \h。
+		 5.1.5 [a-z]  
+		      字符范围。匹配指定范围内的任意字符。例如，'[a-z]' 可以匹配 'a' 到 'z' 范围内的任意小写字母字符。例如:[a-z]   [A-Z]   [0-9]
+         5.1.6 [^a-z]           负值字符范围。匹配任何不在指定范围内的任意字符。例如，'[^a-z]' 可以匹配任何不在 'a' 到 'z' 范围内的任意字符。
+         5.1.7 \w  
+               匹配包括下划线的任何单词字符。等价于'[A-Za-z0-9_]'。
+         5.1.8 \W  
+               匹配任何非单词字符。等价于 '[^A-Za-z0-9_]'。
+         5.1.9 \d  
+               匹配一个数字字符。等价于 [0-9]。
+         5.1.10 \D 
+               匹配一个非数字字符。等价于 [^0-9]。
+         5.1.11 \s 
+               匹配任何一个空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]。
+         5.1.12 \S 
+               匹配任何一个非空白字符。等价于 [^ \f\n\r\t\v]。
+         5.1.13 x|y 
+               匹配 x 或 y。例如，'z|food' 能匹配 "z" 或 "food"。'(z|f)ood' 则匹配 "zood" 或 "food"。
+     5.2 提供计数功能的元字符
+     	 5.2.1 ? 
+     	       问号 容许匹配一次,但非必须
+		 5.2.2 * 
+		       星号 可以匹配任意多次,也可能不匹配
+		 5.2.3 + 
+		       加号 至少需要匹配一次,至多可能任意多次
+		 5.2.4 {n} 
+		       n是一个非负整数。匹配确定的 n 次。例如，'o{2}' 不能匹配 "Bob" 中的 'o'，但是能匹配 "food" 中的两个 o。
+         5.2.5 {n,} 
+               n是一个非负整数。至少匹配n 次。例如，'o{2,}' 不能匹配 "Bob" 中的 'o'，但能匹配 "foooood" 中的所有 o。'o{1,}' 等价于 'o+'。'o{0,}' 则等价于 'o*'。
+		 5.2.6 {min,max} 
+		       区间量词 至少需要min次,至多容许max次
+		 5.2.7 ?	
+               当该字符紧跟在任何一个其他限制符 (*, +, ?, {n}, {n,}, {n,m}) 后面时，匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。例如，对于字符串 "oooo"，'o+?' 将匹配单个 "o"，而 'o+' 将匹配所有 'o'。
+     5.3 匹配位置的元字符
+		 5.3.1 ^ 
+		       脱字符 匹配一行的开头位置
+		 5.3.2 $ 
+		       美元符 匹配一行的结束位置
+		 5.3.3 \b 
+		       单词分界符 匹配常用字符和非常用字符的分界
+		 5.3.4 \B 
+		       匹配非单词边界。'er\B' 能匹配 "verb" 中的 'er'，但不能匹配 "never" 中的 'er'。
+	 5.4 捕获分组的元字符
+	 	 5.4.1 (pattern)	
+               匹配pattern 并获取这一匹配。在JScript 中则使用 $1…$9 属性。要匹配圆括号字符，请使用 '\(' 或'\)'。
+         5.4.2 (?:pattern)	
+                匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用"或" 字符 (|) 来组合一个模式的各个部分是很有用。例如， 'industr(?:y|ies) 就是一个比'industry|industries' 更简略的表达式。
+         5.4.3 (?=pattern)	 
+                正向预查，在任何匹配 pattern 的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如， 'Windows (?=95|98|NT|2000)' 能匹配 "Windows 2000" 中的"Windows" ，但不能匹配 "Windows 3.1" 中的 "Windows"。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始。
+         5.4.4 (?!pattern)	
+               负向预查，在任何不匹配的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如'Windows (?!95|98|NT|2000)' 能匹配 "Windows 3.1" 中的 "Windows"，但不能匹配 "Windows 2000" 中的 "Windows"。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始 
+         5.4.5  \num	
+                匹配 num，其中 num 是一个正整数。对所获取的匹配的引用。例如，'(.)\1' 匹配两个连续的相同字符。
+    5.5 转义元字符
+        5.5.1  \	
+              将下一个字符标记为一个特殊字符、或一个原义字符、或一个后向引用、或一个八进制转义符。例如，'n' 匹配字符 "n"。'\n' 匹配一个换行符。序列 '\\' 匹配 "\" 而 "\(" 则匹配 "("。
+        5.5.2 \cx	
+               匹配由x指明的控制字符。例如， \cM 匹配一个 Control-M 或回车符。 x 的值必须为 A-Z 或 a-z 之一。否则，将 c 视为一个原义的 'c' 字符。
+        5.5.3 \f	
+                匹配一个换页符。等价于 \x0c 和 \cL。
+        5.5.4 \n	
+                匹配一个换行符。等价于 \x0a 和 \cJ。
+        5.5.5 \r	
+                匹配一个回车符。等价于 \x0d 和 \cM。
+        5.5.6 \t	
+                匹配一个制表符。等价于 \x09 和 \cI。
+        5.5.7 \v	
+                匹配一个垂直制表符。等价于 \x0b 和 \cK。
+    5.6 进制位元字符
+        5.6.1 \xn	
+               匹配 n，其中 n 为十六进制转义值。十六进制转义值必须为确定的两个数字长。例如， '\x41' 匹配"A"。'\x041' 则等价于 '\x04' & "1"。正则表达式中可以使用 ASCII 编码。           
+        5.6.2 \n	
+               标识一个八进制转义值或一个后向引用。如果 \n 之前至少 n 个获取的子表达式，则 n 为后向引用。否则，如果 n 为八进制数字 (0-7)，则 n 为一个八进制转义值。
+        5.6.3 \nm	
+              标识一个八进制转义值或一个后向引用。如果 \nm 之前至少有is preceded by at least nm 个获取得子表达式，则 nm 为后向引用。如果 \nm 之前至少有 n 个获取，则 n 为一个后跟文字 m 的后向引用。如果前面的条件都不满足，若  n 和 m 均为八进制数字 (0-7)，则 \nm 将匹配八进制转义值 nm。
+        5.6.4 \nml	如果 n 为八进制数字 (0-3)，且 m 和 l 均为八进制数字 (0-7)，则匹配八进制转义值 nml。 
+        5.6.5 \un	匹配 n，其中 n 是一个用四个十六进制数字表示的 Unicode 字符。例如， \u00A9 匹配版权符号 (?)。
+
+二 总结问号的作用
+   元字符的用法见《面试题75答案》
+  1 ? 计数，放在非量词元字符后面表示出现0-1次
+    匹配前面的子表达式零次或一次。例如，"do(es)?" 可以匹配 "do" 或 "does" 中的"do" 。? 等价于{0,1}。
+  2 ? 非贪婪匹配,放在量词元字符后面取消贪婪性
+    当该字符紧跟在任何一个其他限制符 (*, +, ?, {n}, {n,}, {n,m}) 后面时，匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。例如，对于字符串 "oooo"，'o+?' 将匹配单个 "o"，而 'o+' 将匹配所有 'o'。
+  3 (?:pattern) 不获取分组捕获结果	
+    匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用"或" 字符 (|) 来组合一个模式的各个部分是很有用。例如， 'industr(?:y|ies) 就是一个比'industry|industries' 更简略的表达式。
+  4 (?=pattern) 正向预查	 
+     正向预查，在任何匹配 pattern 的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如， 'Windows (?=95|98|NT|2000)' 能匹配 "Windows 2000" 中的"Windows" ，但不能匹配 "Windows 3.1" 中的 "Windows"。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始。
+  5 (?!pattern) 负向预查	
+    负向预查，在任何不匹配的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如'Windows (?!95|98|NT|2000)' 能匹配 "Windows 3.1" 中的 "Windows"，但不能匹配 "Windows 2000" 中的 "Windows"。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始
+  补充两点，下面不是?的作用
+  6 \? 原义字符，表示问号本身   
+  7 [?] 原义字符，表示问号本身
+  	 <script type="text/javascript">
+    	var reg1 = /^a?$/;
+    	reg1.test("a?");//false iw
+    	reg3.test("a?");//true
+    </script>
+
+三 具有特殊意义的元字符？
+   这里所谓的特殊的元字符指的就是元字符，常用的40个元字符的用法见《面试题75答案》
+ 
+四 []需要注意的细节知识点？
+  1 [xyz]	
+    字符集合。匹配所包含的任意一个字符。例如， '[abc]' 可以匹配 "plain" 中的 'a'。
+    <script type="text/javascript">
+     	var reg1 = /[fkw]ind/;
+     	console.log(reg1.test("kind"));//true
+     	console.log(reg1.test("find"));//true
+     	console.log(reg1.test("wind"));//true
+     	console.log(reg1.test("mind"));//false
+     </script>
+  2 [^xyz]	
+     负值字符集合。匹配未包含的任意字符。例如， '[^abc]' 可以匹配 "plain" 中的'p'。
+       <script type="text/javascript">
+     	var reg1 = /[^fkw]ind/;
+     	console.log(reg1.test("kind"));//false
+     	console.log(reg1.test("find"));//false
+     	console.log(reg1.test("wind"));//false
+     	console.log(reg1.test("mind"));//true
+     </script>
+  3 [a-z]	
+    字符范围。匹配指定范围内的任意字符。例如，'[a-z]' 可以匹配 'a' 到 'z' 范围内的任意小写字母字符。例如:[a-z]   [A-Z]   [0-9]
+      <script type="text/javascript">
+        //1 匹配小写字母
+     	var reg1 = /^[a-z]$/;
+     	console.log(reg1.test("a"));//true
+     	console.log(reg1.test("b"));//true
+     	console.log(reg1.test("A"));//false
+     	console.log(reg1.test("B"));//false
+     	//2 匹配大写字母
+     	var reg2 = /^[A-Z]$/;
+     	console.log(reg2.test("a"));//false
+     	console.log(reg2.test("b"));//false
+     	console.log(reg2.test("A"));//true
+     	console.log(reg2.test("B"));//true
+     	//3 匹配大小写字母写法1
+     	var reg3 = /^[A-z]$/;
+     	console.log(reg3.test("a"));//true
+     	console.log(reg3.test("b"));//true
+     	console.log(reg3.test("A"));//true
+     	(console.logreg3.test("B"));//true
+     	console.log(reg3.test("1"));//false
+        //4 匹配大小写字母写法2
+     	var reg4 = /^[A-Za-z]$/;
+     	console.log(reg4.test("a"));//true
+     	console.log(reg4.test("b"));//true
+     	console.log(reg4.test("A"));//true
+     	console.log(reg4.test("B"));//true
+     	console.log(reg4.test("1"));//false
+     	//5 匹配小于10的非负整数
+     	var reg5 = /^[0-9]/$;
+     	console.log(reg5.test("0"));//true
+     	console.log(reg5.test("1"));//true
+     	console.log(reg5.test("2"));//true
+     	console.log(reg5.test("9"));//true
+     	console.log(reg3.test("10"));//false
+     	//6 匹配大于等于10小于100两位正整数
+     	var reg6 = /^[1-9][0-9]$/;
+     	console.log(reg6.test("10"));//true
+     	console.log(reg6.test("52"));//true
+     	console.log(reg6.test("88"));//true
+     	console.log(reg6.test("99"));//true
+     	console.log(reg6.test("100"));//false
+     	console.log(reg6.test("9"));//fals
+        //7 匹配大于10小于100正整数的错误写法
+        var reg7 = /^[10-99]$/;//此正则的含义是匹配1或者0-9之间的正数或者9，等价于匹配0-9之间的整数。
+     	console.log(reg7.test("10"));//true
+     	console.log(reg7.test("52"));//true
+     	console.log(reg7.test("88"));//true
+     	console.log(reg7.test("99"));//true
+     	console.log(reg7.test("100"));//false
+     	console.log(reg7.test("9"));//true6
+     </script>
+4 [^a-z]	
+     负值字符范围。匹配任何不在指定范围内的任意字符。例如，'[^a-z]' 可以匹配任何不在 'a' 到 'z' 范围内的任意字符。 
+           <script type="text/javascript">
+        //1 匹配f非小写字母
+     	var reg1 = /^[^a-z]$/;
+     	console.log(reg1.test("a"));//false
+     	console.log(reg1.test("b"));//false
+     	console.log(reg1.test("A"));//true
+     	console.log(reg1.test("B"));//true
+     	//2 匹配非大写字母
+     	var reg2 = /^[^A-Z]$/;
+     	console.log(reg2.test("a"));//true
+     	console.log(reg2.test("b"));//true
+     	console.log(reg2.test("A"));//false
+     	console.log(reg2.test("B"));//false
+     	//3 匹配非字母写法1
+     	var reg3 = /^[^A-z]$/;
+     	console.log(reg3.test("a"));//false
+     	console.log(reg3.test("b"));//false
+     	console.log(reg3.test("A"));//false
+     	console.log(reg3.test("B"));//false
+     	console.log(reg3.test("1"));//true
+        //4 匹配非字母写法2
+     	var reg4 = /^[^A-Za-z]$/;
+     	console.log(reg4.test("a"));//false
+     	console.log(reg4.test("b"));//false
+     	console.log(reg4.test("A"));//false
+     	console.log(reg4.test("B"));//false
+     	console.log(reg4.test("1"));//true
+     	//5 匹配1位非数字字符
+     	var reg5 = /^[^0-9]$/;
+     	console.log(reg5.test("0"));//false
+     	console.log(reg5.test("1"));//false
+     	console.log(reg5.test("2"));//false
+     	console.log(reg5.test("9"));//false
+     	console.log(reg5.test("10"));//false，两位数
+     	console.log(reg5.test("a"));//true
+     	//6 两位非数字字符
+     	var reg6 = /^[^0-9][^0-9]$/;
+     	console.log(reg6.test("10"));//false
+     	console.log(reg6.test("99"));//false
+     	console.log(reg6.test("100"));//false
+     	console.log(reg6.test("1"));//false
+     	console.log(reg6.test("c_"));//true
+     	console.log(reg6.test("ab"));//true
+        //7 匹配1位非数字字符
+      var reg7 = /^[^10-99]$/;//此正则的含义是不匹配1或者不匹配0-9之间的正数或者不匹配9，等价于不匹配数字。     
+     	console.log(reg7.test("0"));//false
+     	console.log(reg7.test("1"));//false
+     	console.log(reg7.test("2"));//false
+     	console.log(reg7.test("9"));//false
+     	console.log(reg7.test("10"));//false，两位数
+     	console.log(reg7.test("a"));//true
+     </script>
+  5、[x^yz]
+     当^位于[]内的非第一个元素时，表示^本身
+     <script type="text/javascript">
+     	 var reg1 = /[a^b]/;
+         console.log(reg1.test("a"));//true
+         console.log(reg1.test("b"));//true
+         console.log(reg1.test("^"));//true
+         console.log(reg1.test("c"));//false
+     </script>
+   6、[-xyz]
+     当-位于[]内的第一个元素或最后一个元素时，表示-本身
+   	 <script type="text/javascript">
+     	 var reg1 = /[-az]/;
+         console.log(reg1.test("a"));//true
+         console.log(reg1.test("z"));//true
+         console.log(reg1.test("-"));//true
+         console.log(reg1.test("b"));//false
+         var reg2 = /[ab-]/;
+         console.log(reg2.test("a"));//true
+         console.log(reg2.test("b"));//true
+         console.log(reg2.test("-"));//true
+         console.log(reg2.test("z"));//false
+     </script>
+   7、[(x)]、[x{n}]、[x?]、[x*]、[x+]、$
+     []内的()会被当作普通括号字符，不会进行分组
+     []内的{}、？、*、+会被当作普通标点符号，不会计数
+     []内的$会被当作普通字符，不再表示位置
+     <script type="text/javascript">
+     	var reg1 = /[(c)]/;
+     	console.log(reg1.test("("));//true
+     	console.log(reg1.test("c"));//true
+     	console.log(reg1.test(")"));//true
+     	console.log(reg1.test("\("));//true   	
+     	console.log(reg1.test("\)"));//true   	
+     </script>
+   8、[\num]
+      []内的\数字不再表示分组引用，而是表示八进制数
+      <script type="text/javascript">
+      		 var reg1 = /^(c)[\1az]$/;
+	         console.log(reg1.test("ca"));//true
+	         console.log(reg1.test("cz"));//true
+	         console.log(reg1.test("c\\"));//false
+	         console.log(reg1.test("c1"));//false
+	         console.log(reg1.test("c\1"));//true
+	         console.log(reg1.test("c\01"));//true	         
+	         console.log(reg1.test("cc"));//fasle
+      </script>
+   9、[\b]
+      []内的\b不再表示单词分界符，而是表示普通字符"\b"本身
+      <script type="text/javascript">
+      	 var reg1 = /^c[\baz]h$/;
+         console.log(reg1.test("cah"));//true
+         console.log(reg1.test("czh"));//true
+         console.log(reg1.test("c\\h"));//false
+         console.log(reg1.test("cbh"));//false
+         console.log(reg1.test("c\bh"));//true
+         console.log(reg1.test("c#h"));//false     
+      </script>
+   10 [\]     
+      []内的\用法不变
+      <script type="text/javascript">
+          //1  如果\是最后一个字符，则\必须以偶数的倍数出现，否则有语法错误。
+      		 var reg1 = /^[\\]$/;	      
+	         console.log(reg1.test("\\"));//true	        
+	         console.log(reg1.test("\\\\"));//false
+	         console.log(reg1.test("\\\\\\"));//false  
+	      //2  对比正则中的\。
+      		 var reg2 = /^\\$/;	      
+	         console.log(reg2.test("\\"));//true	        
+	         console.log(reg2.test("\\\\"));//false
+	         console.log(reg2.test("\\\\\\"));//false  
+	      //3 如果\后面有一个普通字符，则匹配后面的字符本色，或者普通字符前面带\的形式。
+	         var reg3 = /^[\x]$/;	      
+	         console.log(reg3.test("x"));//true	        
+	         console.log(reg3.test("\x"));//true
+	         console.log(reg3.test("\\x"));//false 
+	         console.log(reg3.test("\\\x"));//false 
+	         console.log(reg3.test("\\\\x"));//fasle
+	      //4 对比正则中的\x
+	         var reg4 = /^\x$/;	      
+	         console.log(reg4.test("x"));//false	        
+	         console.log(reg4.test("\x"));//fasle
+	         console.log(reg4.test("\\x"));//true  
+	         console.log(reg4.test("\\\x"));//true 
+	         console.log(reg4.test("\\\\x"));//false
+	     //5 如果\后面有个普通字符，则匹配后面的字符本色，或者普通字符前面带\\偶数倍的形式。
+	         var reg5 = /^[\xz]y$/;	      
+	         console.log(reg5.test("xy"));//true        
+	         //console.log(reg5.test("\xy"));//报错 Uncaught SyntaxError: Unexpected token ILLEGAL(…)
+	         console.log(reg5.test("\\xy"));//false 
+	         //console.log(reg5.test("\\\xy"));//报错 Uncaught SyntaxError: Unexpected token ILLEGAL(…)
+	         console.log(reg5.test("\\\\xy"));//fasle
+	      //6 对比正则中的\xy
+	         var reg6 = /^\xy$/;	      
+	         console.log(reg6.test("xy"));//true        
+	         //console.log(reg6.test("\xy"));//报错 Uncaught SyntaxError: Unexpected token ILLEGAL(…)
+	         console.log(reg6.test("\\xy"));//fasle  
+	         //console.log(reg6.test("\\\xy"));//报错 Uncaught SyntaxError: Unexpected token ILLEGAL(…)
+	         console.log(reg6.test("\\\\xy"));//false  
+      </script>                  
+   11、[\x]
+      除了分组引用，[]内前面带\的元字符保留原有的作用
+      <script type="text/javascript">
+     	 //1 \d依然表示数字
+     	 var reg1 = /^[\daz]$/;
+         console.log(reg1.test("a"));//true
+         console.log(reg1.test("\\"));//false
+         console.log(reg1.test("d"));//false
+         console.log(reg1.test("\d"));//false
+         console.log(reg1.test("3"));//true
+         //2 \w依然表示常用字符
+         var reg2 = /^[\waz]$/;
+         console.log(reg2.test("a"));//true
+         console.log(reg2.test("z"));//true
+         console.log(reg2.test("\\"));//false
+         console.log(reg2.test("w"));//true,因为正则/\w/匹配任何字母数字下划线
+         console.log(reg2.test("\w"));//true，因为字符串“\w”没特殊含义，所以依然表示w本身
+         console.log(reg2.test("_"));//true，因为正则/\w/匹配任何字母数字下划线
+         console.log(reg2.test("G"));//true
+         //3 \s 依然表示空白字符
+         var reg3 = /^[\saz]$/;
+         console.log(reg3.test("a"));//true
+         console.log(reg3.test("z"));//true
+         console.log(reg3.test("\\"));//false
+         console.log(reg3.test("s"));//false
+         console.log(reg3.test("\s"));//false
+         console.log(reg3.test(" "));//true
+         console.log(reg3.test("\t"));//true
+         //4 \t 转义字符依然具有转义功能
+         var reg4 = /^[\taz]$/;
+         console.log(reg4.test("a"));//true
+         console.log(reg4.test("z"));//true
+         console.log(reg4.test("\\"));//false
+         console.log(reg4.test("t"));//false
+         console.log(reg4.test("\t"));//true
+         console.log(reg4.test("    "));//false
+         console.log(reg4.test("\x09"));//true
+         //5 \cX 控制字符依然匹配转义控制符
+         var reg5 = /[^\cIaz]$/;
+         console.log(reg5.test("a"));//true
+         console.log(reg5.test("z"));//true
+         console.log(reg5.test("\\"));//false
+         console.log(reg5.test("t"));//false
+         console.log(reg5.test("\t"));//true
+         console.log(reg5.test("    "));//false
+         console.log(reg5.test("\x09"));//true
+         //6 \n 依然匹配八进制数
+         var reg6 = /[\1az]/;
+         console.log(reg6.test("a"));//true
+         console.log(reg6.test("z"));//true
+         console.log(reg6.test("\\"));//false
+         console.log(reg6.test("1"));//false
+         console.log(reg6.test("\1"));//true
+         console.log(reg6.test("\01"));//true
+         console.log(reg6.test("\x09"));//true              
+     </script>   
+   12、在[]里面不识别两位数
+      <script type="text/javascript">
+            //var reg1 = /^[18-65]$/; //1或者8-6或者5, 8-6范围不存在所报错
+            //报错，Invalid regular expression: /^[18-65]$/: Range out of order in character class(…)
+            //console.log(reg1.test("18"));
+      		//console.log(reg1.test("65"));
+      		//console.log(reg1.test("1"))
+      		var reg2 = /^(1[8-9]|[2-5]\d|6[0-5])$/;18-65
+      		console.log(reg2.test("18"));//true
+      		console.log(reg2.test("65"));//true
+      		console.log(reg2.test("1"))//false
+      </script>
+   
+
+五 分组的三个作用？
+   () JS中代表分组的意思-->在大正则中每一个分组都可以理解为一个小正则
+   1 改变正则中默认的优先级:一般情况下x|y,我们都在一个分组中使用
+     <script type="text/javascript">
+     	  var reg1 = /^12|34$/g;//以12开头或者以34极为
+     	  var reg2 = /^(12|34)$/g;//匹配12或34
+          console.log("1234".match(reg1));//["12", "34"]
+          console.log("1234".match(reg2));//null
+          console.log("12a34".match(reg1));//["12", "34"]
+          console.log("12a34".match(reg2));//null
+          console.log("12".match(reg1));//["12"]
+          console.log("12".match(reg2));//["12"]
+          console.log("34".match(reg1));//["34"]
+          console.log("34".match(reg2));//["34"]
+          console.log("12a".match(reg1));//["12"]
+          console.log("12a".match(reg2));//null
+     </script>
+   2 分组的第二个作用：分组捕获
+     ?:在分组捕获的时候，我们不想捕获某一个分组中的内容，就可以加?:来只匹配，不捕获了(?=或者?!都可以实现，这两个具有特殊的意义)
+	    <script type="text/javascript">    	
+	    	var str = "130430199807131520";
+	    	var reg = /^(\d{2})(\d{4})(\d{4})(\d{2})(\d{2})(?:\d{2})(\d)(?:\d|X)$/;
+	    	var ary = reg.exec(str);
+	    	console.log(ary);
+	    	//["130430199807131520", "13", "0430", "1998", "07", "13", "2", index: 0, input: "130430199807131520"]
+		    console.log(ary[3],RegExp.$3);//1998 1998
+		    //ary[0]:大正则捕获的内容
+		    //ary.index:大正则捕获的开始索引
+		    //ary.input:捕获的原始字符串
+		    //ary[1]:第一个分组捕获的内容
+		    //ary[2]:第二个分组捕获的内容
+		    //.....
+		    //console.log(ary[3]); <==> console.log(RegExp.$3); 都是获取第3个分组捕获的内容
+	    </script>
+   3 分组的第三个作用:分组引用
+   	//\1或者\2代表的意思是：\1代表和第一个分组出现一模一样的内容；\2和第二个分组出现一模一样的内容;
+   		<script type="text/javascript">   			 
+    		var reg = /([0-9]+)([a-z]+)\1\2/;
+   			console.log(reg.test("2a3b"));//-->false
+    		console.log(reg.test("2a2a"));//-->true
+   		</script>
+六 正则练习题答案见附件
+
+	</pre>
+  </body>
+</html>

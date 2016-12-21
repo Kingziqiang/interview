@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>正则练习题1</title>    
+</head>
+<body>
+	<h1>
+完成下列正则：
+1 邮编
+2 手机号或 固话
+3 身份证号
+4 时间
+5 求一个字符串中出现次数最多的字符？
+6 把一个字符串中所有单词的首字母大写。
+7 将小写的中文数字替换成大写的中文数字
+8 模拟模板引擎的实现
+9 通过网址获取queryURLParameter
+    var str = "http://www.caoxiaohan.com/index.htm?name=cxh&id=2004001";
+    把URL中的参数都获取到，并且保存成如下格式:
+    var obj = [name: "cxh", uid: "20140001"};</h1>
+	<pre>	
+
+  一 邮箱
+  <script type="text/javascript">   
+    // 邮箱规则，邮箱的@之后的后缀其实是由网址域名演变而来的
+    //1.1 @之前的邮箱用户名，以qq邮箱为例，要么是全数字。要么首为字符是字母，最后一位字符是字母或数字。只能包含数字、字母、下划线，中横线、点，长度为3-18位。
+    //1.2 最后两位为国别域名可有可无，如.cn表示中国，.us表示美国。 用？表示0到1次。
+          //所有2个字母结尾的顶级域名都是国家顶级域名，一般出现在域名的最后
+    //1.3 国别名之前是域名后缀，如.com，.company.  目前可注册的域名后缀有2-18位字母。
+          //域名后缀也可以是汉字或者其他国家的文字，这里我们忽略，不推荐采用，也没有人用作官方网站或邮箱后缀。
+          //世界上最长的域名后缀有18个字母，总共有两个域名，分别是.northwesternmutual域名后缀和.travelersinsurance域名后缀。
+          //未来可能还会新增更长的域名后缀，我们暂且将域名后缀长度限制为{2,18}，或者{2,}。
+    //1.4 域名后缀之前是国际顶级域名
+          //英文际域名域名字母数字及减号"-"组成，"-"只能出现在中间，字母不区分大小写，长度限制在1-63个字符。
+    var reg1 =/^([1-9]\d{3,10}|[a-z][\w-.]{1,16}[a-z0-9])@((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.){1,2}?)([a-z]{2,18}(?:\.[a-z]{2})?)$/i;
+    //验证用户名
+    console.log(reg1.test("cxh1@qq.com"));//true，只能以字母开头，可以以字母或数字结尾。
+    console.log(reg1.test("c@qq.com"));//false,邮箱用户名必须为3-18位字符
+    console.log(reg1.test("cxh0123456789012345678@qq.com"));//fasle,邮箱用户名必须为3-18位字符
+    console.log(reg1.test("cxh0123456789012345678@qq.com"));//fasle,邮箱用户名必须为3-18位字符
+    console.log(reg1.test("c.x_h-kN@qq.com"));//true，邮箱用户名必须为数字、字母、下划线，减号、点，长度为3-18位。
+    console.log(reg1.test("cxh$kn@qq.com"));//fasle，邮箱用户名必须为数字、字母、下划线，减号、点，长度为3-18位。
+    console.log(reg1.test("0cxh@qq.com"));//false，只能以字母开头，可以以字母或数字结尾。
+    console.log(reg1.test("404915056@qq.com"));//true,满足4-11位纯数字qq好，首位数字不为0
+    console.log(reg1.test("15910809283@qq.com"));//true,满足11位手机号，满足手机号就一定能满足qq号，所以不写手机号的规则。
+    //验证邮箱后缀
+    console.log(reg1.exec("cxh123@sina.cn"));//["cxh123@sina.cn", "cxh123", "sina.", "cn", index: 0, input: "cxh123@sina.cn"]
+    console.log(reg1.exec("cxh123@sina.com.cn"));//["cxh123@sina.com.cn", "cxh123", "sina.", "com.cn", index: 0, input: "cxh123@sina.com.cn"]
+    console.log(reg1.exec("cxh123@vip.sina.com.cn"));//["cxh123@vip.sina.com.cn", "cxh123", "vip.sina.", "com.cn", index: 0, input: "cxh123@vip.sina.com.cn"]
+    console.log(reg1.exec("cxh123@vip.163.com"));//["cxh123@vip.163.com", "cxh123", "vip.163.", "com", index: 0, input: "cxh123@vip.163.com"]
+     console.log(reg1.exec("cxh123@abc-xyz.com"));//["cxh123@abc-xyz.com", "cxh123", "abc-xyz.", "com", index: 0, input: "cxh123@abc-xyz.com"]
+     console.log(reg1.exec("cxh123@-xyz.com"));//null
+     console.log(reg1.exec("cxh123@abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz012345678901.com"));//null
+     console.log(reg1.exec("cxh123@abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz01234567890.com"));//["cxh123@abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz01234567890.com", "cxh123", "abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz01234567890.", "com", index: 0, input: "cxh123@abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz01234567890.com"]
+     console.log(reg1.exec("cxh123@abc.northwesternmutual"));//"cxh123@abc.northwesternmutual", "cxh123", "abc.", "northwesternmutual", index: 0, input: "cxh123@abc.northwesternmutual"]
+  </script>
+
+  二 手机号或 固话
+  <script type="text/javascript">
+      //1 手机号,11位数字，首位是1，第2位目前支持3、4、5、7、8
+      var reg1 = /^1[3|4|5|7|8]\d{9}$/;
+      console.log(reg1.test("18911576606"));//true
+      console.log(reg1.test("15910809283"));//true
+      console.log(reg1.test("12345678901"));//false
+      console.log(reg1.test("1891157660"));//false
+      //2 固话，3-4位区号，7-8位直播号码，1－6位分机号，直播号码首位不能为0和1
+      var reg2 =/^(0\d{2,3}\-)?[2-9]\d{6,7}(-\d{1,6})?$/
+      console.log(reg2.test("010-59928888-4"));//true
+      console.log(reg2.test("010-59928888"));//true
+      console.log(reg2.test("59928888-4"));//true
+      console.log(reg2.test("59928888"));//true
+      console.log(reg2.test("0376-59928888-123456"));//true
+      console.log(reg2.test("0871-4609898"));//true,比如昆明之前固话只有7位
+      console.log(reg2.test("010-599288889"));//false
+  </script>
+  
+  三 身份证
+      1 15位身份证
+      /*
+      * 身份证15位编码规则：dddddd yymmdd xx p
+      * dddddd：6位地区编码
+      * yymmdd: 出生年(两位年)月日，如：910215
+      * xx: 顺序编码，系统产生，无法确定
+      * p: 性别，奇数为男，偶数为女
+      */
+      <script type="text/javascript">
+          // 1.1 只匹配大正则
+          var reg1=/^[1-9]\d{7}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])\d{3}$/; 
+          // 1.2 除了大正则，还匹配3个正则分组 dddddd yymmdd xxp
+          var reg=/^([1-9]\d{5})(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))(\d{3})$/; 
+          console.log(reg.exec("130828901204061"));//["130828901204061", "130828", "901204", "061", index: 0, input: "130828901204061"]
+          console.log(reg.exec("130828901304061"));//null
+          console.log(reg.exec("130828901233061"));//null
+          console.log(reg.exec("130828901200061"));//null
+          console.log(reg.exec("130828199012040617"));//null
+          console.log(reg.exec("13082890120406x"));//null
+      </script>
+      2 18位身份证
+      /*
+      * 身份证18位编码规则：dddddd yyyymmdd xx p y
+      * dddddd：6位地区编码
+      * yyyymmdd: 出生年(四位年)月日，如：19910215
+      * xx: 顺序编码，系统产生，无法确定
+      * p: 性别，奇数为男，偶数为女
+      * y: 校验码，该位数值可通过前17位计算获得
+      */
+      <script type="text/javascript">
+          // 2.1 只匹配大正则
+          var reg2=/^[1-9]\d{5}(?:19|20)\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])(?:\d{4}|\d{3}[Xx])$/;
+          // 2.2 除了大正则，还匹配3个正则分组 dddddd yymmdd xxpy
+          var reg=/^([1-9]\d{5})((?:19|20)\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))(\d{4}|\d{3}[Xx])$/;
+          console.log(reg.exec("130828199012040617"));//["130828199012040617", "130828", "19901204", "0617", index: 0, input: "130828199012040617"]
+          console.log(reg.exec("13082819901204061x"));//["13082819901204061x", "130828", "19901204", "061x", index: 0, input: "13082819901204061x"]
+          console.log(reg.exec("13082819901204061X"));//["13082819901204061X", "130828", "19901204", "061X", index: 0, input: "13082819901204061X"]
+          console.log(reg.exec("130828901204061"));//null
+          console.log(reg.exec("030828199012040617"));//null
+          console.log(reg.exec("13082819902204061X"));//null
+          console.log(reg.exec("13082800901204061X"));//null
+      </script>
+      3 15位或18位身份证
+        <script type="text/javascript">
+          // 3.1 只匹配大正则
+          var reg3=/^(?:[1-9]\d{7}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])\d{3})|(?:[1-9]\d{5}(?:19|20)\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])(?:\d{4}|\d{3}[Xx]))$/;
+          console.log(reg3.exec("130828901204061"));//["130828901204061", index: 0, input: "130828901204061"]
+          console.log(reg3.exec("130828199012040617"));//["130828199012040617", index: 0, input: "130828199012040617"]
+          console.log(reg3.exec("13082819901204061x"));//["13082819901204061x", index: 0, input: "13082819901204061x"]
+          console.log(reg3.exec("13082819901204061X"));//["13082819901204061X", index: 0, input: "13082819901204061X"]
+          // 3.2  除了大正则，还匹配3个正则分组 dddddd yymmdd xxp 或 dddddd yymmdd xxpy
+          var reg=/^([1-9]\d{5})(?:(?:(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))(\d{3}))|(?:((?:19|20)\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))(\d{4}|\d{3}[Xx])))$/;
+          console.log(reg.exec("130828901204061"));//["130828901204061", "130828", "901204", "061", undefined, undefined, index: 0, input: "130828901204061"]
+          console.log(reg.exec("130828199012040617"));//["130828199012040617", "130828", undefined, undefined, "19901204", "0617", index: 0, input: "130828199012040617"]
+          console.log(reg.exec("13082819901204061x"));//["13082819901204061x", "130828", undefined, undefined, "19901204", "061x", index: 0, input: "13082819901204061x"]
+          console.log(reg.exec("13082819901204061X"));//["13082819901204061X", "130828", undefined, undefined, "19901204", "061X", index: 0, input: "13082819901204061X"]          
+          console.log(reg.exec("030828199012040617"));//null
+          console.log(reg.exec("13082819902204061X"));//null
+          console.log(reg.exec("13082800901204061X"));//null
+        </script>
+        <script type="text/javascript">
+        	 function myFormatTime(str) {
+        var reg = /^(\d{4})(?:-|\/|\.|:)(\d{1,2})(?:-|\/|\.|:)(\d{1,2})(?:\s+)(\d{1,2})(?:-|\/|\.|:)(\d{1,2})(?:-|\/|\.|:)(\d{1,2})$/g;
+        var strThis=str.replace(/\b\d\b/g, "0$&");
+		//console.log(strThis)
+			strThis=strThis.replace(reg,function(){
+			//console.log( arguments[1])
+			return RegExp.$1+"年"+RegExp.$2+"月"+RegExp.$3+"日"+" "+RegExp.$4+"秒"+RegExp.$5+"分"+RegExp.$6+"秒";
+			});
+			return strThis;
+    };
+  
+    	console.log(myFormatTime("2015/12/7 3-2-0"));
+        </script>
+
+  四 时间     
+    "2015-9-22 13:10:0" --> "2015年09月22日 13时10分00秒"
+    4.1 方法1
+    <script type="text/javascript">            
+        var str="2015-9-22 13:10:0".replace(/\b\d\b/g,"0$&");
+        var reg=/(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
+        str.replace(reg, "$1年$2月$3日 $4时$5分$6秒");//2015年09月22日 13时10分00秒       
+    </script>
+    4.2 方法2
+    <script type="text/javascript">
+        var str="2015-9-22 13:10:0".replace(/\b\d\b/g,function(){            
+            return "0"+arguments[0]; 
+        });
+        var reg=/(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
+        str.replace(reg, function(){            
+             return arguments[1]+"年"+arguments[2]+"月"+arguments[3]+"日"+" "+arguments[4]+"时"+arguments[5]+"分"+arguments[6]+"秒";
+        });//2015年09月22日 13时10分00秒
+    </script>
+    4.3 方法3
+    <script type="text/javascript">
+        var str="2015-9-22 13:10:0".replace(/\b\d\b/g,function(){           
+            eturn "0"+arguments[0];  
+        });
+        var reg=/(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})/g;
+        str.replace(reg, function(){
+             return RegExp.$1+"年"+RegExp.$2+"月"+RegExp.$3+"日"+" "+RegExp.$4+"时"+RegExp.$5+"分"+RegExp.$6+"秒";             
+        });//2015年09月22日 13时10分00秒
+    </script>   
+
+  五 把一个字符串中所有单词的首字母大写。   
+    <script type="text/javascript">       
+       var reg = /\b([a-z])([a-z]*)\b/gi;
+       var str = "i lOVe ChiNese fOOD.";
+       str.replace(reg,function(){
+          return arguments[1].toUpperCase()+arguments[2].toLowerCase();
+       });
+    </script>
+  六 求一个字符串中出现次数最多的字符？   
+    1 方法1,利用字符串的索引str[i]
+    <script type="text/javascript">       
+        function getMostChar(str){
+            var obj = {}, max = 1, maxChar = str[0];
+            for(var i = 0;i<str.length;i++){
+                var cur =str[i];
+                obj[cur]?obj[cur]+=1:obj[cur]=1;
+                max<obj[cur]?(max=obj[cur],maxChar=cur):null;            
+            }
+            obj = {};
+            obj[maxChar]=max;
+            return obj;
+        }        
+        console.log(getMostChar("ababac"));//{a: 3}
+    </script>
+    2 方法2,利用正则
+     <script type="text/javascript">       
+        function getMostChar(str){
+            var obj = {}, max = 1, maxChar = str[0];
+            str.replace(/./g,function(){
+                var cur=arguments[0];
+                obj[cur]?obj[cur]+=1:obj[cur]=1;
+                max<obj[cur]?(max=obj[cur],maxChar=cur):null;                  
+            });                    
+            obj = {};
+            obj[maxChar]=max;
+            return obj;
+        }        
+        console.log(getMostChar("ababac"));//{a: 3}
+    </script>
+   3 方法3，利用数组的方法
+    <script type="text/javascript">       
+        function getMostChar(str){
+            var arr = str.split("");
+            var obj = {}, max = 1, maxChar = arr[0];
+            arr.forEach(function(cur){              
+                obj[cur]?obj[cur]+=1:obj[cur]=1;
+                max<obj[cur]?(max=obj[cur],maxChar=cur):null;                  
+            });                    
+            obj = {};
+            obj[maxChar]=max;            
+            return obj;
+        }        
+        console.log(getMostChar("ababac"));//{a: 3}
+   </script>
+  7 将小写的中文数字替换成大写的中文数字
+    <script type="text/javascript">
+        var str="20110214";
+        var arr=["零","壹","贰","叁","肆","伍","陆","柒","捌","玖"]
+        str=str.replace(/\d/g,function(){  
+          return arr[arguments[0]]         
+        });//"贰零壹壹零贰壹肆"
+    </script>
+  8 模拟模板引擎的实现
+    <script type="text/javascript">
+        var str = "my name is {0}，my age is {1}，i come from {2}，i love {3}~";
+        var ary = ["bill", "52", "china", "money"];
+        str = str.replace(/{(\d+)}/g, function () {
+            return ary[arguments[1]];
+            //return ary[RegExp.$1]; 在IE下不兼容
+        });
+        console.log(str);//my name is bill，my age is 52，i come from china，i love money~
+    </script>
+  9 通过网址获取queryURLParameter
+      var str = "http://www.caoxiaohan.com/index.html?name=cxh&id=2004001";
+      把URL中的参数都获取到，并且保存成如下格式:
+      var obj = [name: "cxh", uid: "20140001"};
+    <script type="text/javascript">
+        var str = "http://www.caoxiaohan.com/index.html?name=cxh&id=2004001";
+        var reg = /([^?=&]+)=([^?=&]+)/g;
+        var obj = {};
+        str.replace(reg, function () {
+            obj[arguments[1]] = arguments[2];
+        });
+        console.log(obj);//{name: "cxh", id: "2004001"}
+    </script>
+	</pre>
+  </body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>正则练习题2</title>    
+</head>
+<body>
+	<h1>
+正则补充练习题2
+1 匹配数字，可以是"正负数、整数、小数
+2 匹配HTML标记,比如"<br/>"或者"<div>abc</div>"
+3 匹配网址URI，比如http://www.caoxiaohan.com
+4 匹配QQ号码
+5 匹配中国邮编
+6 匹配IP地址，比如192.168.0.1
+7  匹配MAC地址，比如00:01:6C:06:A6:29
+8 匹配一年的12个月
+9 匹配一个月的28~31天</h1>
+	<pre>	
+  一 匹配数字，可以是正负数、整数、小数
+  <script type="text/javascript">   
+     /*+ or -  可以出现0-1次
+       整数(两位及以上不能以0开头) 这部分必须有
+       小数(只要出现.，必须至少要跟一位有效的数字) 这部分出现0-1次
+     */
+       var reg = /^[+-]?(\d|[1-9]\d+)(\.\d+)?$/;
+       console.log(reg.test("+123"));//true
+       console.log(reg.test("-123.001"));//true
+       console.log(reg.test("3.14"));//true
+       console.log(reg.test("03.14"));//false
+       console.log(reg.test("3."));//false
+       console.log(reg.test("a"));//false
+  </script>
+
+  二 匹配HTML标记,比如"< div>cxh</div>"
+    1 匹配HMTL标记
+      <script type="text/javascript">
+          /*
+             1.1 单标签<右侧不能为空格，/左右两侧可以出现空格
+                 如<br/>正确，< br/>错误，<br />正确，<br/ >正确
+             1.2 双标签第一个标签和第二个标签<右侧不能为空格，/左右两侧不能出现空格
+                 如<div></div>正确，< div></div>错误，<div>< /div>错误，<div></ div>错误
+             1.3 所有表情>左侧可以出现空格
+                 <br/ >正确，<div ></div >正确
+             1.4 单标签后面的/可以省略，如果有/必须出现在标签名右侧
+                 <br>正确，</br>错误，<br/>正确
+             1.5 双标签第二个标签的/不能省略，/必须出现在标签名左侧
+                 <div><div>错误，<div></div>正确，<div><div/>错误
+          */
+          var reg1 = /^<([^<>\s/]+)[^<>]*>(.*?<\/\1\s*>)?$/;
+          console.log(reg1.test("<br />"));//true
+          console.log(reg1.test("<br/>"));//true
+          console.log(reg1.test("<br/ >"));//true
+          console.log(reg1.test("<br>"));//true
+          console.log(reg1.test("< br>"));//false
+          console.log(reg1.test("<div> cxh </div>"));//true
+          console.log(reg1.test("<div>cxh</div>"));//true
+          console.log(reg1.test("<div > cxh </div >"));//true
+          console.log(reg1.test("< div>cxh</div>"));//false
+          console.log(reg1.test("<div>cxh< /div>"));//false
+          console.log(reg1.test("<div>cxh</ div>"));//false
+          console.log(reg1.test("<div>cxh<</div>"));//true
+          console.log(reg1.test("<div>cxh></div>"));//true
+          console.log(reg1.test("<div class='cursor'>cxh</div>"));//true
+          console.log(reg1.test("<div cxh</div>"));//false  
+          console.log(reg1.test("<my-div>cxh</my-div>"));//true 
+           console.log(reg1.test("cxh"));//false       
+      </script>
+    2 严格匹配HMTL标记，标签名必须以字母开头，可以包含字母或数字
+      <script type="text/javascript">
+          /*
+             2.1 单标签<右侧不能为空格，/左右两侧可以出现空格
+                 如<br/>正确，< br/>错误，<br />正确，<br/ >正确
+             2.2 双标签第一个标签和第二个标签<右侧不能为空格，/左右两侧不能出现空格
+                 如<div></div>正确，< div></div>错误，<div>< /div>错误，<div></ div>错误
+             2.3 所有表情>左侧可以出现空格
+                 <br/ >正确，<div ></div >正确
+             2.4 单标签后面的/可以省略，如果有/必须出现在标签名右侧
+                 <br>正确，</br>错误，<br/>正确
+             2.5 双标签第二个标签的/不能省略，/必须出现在标签名左侧
+                 <div><div>错误，<div></div>正确，<div><div/>错误
+             2.6 标签名必须以字母开头，可以包含字母或数字
+          */
+          var reg2 = /^<([a-z][a-z0-9]*)[^<>]*>(.*?<\/\1\s*>)?$/i;
+          console.log(reg2.test("<br />"));//true
+          console.log(reg2.test("<br/>"));//true
+          console.log(reg2.test("<br/ >"));//true
+          console.log(reg2.test("<br>"));//true
+          console.log(reg2.test("< br>"));//false
+          console.log(reg2.test("<div> cxh </div>"));//true
+          console.log(reg2.test("<div>cxh</div>"));//true
+          console.log(reg2.test("<div > cxh </div >"));//true
+          console.log(reg2.test("< div>cxh</div>"));//false
+          console.log(reg2.test("<div>cxh< /div>"));//false
+          console.log(reg2.test("<div>cxh</ div>"));//false
+          console.log(reg2.test("<div>cxh<</div>"));//true
+          console.log(reg2.test("<div>cxh></div>"));//true
+          console.log(reg2.test("<div class='cursor'>cxh</div>"));//true
+          console.log(reg2.test("<div cxh</div>"));//false      
+          console.log(reg2.test("<my-div>cxh</my-div>"));//false
+          console.log(reg2.test("cxh"));//false
+      </script>
+
+  三 匹配网址URL，比如http://www.caoxiaohan.com
+      1 匹配URL格式
+      /*
+        1.1 ：之前是数字字母混合，首字符必须为字母，比如http,https,ed2k 
+            URL很多，但网址通常有http,https,ftp开头
+        1.2 //之后是www或域名
+           http://www.caoxiaohan.com
+           http://caoxiaohan.com
+           http://vip.caoxiaohan.com
+           http://vip.caoxiaohan.com.cn
+        1.3 最后一个
+        网址规则，邮箱的@之后的后缀其实是由网址域名演变而来的
+        1.4 最后两位为国别域名可有可无，如.cn表示中国，.us表示美国。 用？表示0到1次。
+          //所有2个字母结尾的顶级域名都是国家顶级域名，一般出现在域名的最后
+        1.5 国别名之前是域名后缀，如.com，.company.  目前可注册的域名后缀有2-18位字母。
+          //域名后缀也可以是汉字或者其他国家的文字，这里我们忽略，不推荐采用，也没有人用作官方网站或邮箱后缀。
+          //世界上最长的域名后缀有18个字母，总共有两个域名，分别是.northwesternmutual域名后缀和.travelersinsurance域名后缀。
+          //未来可能还会新增更长的域名后缀，我们暂且将域名后缀长度限制为{2,18}，或者{2,}。
+        1.6 域名后缀之前是域名
+          //英文际域名域名字母数字及减号"-"组成，"-"只能出现在中间，字母不区分大小写，长度限制在1-63个字符。
+          比如caoxiaohan或者vip.caoxiaohan
+        1.7 域名后缀:后紧邻的数字为端口号为0---65535，可有可无
+          http://www.caoxiaohan.com:80
+          http://www.caoxiaohan.com:80/
+        1.8 域名后缀后的/及/后的字符可有可无
+          http://baike.baidu.com/link?url=SCDWiuJkcW8o3ZiQMMDMXE-mWb0Zhx4ba6P8cRE_PhfYDelRFLrymSUiZB2-Klsr0GbAHIDgIsjjx4jd7OIYUq
+      */
+      <script type="text/javascript">
+          var reg1 =/^([a-z][a-z0-9]*):\/{2}((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.){1,2}?)([a-z]{2,18}(?:\.[a-z]{2})?)(?::\d{1,5})?(?:\/\S*)?$/i;
+          //验证协议
+          console.log(reg1.test("ed2k://qq.com"));//true
+          console.log(reg1.test("http://qq.com"));//true
+          console.log(reg1.test("2ab://qq.com"));//fasle,协议必须以字母开头
+          console.log(reg1.test("a_b://qq.com"));//fasle,协议只能包含数字或字母   
+          //验证域名
+          console.log(reg1.exec("http://sina.cn"));//["http://sina.cn", "http", "sina.", "cn", index: 0, input: "http://sina.cn"]
+          console.log(reg1.exec("http://sina.com.cn"));//["http://sina.com.cn", "http", "sina.", "com.cn", index: 0, input: "http://sina.com.cn"]
+          console.log(reg1.exec("http://vip.sina.com.cn"));//["http://vip.sina.com.cn", "http", "vip.sina.", "com.cn", index: 0, input: "http://vip.sina.com.cn"]
+          console.log(reg1.exec("http://vip.163.com"));//["http://vip.163.com", "http", "vip.163.", "com", index: 0, input: "http://vip.163.com"]
+          console.log(reg1.exec("http://abc-xyz.com"));//["http://abc-xyz.com", "http", "abc-xyz.", "com", index: 0, input: "http://abc-xyz.com"]
+          console.log(reg1.exec("http://-xyz.com"));//null
+          console.log(reg1.exec("http://abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz012345678901.com"));//null
+          console.log(reg1.exec("http://abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz01234567890.com"));//["http://abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz01234567890.com", "http", "abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz01234567890.", "com", index: 0, input: "http://abcdefghigklmnopqrstuvwxyzabcdefghigklmnopqrstuvwxyz01234567890.com"]
+          console.log(reg1.exec("http://abc.northwesternmutual"));//"http://abc.northwesternmutual", "http", "abc.", "northwesternmutual", index: 0, input: "http://abc.northwesternmutual"]
+          console.log(reg1.exec("http://baike.baidu.com:80"));//["http://baike.baidu.com:80", "http", "baike.baidu.", "com", index: 0, input: "http://baike.baidu.com:80"]
+          console.log(reg1.exec("http://baike.baidu.com:8080"));//["http://baike.baidu.com:8080", "http", "baike.baidu.", "com", index: 0, input: "http://baike.baidu.com:8080"]
+          console.log(reg1.exec("http://baike.baidu.com:ab"));//null，端口号只能为数字
+          console.log(reg1.exec("http://baike.baidu.com:123456"));//null，端口号必须为0-65525
+          console.log(reg1.exec("http://baike.baidu.com/link?url=SCDWiuJkcW8o3ZiQMMDMXE-mWb0Zhx4ba6P8cRE_PhfYDelRFLrymSUiZB2-Klsr0GbAHIDgIsjjx4jd7OIYUq"));//["http://baike.baidu.com/link?url=SCDWiuJkcW8o3ZiQMM…RE_PhfYDelRFLrymSUiZB2-Klsr0GbAHIDgIsjjx4jd7OIYUq", "http", "baike.baidu.", "com", index: 0, input: "http://baike.baidu.com/link?url=SCDWiuJkcW8o3ZiQMM…RE_PhfYDelRFLrymSUiZB2-Klsr0GbAHIDgIsjjx4jd7OIYUq"]
+      </script>
+       2 匹配网址，采用http,https,ftp协议开头
+       <script type="text/javascript">
+          var reg2 =/^(https?|ftp):\/{2}((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.){1,2}?)([a-z]{2,18}(?:\.[a-z]{2})?)(?::\d{1,5})?(?:\/\S*)?$/i;
+          //验证协议
+          console.log(reg2.test("http://qq.com"));//true
+          console.log(reg2.test("https://qq.com"));//true
+          console.log(reg2.test("ftp://qq.com"));//true
+          console.log(reg2.test("ed2k://qq.com"));//false,只能是http,https,ftp协议         
+          console.log(reg2.test("2ab://qq.com"));//fasle,协议必须以字母开头
+          console.log(reg2.test("a_b://qq.com"));//fasle,协议只能包含数字或字母  
+          // 验证域名,跟第一种情况URL一致         
+      </script>
+      
+  四 匹配QQ号码    
+    目前存在的QQ号为5-11位，纯数字，首位数字不能为0  
+    <script type="text/javascript">            
+        var reg = /^[1-9]\d{4,10}$/;
+        console.log(reg.test("404915056"));//true
+        console.log(reg.test("15056"));//true
+        console.log(reg.test("10404915056"));//true
+        console.log(reg.test("5056"));//false，长度应该为5-11为
+        console.log(reg.test("102404915056"));//false，长度应该为5-11位
+        console.log(reg.test("404915056a"));//false,不能包含数字外的字符
+        console.log(reg.test("04915056"));//false,首位字符不能是0
+    </script>
+  
+
+  五 匹配中国邮编。   
+    中国邮编为6位数字，首位数字不能为0
+    <script type="text/javascript">       
+       var reg = /^[1-9]\d{5}$/;
+       console.log(reg.test("100084"));//true
+       console.log(reg.test("000084"));//false,首位字符不能是0
+       console.log(reg.test("10008"));//false,邮编长度为6位数字
+       console.log(reg.test("1000842"));//false，邮编长度为6位数字
+       console.log(reg.test("10008a"));//false,邮编必须为纯数字
+    </script>
+
+  六 匹配IP地址，比如192.168.0.1？
+     以IPV4为例，IP地址分四段，每段IP从0-255，IP地址范围从0.0.0.0~255.255.255.255       
+    <script type="text/javascript">       
+       var reg=/^((?:0|[1-9]\d?|1\d{2}|2[0-4]\d|25[0-5])\.){3}(0|[1-9]\d?|1\d{2}|2[0-4]\d|25[0-5])$/;
+       console.log(reg.test("0.0.0.0"));//true
+       console.log(reg.test("255.255.255.255"));//true
+       console.log(reg.test("192.99.0.12"));//true
+       console.log(reg.test("192.99.0.256"));//false,每段IP范围0~255
+       console.log(reg.test("192.99.0.1a"));//false,IPV4为纯数字
+    </script>
+   
+  七 匹配MAC地址，比如00:01:6C:06:A6:29
+    MAC地址分为六段，中间用:或者-分隔，每段范围从十六进制00~ff.
+    通常电脑的MAC地址(物理地址)大写用-分隔，手机上的MAC地址小写用:分隔
+    <script type="text/javascript">
+       var reg = /^(([a-f0-9]{2}:){5}|([a-f0-9]{2}-){5})[a-f0-9]{2}$/i;
+       console.log(reg.test("00-90-96-C0-AF-08"));//true
+       console.log(reg.test("00:90:96:C0:AF:08"));//true
+       console.log(reg.test("00-90-96-c0-af-08"));//true
+       console.log(reg.test("00:90:96:c0:af:08"));//true
+       console.log(reg.test("00-90:96-C0:AF-08"));//false,分隔符应该统一
+       console.log(reg.test("00-90:96-C0:AF-0Y"));//false,十六进制数只能用0-9或A-F表示，Y不是有效十六进制数
+       console.log(reg.test("00-90:96-C0:AF-08-"));//false，格式不符合
+       console.log(reg.test("00-90:96-C0:AF-08-01-02"));//false，长度不符合，应该是6段
+    </script>
+
+  八 匹配一年的12个月
+    月份1-12，0-9前面可以加0也可不加
+    <script type="text/javascript">
+        var reg = /^(0?[1-9]|1[0-2])$/;
+        console.log(reg.test("1"));//true
+        console.log(reg.test("09"));//true
+        console.log(reg.test("12"));//true
+        console.log(reg.test("13"));//false,月份只能是1-12
+        console.log(reg.test("a"));//false,月份只能是数字
+        console.log(reg.test("0"));//false,月份不能为0
+        console.log(reg.test("00"));//false,月份不能为00
+    </script>
+
+  九 匹配一个月的1~31天
+     每月1-31天，0-9前面可以加0可以不加0 
+    <script type="text/javascript">
+        var reg = /^(0?[1-9]|[12][0-9]|3[01])$/;
+        console.log(reg.test("9"));//true
+        console.log(reg.test("08"));//true
+        console.log(reg.test("29"));//true
+        console.log(reg.test("31"));//true
+        console.log(reg.test("a"));//false,日期只能是数字
+        console.log(reg.test("0"));//false,日期不能为0
+        console.log(reg.test("00"));//false,日期不能为00
+    </script>
+	</pre>
+  </body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>正则练习题3</title>    
+</head>
+<body>
+	<h1>
+Freecodecamp练习题3
+要求在freecodecamp.cn网页上验证通过
+1 https://freecodecamp.cn/challenges/caesars-cipher 
+2 https://freecodecamp.cn/challenges/search-and-replace
+3 https://freecodecamp.cn/challenges/pig-latin
+4 https://freecodecamp.cn/challenges/spinal-tap-case
+5 https://freecodecamp.cn/challenges/validate-us-telephone-numbers</h1>
+	<pre>	
+  一 https://freecodecamp.cn/challenges/caesars-cipher 
+  <script type="text/javascript">   
+      function rot13(str) { // LBH QVQ VG!
+          str=str.replace(/[A-Z]/gi,function(match){             
+               return /^[N-Zn-z]$/.test(match)?String.fromCharCode(match.charCodeAt()-13):String.fromCharCode(match.charCodeAt()+13);  
+          });
+          return str;
+      }
+      // Change the inputs below to test
+      console.log(rot13("SERR PBQR PNZC"));//"FREE CODE CAMP"
+      console.log(rot13("sErR PbqR pnzC"));//fReE CodE camP
+  </script>
+
+  二 https://freecodecamp.cn/challenges/search-and-replace
+    1 匹配HMTL标记
+      <script type="text/javascript">
+          function myReplace(str, before, after) {
+              if(/^[A-Z]/g.test(before)){         
+                  after = after.replace(/^[a-z]/, after[0].toUpperCase());     
+              }   
+              return str.replace(new RegExp(before,"g"),after);
+          }
+          console.log(myReplace("A quick brown fox jumped over the lazy dog", "jumped", "leaped"));//A quick brown fox leaped over the lazy dog
+          console.log(myReplace("He is Sleeping on the couch", "Sleeping", "sitting"));//He is Sitting on the couch
+      </script>
+   
+
+  三 https://freecodecamp.cn/challenges/pig-latin     
+      <script type="text/javascript">
+          function translatePigLatin(str) {   
+            if(/[aeiou]/.test(str[0])){
+              str =str+"way";
+            }else{    
+              str= str.replace(/^([^aeiou]+)([aeiou][a-z]*)$/i,"$2$1ay");
+            }
+            return str;
+          }
+          console.log(translatePigLatin("california"));//"aliforniacay"
+          console.log(translatePigLatin("algorithm"));//"algorithmway"
+      </script>
+      
+  四 https://freecodecamp.cn/challenges/spinal-tap-case       
+    <script type="text/javascript">            
+       function spinalCase(str) {
+          str = str.replace(/([a-z])([A-Z])/g,"$1"+"-"+"$2"); 
+          str = str.replace(/[^a-z]+/gi,"-");   
+          return str.toLowerCase();
+        }
+        console.log(spinalCase('This Is Spinal Tap'));//"this-is-spinal-tap"。
+        console.log(spinalCase("thisIsSpinalTap"));//"this-is-spinal-tap"。
+        console.log(spinalCase("The_Andy_Griffith_Show"));//"the-andy-griffith-show"
+        console.log(spinalCase("Teletubbies say Eh-oh"));//"teletubbies-say-eh-oh"
+    </script>
+  
+
+  五 https://freecodecamp.cn/challenges/validate-us-telephone-numbers      
+    <script type="text/javascript">       
+       function telephoneCheck(str) {  
+          var reg=/^(\d{6}|(1\s)?(\d{3}[\s-]){2}|(1\s?)?\(\d{3}\)\s?\d{3}-)\d{4}$/;
+          return reg.test(str);  
+        }
+        console.log(telephoneCheck("1 555-555-5555"));//true
+        console.log(telephoneCheck("1 (555) 555-5555"));//true
+        console.log(telephoneCheck("5555555555"));//true
+        console.log(telephoneCheck("555-555-5555"));//true
+        console.log(telephoneCheck("(555)555-5555"));//true
+        console.log(telephoneCheck("1(555)555-5555"));//true
+        console.log(telephoneCheck("1 456 789 4444"));//true
+        console.log(telephoneCheck("1 555)555-5555"));//false
+    </script>
+
+ 
+	</pre>
+  </body>
+</html>

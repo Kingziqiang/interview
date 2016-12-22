@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>offset兼容性错误写法</title>
+<style type="text/css">
+*{
+	margin:0px;
+	padding: 0px;
+	clear: both
+}
+html{
+	margin:7px;
+	padding:6px;	
+	border:5px gray solid;
+}
+
+body{
+	margin:12px;
+	padding:14px;
+	border:4px green solid;
+}
+div#outer{ width:300px;height:200px; margin:100px;border:10px pink dashed;padding:40px; background:yellow;}
+div#inner{ width:150px;height:100px; margin:50px;border:5px red dashed;padding:20px; background:blue;overflow: hidden;}
+</style>	
+
+</head>
+<body>
+<div id="outer">
+	<div id="inner">
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+	</div>
+</div>
+
+</body>
+</html>
+<script>
+
+//正确的错误写法	
+   	function offset(curEle) {
+        var offsetL = curEle.offsetLeft, offsetT = curEle.offsetTop, offsetP = curEle.offsetParent;
+        while (offsetP) {
+            offsetL += offsetP.offsetLeft;
+            offsetT += offsetP.offsetTop;
+            if (navigator.userAgent.indexOf("MSIE 8.0") <= -1) {
+                offsetL += offsetP.clientLeft;
+                offsetT += offsetP.clientTop;
+            }
+            offsetP = offsetP.offsetParent;
+        }
+        return {top: offsetT, left: offsetL};
+    }
+	//以下浏览器在IE5-11，及其他各版本浏览器中输出结果一直
+		console.log("<------------------------offset兼容处理前的值：--------------------------------->");
+		outer.style.position="static";	 
+		console.log("当inner元素的父元素没有做定位时offset兼容处理前的值："); 
+		console.log({left:inner.offsetLeft,top:inner.offsetTop});
+		outer.style.position="relative";
+		console.log("当inner元素的父元素做定位时offset兼容处理前的值：");
+		console.log({left:inner.offsetLeft,top:inner.offsetTop}); 
+		console.log("outer元素的offset兼容处理前的值:");
+		console.log({left:outer.offsetLeft,top:outer.offsetTop});
+		console.log("body元素的offset兼容处理前的值："); 
+		console.log({left:document.body.offsetLeft,top:document.body.offsetTop});
+		console.log("html元素的offset兼容处理前的值："); 
+		console.log({left:document.documentElement.offsetLeft,top:document.documentElement.offsetTop});
+		console.log("<------------------------offset兼容处理后的值：--------------------------------->"); 
+		outer.style.position="static";		
+		console.log("当inner元素的父元素没有做定位时offset的值：");  
+		console.log(offset(inner));	// 	
+		outer.style.position="relative";	
+		console.log("当inner元素的父元素做定位时offset的值：");  
+		console.log(offset(inner));	// 
+		console.log("outer元素的offset值:");
+		console.log(offset(outer));  // 	
+		console.log("body元素的offset值："); 
+		console.log(offset(document.body)); //		
+		console.log("html元素的offset值："); 
+		console.log(offset(document.documentElement)); //
+		console.log("<------------------------标准值：--------------------------------->"); 
+		console.log({top: 241, left: 241});
+		console.log({top: 90, left: 90});
+		console.log({top: 141, left: 141});
+		console.log({top: 0, left: 0});
+		console.log({top: 7, left: 7});
+</script>

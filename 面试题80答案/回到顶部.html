@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>返回顶部</title>
+<style>
+body{background:pink;text-align: center;height:1000px;font-size: 28px}
+#top{width:30px; height:40px; padding:20px; font:14px/20px arial; text-align:center;  background:#888; position:absolute; cursor:pointer; color:#fff;display: none}
+</style>
+</head>
+<body>
+<h1>这是顶部</h1>
+<p>a</p><p>b</p><p>c</p><p>d</p><p>e</p><p>f</p><p>g</p><p>h</p><p>i</p><p>j</p><p>k</p>l<br>
+m<br>o<br>p<br>q<br>r<br>s<br>t<br>u<br>v<br>w<br>x<br>y<br>z<br>A<br>B<br>C<br>D<br>E<br>F<br>G<br>H<br>I<br>J<br>K<br>L<p>M</p>N<br>O<br>P<br>Q<br>R<br>S<br>T<br>U<br>V<br>W<br>X<br>Y<br>Z<br>0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9
+<h1>这是底部</h1>
+<div id="top">返回顶部</div>
+<script type="text/javascript" src="utils.js"></script>
+<script>
+    window.onload = function(){
+      var oTop = document.getElementById("top");
+      var screenW = utils.ctrWin("clientWidth");//可视化区域宽度
+      var screenH = utils.ctrWin("clientHeight");//可视区域高度
+      oTop.style.left = screenW - oTop.offsetWidth-100 +"px";//距离可视窗口最右侧100px
+      oTop.style.top = screenH - oTop.offsetHeight-100 + "px";//距离可视窗口最底部100px
+      window.onscroll = function(){
+        var scrolltop = utils.ctrWin("scrollTop");
+        oTop.style.top = screenH - oTop.offsetHeight-100 + scrolltop +"px";//当拖动滚动条时，保持返回顶部图标位置始终右下角
+        oTop.style.display = scrolltop >= screenH/2? "block" : "none";//当卷去的高度大于等于1/2屏幕高度时，显示返回顶部图标。
+      }
+      oTop.onclick = function(){
+        utils.ctrWin("scrollTop",0);
+      }
+    }  
+</script>
+</body>
+</html>

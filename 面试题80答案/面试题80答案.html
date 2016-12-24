@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>80</title>    
+</head>
+<body>
+	<h1>80 写一个工具类包一些共用方法（网页属性的兼容性、类数组转换成数字、字符串转换成JSON格式、获取样式的兼容写法、获取offsetLeft/offsetTop的兼容写法）？图解scroll相关属性？scrollWidth/scrollHeight 可读写吗，scrollTop/scrollLeft可读写吗及其取值范围？写一个滚动事件ele.onScroll=function(){console.log(ele.scrollTop);}，轻轻滑动最小一步滚动条对应的方法执行几次，scrollTop/scrollLeft的变化频率及规律？写一个回到顶部效果示例？写一个进入可视区域零界点时切换文字效果（DIV原来不在可视区域，当向下滑动滚动条使DIV的的底部边框与可视窗口底部重合时，DIV中原来的文字变成其他文字的效果）？</h1>
+	<pre>	
+一 写一个工具类包一些共用方法（网页属性的兼容性、类数组转换成数字、字符串转换成JSON格式、获取样式的兼容写法、获取offsetLeft/offsetTop的兼容写法）？
+   见附件《utils.js》
+   补充了setCss方法对做动画很有用，修正了offset方法。
+
+二 图解scroll相关属性
+   见附件《滚动条相关scroll属性》，拖动滚动条时观察控制台输出结果。
+
+三 scrollWidth/scrollHeight 可读写吗，scrollTop/scrollLeft可读写吗及其取值范围？
+   1 scrollWidth/scrollHeight  （只读属性）
+	 1.1 容器中内容没有溢出的情况下：和我们的clientWidth/clientHeight一模一样
+	 1.2 如果容器中内容有溢出，获取的结果如下规则：
+		 scrollWidth：真实内容的宽度（包含溢出）+左填充
+		 scrollHeight：真实内容的高度（包含溢出）+上填充
+	 1.3 获取到的结果都是“约等于”的值，因为：
+		 同一个浏览器，我们是否设置overflow="hidden"，对于最终的结果是有影响的（滚动条也占据宽度会影响）；
+		 在不同的浏览器中我们获取到的结果也是不相同的
+    2 scrollLeft/scrollTop（可读写属性）
+	  滚动条卷去的宽度/高度 
+	  2.1.之前我们学习的js盒子模型中：client系列/offset系列/scrollWidth/scrollHeight都是“只读”属性->只能通过属性获取值，不能通过属性修改元素的样式
+	  2.2.scrollTop/scrollLeft：滚动条卷曲的高度/宽度(这两个属性是唯一“可读写”属性)		 
+		   scrollTop的值是存在边界值（最大和最小值的），我们设置的值比最小值小或者比最大值大时都没用，起到效果的依然是边界的值。
+		   [最小值是零]
+			<script type="text/javascript">
+				box.scrollTop = -1000;  //直接回到容器顶部，没有超出  
+				console.log(box.scrollTop);  //0
+			</script>
+		   [最大值=真实的高度-当前容器屏幕的高度]
+			<script type="text/javascript">
+				var maxTop = box.scrollHeight - box.clientHeight;  
+				console.log(maxTop); 
+			</script>
+ 
+四 写一个滚动事件ele.onScroll=function(){console.log(ele.scrollTop);}，轻轻滑动最小一步滚动条对应的方法执行几次，scrollTop/scrollLeft的变化频率及规律
+   见附件《滚动事件对应方法执行次数.html》，拖动滚动条时观察控制台输出结果。
+   轻轻滑动最小1步滚动条对应的方法执行多次，不同浏览器略有不同，同一个浏览器每次拖动滚动条执行的次数也不同。
+  
+五 写一个回到顶部效果示例？
+   见附件《回到顶部.html》
+
+六 写一个进入可视区域零界点时切换文字效果
+   见附件《改变进入可视窗口div的文字.html》
+	</pre>
+  </body>
+</html>

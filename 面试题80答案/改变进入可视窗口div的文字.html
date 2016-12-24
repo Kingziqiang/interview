@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+body{background:pink;text-align: center;font-size: 28px}
+
+#content{ height:300px; line-height:300px; background:black; color:orange; font-size:36px; text-align:center; }
+</style>
+</head>
+
+<body style="height:3000px;">
+<p>a</p>
+<p>b</p><p>c</p><p>d</p><p>e</p><p>f</p><p>g</p><p>h</p><p>i</p><p>j</p><p>k</p>l<br>
+m<br>o<br>p<br>q<br>r<br>s<br>t<br>u<br>v<br>w<br>x<br>y<br>z<br>A<br>B<br>C<br>D<br>E<br>F<br>G<br>H<br>I<br>J<br>K<br>L<p>M</p>N<br>O<br>P<br>Q<br>R<br>S<br>T<br>U<br>V<br>W<br>X<br>Y<br>Z<br>0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9
+<div id="content">我是原来的文字</div>
+9<br>8<br>7<br>6<br>5<br>4<br>3<br>2<br>1<br>0
+</body>
+</html>
+<script type="text/javascript" src="utils.js"></script>
+<script>
+
+
+/*
+//当浏览器滚动条滚动的时候，检测盒子是否进入了浏览器的可视窗口内
+//一、浏览器滚动条在滚动 window.onscroll onscroll没有兼容性问题的通用事件
+二、如何知道某个元素到了浏览器可视窗口
+	1、盒子的位置是固定的:utils.offset(content).top
+	2、浏览器的可视窗口是变化的，但是我们可以计算出当前网页的那一部分显示在可视窗口里
+	3、如果网页可视区的底边>元素的底边,则说明这个元素已经到了可视区了
+		网页可视区的底边=网页翻出的那一部分+浏览器本身的高
+		var h=(document.documentElement.scrollTop||document.body.scrollTop)+(document.documentElement.clientHeight||document.body.clientHeight)
+		
+		元素的底边：元素本身距离文档顶端的偏移+元素本身的高
+		eleBottom=utils.offset(content).top+content.utils.offsetHeight;
+*/
+
+window.onscroll=function(){
+	var ele=document.getElementById("content");
+		var eleBottom=utils.offset(ele).top+ele.offsetHeight;//这样滚动条每动一次，则就重新计算一次这个值。而这个值是固定的，没必要总是重新计算，则将其提前计算保存下来比较合适。
+		console.log(utils.offset(ele).top,ele.offsetHeight);
+		var h=(document.documentElement.scrollTop||document.body.scrollTop)+(document.documentElement.clientHeight||document.body.clientHeight);
+		console.log("body的scrollTop值为:",document.body.scrollTop);//chrome、safari、opera中显示正整数，firefox、IE中始终显示0
+		console.log("html的scrollTop值为:",document.documentElement.scrollTop);//firefox、IE显示正整数，chrome、safari、opera中中始终显示0
+
+		if(h>eleBottom){
+			ele.innerHTML="已经完全显示id为content的黑色背静div，立刻切换文字";
+		}
+	
+}
+
+</script>

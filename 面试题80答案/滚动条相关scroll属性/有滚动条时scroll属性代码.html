@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>有滚动条时scroll属性</title>
+<style type="text/css">
+*{
+	margin:0px;
+	padding: 0px;
+	clear: both
+}
+
+div#temp{width:200px;height:200px;}
+div#inner{ width:150px;height:150px; margin:50px;border:15px red dashed;padding:20px; background:blue;font-size:150px;overflow: auto}
+</style>	
+
+</head>
+<body>
+   <div id ="temp"></div>
+	<div id="inner">上中下</div>
+	
+
+</body>
+</html>
+<script>
+inner.onscroll=function(){
+	console.log("inner.scrollHeight:",inner.scrollHeight);//469,449(真实内容的高度)+20(padding-top)
+	console.log("inner.scrollWidth:",inner.scrollWidth);////173,clientWidth,容器中内容没有溢出的情况下：和我们的clientWidth/clientHeight一模一样
+	console.log("inner.scrollLeft:",inner.scrollLeft);//0,当没有溢出或没有滚动条或者滚动条在默认位置（最左侧）时值为0
+	//当向右拖动滚动条时，inner.scrollLeft的值逐渐增大，最小值是0，最大值是 inner.scrollWidth - inner.clientWidth
+	console.log("inner.scrollTop",inner.scrollTop);//0,当没有溢出或没有滚动条或者滚动条在默认位置（最上侧）时值为0
+	//当向下拖动滚动条时，inner.scrollTop的值逐渐增大，最小值是0，最大值是 inner.scrollHeight - inner.clientHeight
+	console.log("inner.scrollWidth==inner.clientWidth+inner.scrollLeft",inner.scrollWidth==inner.clientWidth+inner.scrollLeft);
+	console.log("inner.scrollHeight==inner.clientHeight+inner.scrollTop",inner.scrollHeight==inner.clientHeight+inner.scrollTop);
+	console.log("inner.clientHeight",inner.clientHeight);
+	console.log("inner.clientWidth",inner.clientHeight);
+
+}
+
+
+
+
+
+</script>

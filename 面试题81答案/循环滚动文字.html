@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>循环滚动文字</title>
+<style type="text/css">
+div#inner{ width:150px;height:150px; margin:50px;border:15px red dashed;padding:20px; background:blue;font-size:150px;overflow: auto}
+</style>
+</head>
+
+<body>
+	<div id="inner">上中下</div>
+</body>
+</html>
+<script>
+	var ele=document.getElementById("inner");
+	;(function (){
+		var t=ele.scrollTop;//这是累加前的
+		ele.scrollTop++//累加之后的
+		if(t==ele.scrollTop){//这一句深藏功与名：如果累加前的值和累加后的值相同，则表示scrollTop加不动了：到头了
+			//ele.innerHTML+=ele.innerHTML;
+			ele.scrollTop=0;
+		}	
+		window.setTimeout(arguments.callee,10);
+		console.log(1);	
+	})();
+</script>

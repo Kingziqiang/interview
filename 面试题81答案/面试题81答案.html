@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>81</title>    
+</head>
+<body>
+	<h1>81 仔细看视频4js20150923第1小时:04分，在老师写的代码《6、仅供参考.html》在IE7浏览器中演示时部分图片无法加载，老师始终没有修复这个bug，自己写一个延迟加载程序兼容IE6-8使得所有图片正常显示?写一个循环滚动文字效果</h1>
+	<pre>	
+一 兼容IE6-8的图图片延迟加载？
+   见附件《兼容IE6-8的图片延迟加载》
+   若要兼容IE6-8，oImg.src = container.trueImg;这句话一定要在oImg.onload方法之后。
+   关键在于修改下列方法内的代码顺序。
+   <script type="text/javascript">
+	   	function loadImg(container) {
+	        var oImg = new Image;        
+	        oImg.onload = function () {//图片加载后执行该方法
+	            var temp = container.getElementsByTagName("img");
+	            if (temp.length === 0) {
+	                container.appendChild(this);
+	                container.isLoad = true;
+	                fadeIn(this);
+	            }
+	        }
+	        oImg.src = container.trueImg;//将oImg的src属性设置为一个图片地址。
+	    }
+   </script>
+   
+
+二 循环滚动文字
+   见附件《循环滚动文字.html》
+   判断元素ele滚动到底部的条件是：ele.scrollTop==++ele.scrollTop
+   因为ele.scrollTop到底部时取得最大值ele.scrollHeight-ele.clientHeight，如果继续自增则值不会改变，依然是ele.scrollHeight-ele.clientHeight.
+
+	</pre>
+  </body>
+</html>

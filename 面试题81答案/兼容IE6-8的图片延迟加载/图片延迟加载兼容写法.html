@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, div, img, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            border: none;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        #ul1 {
+            margin: 10px auto;
+            padding: 0 0 15px 15px;
+            width: 630px;
+            border: 1px dashed #0fb200;
+            overflow: hidden;
+        }
+
+        #ul1 li {
+            float: left;
+            margin: 15px 15px 0 0;
+            width: 300px;
+            height: 150px;
+            background: url("img/ddd.jpg") no-repeat center center;
+        }
+
+        #ul1 li img {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+    </style>
+</head>
+<body>
+<ul id="ul1"></ul>
+
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/json.js"></script>
+<script type="text/javascript">
+    var oUl = document.getElementById("ul1");
+    var oLis = oUl.getElementsByTagName("li");
+
+    //1、绑定数据
+    function initData() {
+        var frg = document.createDocumentFragment();
+        for (var i = 0; i < data.length; i++) {
+            var oLi = document.createElement("li");
+            //在绑定数据的时候，把需要展示的图片地址绑定到对应的每一个li上
+            oLi.trueImg = data[i];
+            frg.appendChild(oLi);
+        }
+        oUl.appendChild(frg);
+    }
+    initData();
+
+    //2、编写图片延迟加载的方法
+    function loadImg(container) {
+        var oImg = new Image;        
+        oImg.onload = function () {
+            var temp = container.getElementsByTagName("img");
+            if (temp.length === 0) {
+                container.appendChild(this);
+                container.isLoad = true;
+                fadeIn(this);
+            }
+        }
+        oImg.src = container.trueImg;
+    }
+    function fadeIn(img) {
+        var count = 0, timer = null;
+        ~function move() {
+            window.clearTimeout(timer);
+            count += 0.2;
+            img.style.opacity = count;
+            img.style.filter = "alpha(opacity=" + count * 100 + ")";
+            if (count === 1) return;
+            timer = window.setTimeout(move, 10);
+        }();
+    }
+
+    //3、开始默认延迟1s后，只加载第一屏幕上的图片(前8个)
+    window.setTimeout(function () {
+        for (var i = 0; i < 8; i++) {
+            if (oLis[i]) {//只是处理如果总数量都不足8个的时候，这样的话，浏览器不会报错
+                loadImg(oLis[i]);
+            }
+        }
+    }, 1000);
+
+    //4、当页面滚动的时候，把出现的在视野中的图片都加载出来
+    //浏览器底边框的偏移>=每一个li的偏移
+    window.onscroll = function () {
+        var winT = utils.ctrWin("clientHeight") + utils.ctrWin("scrollTop");
+        for (var i = 8; i < oLis.length; i++) {
+            var cur = oLis[i];
+            if (!cur.isLoad) {
+                var curT = utils.offset(cur).top;
+                if (winT >= curT) {
+                    loadImg(cur);
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

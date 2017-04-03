@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>获取到屏幕左上角的距离的兼容写法</title>
+<style type="text/css">
+*{
+	margin:0px;
+	padding: 0px;
+	clear: both
+}
+html{
+	margin:7px;
+	padding:6px;	
+	border:5px gray solid;
+}
+
+body{
+	margin:12px;
+	padding:14px;
+	border:4px green solid;
+}
+div#outer{ width:300px;height:200px; margin:100px;border:10px pink dashed;padding:40px; background:yellow;}
+div#inner{ width:150px;height:100px; margin:50px;border:5px red dashed;padding:20px; background:blue;overflow: hidden;}
+</style>	
+
+</head>
+<body>
+<div id="outer">
+	<div id="inner">
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+	</div>
+</div>
+
+</body>
+</html>
+<script>
+//正确的兼容方法
+	 		function getCss(curEle,attr){
+		        var val = typeof window.getComputedStyle == "function" ? getComputedStyle(curEle,null)[attr] : curEle.currentStyle[attr];
+		        if(!isNaN(parseFloat(val))) val = parseFloat(val);
+		        return val;
+		    }	
+
+	   		function offset(curEle){	   			
+	   		    //1 获取html左边框和上边框分别距离屏幕最左侧和最上方的距离 
+	   		    var bLeft= getCss(document.documentElement,"marginLeft"),bTop=getCss(document.documentElement,"marginTop");
+	   			if(curEle==document.documentElement)  return {left:bLeft,top:bTop};			  
+			    //2 获取body左边框和上边框分别距离屏幕最左侧和最上方的距离  
+			    var hLeft = getCss(document.documentElement,"marginLeft")+getCss(document.documentElement,"borderLeftWidth")+getCss(document.documentElement,"paddingLeft")+getCss(document.body,"marginLeft");
+			    var hTop = getCss(document.documentElement,"marginTop")+getCss(document.documentElement,"borderTopWidth")+getCss(document.documentElement,"paddingTop")+getCss(document.body,"marginTop");
+	   			if(curEle==document.body) return {left:hLeft,top:hTop};	
+	   			var tempPar=par = curEle.parentNode,  pos = getCss(par,"position");
+	   			tempPar.style.position="static";//将父元素统一设置为不定位		   					   			  	
+	   			var totalLeft =curEle.offsetLeft,totalTop = curEle.offsetTop;
+	   			if(/Firefox/.test(navigator.userAgent)){ 				
+	   				totalLeft+= getCss(document.documentElement,"marginLeft")-document.body.offsetLeft;
+	   				totalTop+= getCss(document.documentElement,"marginTop")-document.body.offsetTop;   				
+	   			}else if(/(MSIE\s(8.0|9.0|10.0))|(rv:\d+\.\d\)\slike Gecko)/.test(navigator.userAgent)){			    
+			    		    	
+			    }else if(/MSIE\s(5.0|6.0|7.0)/.test(navigator.userAgent)){	   		   			    		
+		   			while (par){ //直到html为止    				    		       
+						   totalLeft += par.clientLeft+par.offsetLeft;  
+						   totalTop += par.clientTop+par.offsetTop;
+						   curEle = par;
+						   par = par.offsetParent;						  
+					}	
+
+			    }else{
+			    	totalLeft +=getCss(document.documentElement,"marginLeft");
+			    	totalTop +=getCss(document.documentElement,"marginTop");
+			    }
+			    tempPar.style.position=pos;//恢复原来的样式
+				return {left:totalLeft,top:totalTop}; 		
+			}	
+		//以下浏览器在IE5-11，及其他各版本浏览器中输出结果一直
+		console.log("<------------------------offset兼容处理前的值：--------------------------------->");
+		outer.style.position="static";	 
+		console.log("当inner元素的父元素没有做定位时offset兼容处理前的值："); 
+		console.log({left:inner.offsetLeft,top:inner.offsetTop});
+		outer.style.position="relative";
+		console.log("当inner元素的父元素做定位时offset兼容处理前的值：");
+		console.log({left:inner.offsetLeft,top:inner.offsetTop}); 		
+		console.log("<------------------------offset兼容处理后的值：--------------------------------->"); 
+		outer.style.position="static";		
+		console.log("当inner元素的父元素没有做定位时offset的值：");  
+		console.log(offset(inner));	// 	
+		outer.style.position="relative";	
+		console.log("当inner元素的父元素做定位时offset的值：");  
+		console.log(offset(inner));	// 		
+		if(/MSIE\s(5.0|6.0|7.0)/.test(navigator.userAgent)){
+			if(document.documentElement.clientLeft==0){
+				console.log("<------------------------IE5浏览器inner边框举例屏幕的真实值：--------------------------------->"); 
+				console.log({left: 230, top: 164});
+			}else{
+				console.log("<------------------------IE7浏览器inner边框举例屏幕的真实值：--------------------------------->"); 
+				console.log({left: 248, top: 194});
+			}		
+		}else{
+			console.log("<------------------------标准浏览器inner边框举例屏幕的真实值：--------------------------------->"); 
+			console.log({left: 248, top: 248});
+		}	
+</script>

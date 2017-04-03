@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>82</title>    
+</head>
+<body>
+	<h1>82 总结元素常用样式的默认值？处理获得样式对象的兼容性的几种写法？如何判断不存在的属性或变量？伪元素的用法举例？默认情况下所有的元素的offsetParent是什么，offsetParent和parentNode之间有什么关系，什么情况下offsetParent会改变不再是body？写一个兼容所有浏览器的计算元素上边框到浏览器最顶部或最左侧的offset方法？</h1>
+	<pre>	
+一 元素常用样式的默认值
+   1 chrome/safari/opera浏览器
+     控制台执行：console.dir(getComputedStyle(document.body));
+     background:"rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box"
+     backgroundColor:"rgba(0, 0, 0, 0)"
+     backgroundImage:"none"
+     backgroundPosition:"0% 0%"
+     backgroundRepeat:"repeat"
+     border:"0px none rgb(0, 0, 0)"
+     borderTopWidth:"0px"
+     borderTopStyle:"none"
+     borderTopColor:"rgb(0, 0, 0)"
+     cursor:"auto"
+     clear:"none"
+     display:"block"
+     filter:"none"
+     float:"none"     
+	 font:"normal normal normal normal 16px / normal Simsun"
+	 fontFamily:"Simsun"
+	 fontSize:"16px"
+	 fontWeight:"normal"
+	 height:"18px"
+	 left:"auto"
+	 listStyle:"disc outside none"
+	 listStyleType:"disc"
+	 margin:"8px"
+	 marginTop:"8px"
+	 opacity:"1"
+	 overflow:"visible"
+	 padding:"0px"
+	 position:"static"
+	 right:"auto"	
+	 textAlign:"start"
+	 textIndent:"0px"
+	 verticalAlign:"baseline"
+	 visibility:"visible"
+	 width:"1264px"	
+	 zIndex:"auto"	
+ 
+  2 firefox浏览器
+  	控制台执行：console.dir(getComputedStyle(document.body));
+     background:""
+     backgroundColor:"transparent"
+     backgroundImage:"none"
+     backgroundPosition:"0% 0%"
+     backgroundRepeat:"repeat"
+     border:""
+     borderTopWidth:"0px"
+     borderTopStyle:"none"
+     borderTopColor:"rgb(0, 0, 0)"
+     cursor:"auto"
+     clear:"none"
+     display:"block"
+     filter:"none"
+     float:"none"     
+	 font:""
+	 fontFamily:"sans-serif"
+	 fontSize:"16px"
+	 fontWeight:"400"
+	 height:"22px"
+	 left:"auto"	
+	 listStyle:""
+	 listStyleType:"disc"
+	 margin:""
+	 marginTop:"8px"
+	 opacity:"1"
+	 overflow:"visible"
+	 padding:"0"
+	 paddingTop:"0px"
+	 position:"static"
+	 right:"auto"	
+	 textAlign:"start"
+	 textIndent:"0px"
+	 verticalAlign:"baseline"
+	 visibility:"visible"
+	 width:"1264px"	
+	 zIndex:"auto"	
+	 firefox的body元素常用属性与chrome/safari/opera不同之处：
+	 2.1 chrome/safari/opera复合值属性是均包含各个分支值的字符串border:"0px none rgb(0, 0, 0)"
+	 	 firefox复合值属性均为空字符串"",border:""
+	 2.2 chrome/safari/opera默认字体fontFamily为, fontFamily:"Simsun"	 	
+	 	 firefox默认字体fontFamily为,fontFamily:"sans-serif"
+	 2.3 chrome/safari/opera默认字体粗细fontWeight:为, fontWeight:"normal"	 	
+	 	 firefox默认字体粗细fontWeight为, fontWeight:"400"
+
+  3 IE浏览器(IE9-IE11)
+     控制台执行：console.dir(getComputedStyle(document.body));//IE9-IE11才能使用getComputedStyle方法 
+     background:""
+     backgroundColor:"transparent"
+     backgroundImage:"none"
+     backgroundPosition:"0% 0%"
+     backgroundRepeat:"repeat"
+     border:""
+     borderTopWidth:"0px"
+     borderTopStyle:"none"
+     borderTopColor:"rgb(0, 0, 0)"
+     cursor:"auto"
+     clear:"none"
+     display:"block"
+     filter:"none"
+     float:"none"     
+	 font:""
+	 fontFamily:"Times New Roman"
+	 fontSize:"16px"
+	 fontWeight:"400"
+	 height:"18.4px"
+	 left:"auto"	
+	 listStyle:""
+	 listStyleType:"disc"
+	 margin:"8px"
+	 marginTop:"8px"
+	 opacity:"1"
+	 overflow:"visible"
+	 padding:"0px"
+	 paddingTop:"0px"
+	 position:"static"
+	 right:"auto"	
+	 textAlign:"left"
+	 textIndent:"0px"
+	 verticalAlign:"baseline"
+	 visibility:"visible"
+	 width:"1264px"	
+	 zIndex:"auto"	
+	 3.1 chrome/safari/opera复合值属性是均包含各个分支值的字符串border:"0px none rgb(0, 0, 0)"
+	 	 IE9-IE11(Edge浏览器)复合值属性均为空字符串"",border:""
+	 3.2 chrome/safari/opera默认字体fontFamily为, fontFamily:"Simsun"	 	
+	 	 IE9-IE11(Edge浏览器)默认字体fontFamily为,fontFamily:"Times New Roman"
+	 3.3 chrome/safari/opera默认字体粗细fontWeight:为, fontWeight:normal"	 	
+	 	 IE9-IE11(Edge浏览器)默认字体粗细fontWeight为, fontWeight:"400"
+	 3.4 chrome/safari/opera默认body高度height为, height:"22px"	 	
+	 	 IE9-IE11(Edge浏览器)默认body高度height为, height:"18.4px"
+  4  IE浏览器(IE9-11)     
+     控制台执行：console.dir(document.body.currentStyle);//IE5-IE11均可使用currentStyle属性
+     background:""
+     backgroundColor:"transparent"
+     backgroundImage:"none"
+     backgroundPosition:"0% 0%"
+     backgroundRepeat:"repeat"
+     border:undefined
+     borderTopWidth:"0px"
+     borderTopStyle:"none"
+     borderTopColor:"#000000"
+     cursor:"auto"
+     clear:"none"
+     display:"block"
+     filter:""
+     float:"none"     
+	 font:undefined
+	 fontFamily:"Times New Roman"
+	 fontSize:"12pt"
+	 fontWeight:"400"
+	 height:"auto"
+	 left:"auto"	
+	 listStyle:""
+	 listStyleType:"disc"
+	 margin:"8px"
+	 marginTop:"8px"
+	 opacity:"1"
+	 overflow:"visiable"
+	 padding:"0px"
+	 paddingTop:"0px"
+	 position:"static"
+	 right:"auto"	
+	 textAlign:"left"
+	 textIndent:"0pt"
+	 verticalAlign:"baseline"
+	 visibility:"inherit"
+	 width:"1264px"	
+	 zIndex:"auto"	
+	 4.1 chrome/safari/opera复合值属性是均包含各个分支值的字符串border:"0px none rgb(0, 0, 0)"
+	 	 IE9-IE11(Edge浏览器)复合值属性均为"",border:""
+	 4.2 chrome/safari/opera默认字体fontFamily为, fontFamily:"Simsun"	 	
+	 	 IE9-IE11(Edge浏览器)默认字体fontFamily为,fontFamily:"Times New Roman"
+	 4.3 chrome/safari/opera默认字体粗细fontWeight:为, fontWeight:normal"	 	
+	 	 IE9-IE11(Edge浏览器)默认字体粗细fontWeight为, fontWeight:"400"
+	 4.4 chrome/safari/opera默认字体大小fontSize为, fontSize:"16px"	 	
+	 	 IE9-IE11(Edge浏览器)默认字体大小fontSize为,fontSize:"12pt"
+	 4.5 chrome/safari/opera默认文字缩进textIndent为, texIndent:"0px"	 	
+	 	 IE9-IE11(Edge浏览器)默认文字缩进textIndent为,textIndent:"0pt"
+	 4.6 chrome/safari/opera默认body高度height为, height:"22px"	 	
+	 	 IE9-IE11(Edge浏览器)默认body高度height为, height:"auto"
+	 4.7 chrome/safari/opera默认与颜色有的样式为rgb格式, color:"rgb(0, 0, 0)"	 	
+	 	 IE9-IE11(Edge浏览器)默认bod内默认与颜色有的样式为十六进制数, color:"#0000000"	
+	 4.8 chrome/safari/opera默认visibility为, visibility:"visiable"	 	
+	 	 IE9-IE11(Edge浏览器)默认visibility, visibility:"inherit"
+	 4.9 chrome/safari/opera默认filter为, filter:""	 	
+	 	 IE9-IE11(Edge浏览器)默认fliter为none, filter:"none"
+ 5  IE浏览器(IE8) 
+     控制台执行：console.dir(document.body.currentStyle);//IE5-IE11均可使用currentStyle属性
+     background:""
+     backgroundColor:"transparent"
+     backgroundImage:"none"
+     backgroundPosition:"0% 0%"
+     backgroundRepeat:"repeat"
+     border:undefined
+     borderTopWidth:"0px"
+     borderTopStyle:"none"
+     borderTopColor:"#000000"
+     cursor:"auto"
+     clear:"none"
+     display:"block"
+     filter:""
+     float:"none"     
+	 font:undefined
+	 fontFamily:"Times New Roman"
+	 fontSize:"12pt"
+	 fontWeight:"400"
+	 height:"auto"
+	 left:"auto"	
+	 listStyle:""
+	 listStyleType:"disc"
+	 margin:"15px 10px"
+	 marginTop:"15px"
+	 opacity:"1"
+	 overflow:"visiable"
+	 padding:"0px"
+	 paddingTop:"0px"
+	 position:"static"
+	 right:"auto"	
+	 textAlign:"left"
+	 textIndent:"0pt"
+	 verticalAlign:"baseline"
+	 visibility:"inherit"
+	 width:"1264px"	
+	 zIndex:"auto"	
+	 5.1 chrome/safari/opera复合值属性是均包含各个分支值的字符串border:"0px none rgb(0, 0, 0)"
+	 	 IE8复合值属性均为"",border:""
+	 5.2 chrome/safari/opera默认字体fontFamily为, fontFamily:"Simsun"	 	
+	 	 IE8默认字体fontFamily为,fontFamily:"Times New Roman"
+	 5.3 chrome/safari/opera默认字体粗细fontWeight:为, fontWeight:normal"	 	
+	 	 IE8默认字体粗细fontWeight为, fontWeight:"400"
+	 5.4 chrome/safari/opera默认字体大小fontSize为, fontSize:"16px"	 	
+	 	 IE8默认字体大小fontSize为,fontSize:"12pt"
+	 5.5 chrome/safari/opera默认文字缩进textIndent为, texIndent:"0px"	 	
+	 	 IE8默认文字缩进textIndent为,textIndent:"0pt"
+	 5.6 chrome/safari/opera默认body高度height为, height:"22px"	 	
+	 	 IE8默认body高度height为, height:"auto"
+	 5.7 chrome/safari/opera默认与颜色有的样式为rgb格式, color:"rgb(0, 0, 0)"	 	
+	 	 IE8默认bod内默认与颜色有的样式为十六进制数, color:"#0000000"	
+	 5.8 chrome/safari/opera默认visibility为, visibility:"visiable"	 	
+	 	 IE8默认visibility, visibility:"inherit"
+	 5.9 chrome/safari/opera默认filter为, filter:""	 	
+	 	 IE8默认fliter为none, filter:"none"
+	 5.10  chrome/safari/opera默认margin为, margin:"8px"	 	
+	 	   IE8默认margin, margin:"15px 10px"
+  6  IE浏览器(IE5-7)
+     控制台执行：console.dir(getComputedStyle(document.body));//IE9-IE11才能使用getComputedStyle方法
+     控制台执行：console.dir(document.body.currentStyle);//IE5-IE11均可使用currentStyle属性
+     background:undefined
+     backgroundColor:"transparent"
+     backgroundImage:"none"
+     backgroundPosition:"0% 0%"
+     backgroundRepeat:"repeat"
+     border:undefined
+     borderTopWidth:"0px"
+     borderTopStyle:"none"
+     borderTopColor:"#000000"
+     cursor:"auto"
+     clear:"none"
+     display:"block"
+     filter:""
+     float:"none"     
+	 font:undefined
+	 fontFamily:"Times New Roman"
+	 fontSize:"12pt"
+	 fontWeight:"400"
+	 height:"auto"
+	 left:"auto"	
+	 listStyle:""
+	 listStyleType:"disc"
+	 margin:"15px 18px"
+	 marginTop:"15px"
+	 opacity:"1"
+	 overflow:"scroll"
+	 padding:"0"
+	 paddingTop:"0px"
+	 position:"static"
+	 right:"auto"	
+	 textAlign:"left"
+	 textIndent:"0px"
+	 verticalAlign:"baseline"
+	 visibility:undefined
+	 width:"1264px"	
+	 zIndex:"auto"	
+	 6.1 chrome/safari/opera复合值属性是均包含各个分支值的字符串border:"0px none rgb(0, 0, 0)"
+	 	 IE5-7复合值属性均为undefined,border:undefined
+	 6.2 chrome/safari/opera默认字体fontFamily为, fontFamily:"Simsun"	 	
+	 	 IE5-7默认字体fontFamily为,fontFamily:"Times New Roman"
+	 6.3 chrome/safari/opera默认字体粗细fontWeight:为, fontWeight:normal"	 	
+	 	 IE5-7默认字体粗细fontWeight为, fontWeight:"400"
+	 6.4 chrome/safari/opera默认字体大小fontSize为, fontSize:"16px"	 	
+	 	 IE5-7默认字体大小fontSize为,fontSize:"12pt"
+	 6.5 chrome/safari/opera默认文字缩进textIndent为, texIndent:"0px"	 	
+	 	 IE5-7默认文字缩进textIndent为,textIndent:"0pt"
+	 6.6 chrome/safari/opera默认body高度height为, height:"22px"	 	
+	 	 IE5-7默认body高度height为, height:"auto"
+	 6.7 chrome/safari/opera默认与颜色有的样式为rgb格式, color:"rgb(0, 0, 0)"	 	
+	 	 IE5-7默认bod内默认与颜色有的样式为十六进制数, color:"#0000000"
+	 6.8 chrome/safari/opera默认overflow为, overflow:"visiable"	 	
+	 	 IE5-7默认overflow为, overflow:"scroll"
+	 6.9 chrome/safari/opera默认zIndex为, zIndex:"auto"	 	
+	 	 IE5-7默认zIndex为, zIndex:0
+	 6.10 chrome/safari/opera默认visibility为, visibility:"visiable"	 	
+	 	 IE5-7默认visibility, visibility:undefined
+	 6.11 chrome/safari/opera默认filter为, filter:""	 	
+	 	 IE5-7默认fliter不存在, filter:undefined
+	 6.12 chrome/safari/opera默认opacity为, opacity:"1"	 	
+	 	 IE5-7默认opacity不存在, opacity:undefined
+	 6.13 chrome/safari/opera默认margin为, margin:"8px"	 	
+	 	 IE5-7默认margin, margin:"15px 10px"
+
+
+
+
+二 处理获得样式对象的兼容性的几种写法
+   <script type="text/javascript">
+        // 方法1
+        function getCss(curEle,attr){
+		    var val = window.getComputedStyle? getComputedStyle(curEle,null)[attr] : curEle.currentStyle[attr];
+		    if(!isNaN(parseFloat(val))) val = parseFloat(val);
+		    return val;
+		}
+		// 方法2	
+   		function getCss(curEle,attr){
+		    var val = "getComputedStyle" in window ? getComputedStyle(curEle,null)[attr] : curEle.currentStyle[attr];
+		    if(!isNaN(parseFloat(val))) val = parseFloat(val);
+		    return val;
+		}	
+		// 方法3
+		function getCss(curEle,attr){
+		    var val = typeof window.getComputedStyle == "function" ? getComputedStyle(curEle,null)[attr] : curEle.currentStyle[attr];
+		    if(!isNaN(parseFloat(val))) val = parseFloat(val);
+		    return val;
+		}
+		// 方法4	
+		function getCss(ele,attr){
+			var val = null;
+			try{
+			    val = getComputedStyle(ele,null)[attr]
+			}catch(e){
+				val = ele.currentStyle[attr];
+			}
+			if(!isNaN(parseFloat(val))) val = parseFloat(val);
+		    return val;
+		}
+   </script>
+
+三 如何判断不存在的属性或变量
+  <script type="text/javascript">
+  		//方法1 
+  		  window.cxh;//undefined,表示不存在
+  		//方法2
+  		  "cxh" in window//false,表示不存在
+  		//方法3
+  		  typeof cxh //"undefined"，表示不存在
+  		//方法4
+  		  try{
+  		  	cxh;
+  		  }catch(e){
+  		  	console.log("变量cxh不存在");//执行 catch语句块的内容表示 不存在 
+  		  }
+  		//注意：不能直接获取不存在的变量名 
+  		  cxh;//报错 ，“cxh”未定义
+  </script>
+
+四 伪元素的用法举例？  
+    见《伪元素的用法举例.html》
+	就像 pseudo classes (伪类)一样， 将伪元素添加到选择器中允许在不添加额外声明的情况下为文档的某些部分添加样式。 例如，使用 ::first-line 伪元素会匹配由选择器中所指定的元素的第一行。
+   1 语法
+	元素名:伪元素 {
+	  声明: 值;
+	}
+   2 所有伪元素
+	2.1 ::after
+	  //在元素内容后添加新内容
+	  //单冒号和双冒号均可，单冒号兼容更多老版本浏览器
+	  <style type="text/css">
+	  	h1:after
+		{
+		  content:"chen";
+		}
+	  </style>
+	   <h1>cao love </h1> 
+	2.2 ::before
+	  //在元素内容前添加新内容
+	  //单冒号和双冒号均可，单冒号兼容更多老版本浏览器
+	  <style type="text/css">
+	  	h1:before
+		{
+		  content:"cao";
+		}
+	  </style>
+	   <h1> love chen</h1> 
+	2.3 ::first-letter
+	  //将类名为article的段落p内的首字母字体T加粗变大颜色改为红色
+	  //单冒号和双冒号均可，单冒号兼容更多老版本浏览器
+	  <style type="text/css">
+	  	p.article:first-letter   {
+	   		color: #FF0000;
+	   		font-weight: bold;
+	   		font-size: 24px
+	    }
+	  </style>
+  	  <p class="article">This is a paragraph in an article。</p> 
+	2.4 ::first-line
+	  //将每个段落p内的第一行元素改成字体颜色蓝色
+	  //单冒号和双冒号均可，单冒号兼容更多老版本浏览器
+	  <style type="text/css">
+	  	p:first-line{
+	   		color: blue;	   		
+	    }
+	  </style>
+  	  <p class="article">First paragraph first Line。<br />First paragraph second Line。</p>
+      <p class="article">Second paragraph first Line。<br />Second paragraph second Line。</p>
+	2.5 ::selection
+     //将选中文本渲染成黑色背景白色前景
+     //必须用双冒号::selection才有效，单冒号:selection无效
+   	 <style type="text/css">
+   	 	p::-moz-selection {
+		  color: white;
+		  background: black;
+		}
+		p::selection {
+		  color: white;
+		  background: black;
+		}
+   	 </style>	
+	2.6 ::backdrop
+	//可以用来设置全屏的样式，只能用在 dialog 元素 和 fullscreen 元素上
+	//只有最新浏览器支持，如IE11，chorme32.0, firefox47, safari和opear均不支持
+    //dialog只有chorme37和opera24以上版本才支持
+	<style type="text/css">
+		dialog::backdrop {    background: rgba(0,0,0, .8);}
+   </style>
+	</style>
+	<dialog id="myDialog">
+	  <form method="dialog">        
+	    <menu>     
+	      <button type="submit">关闭对话框</button>
+	    </menu>
+	  </form>
+	</dialog>
+	<button id="openDialog">打开对话框</button>
+	<script>
+	  (function() {
+	    var openButton = document.getElementById('openDialog');
+	    var closeButton = document.getElementById('cancel');
+	    var myDialog = document.getElementById('myDialog');
+	    // 打开对话框
+	    openButton.addEventListener('click', function() {
+	      myDialog.showModal();
+	    });
+	    // 关闭对话框
+	    submitButton.addEventListener('click', function() {
+	      myDialog.close();
+	    });
+	  })();
+	</script>
+   3 注意事项
+	 3.1 有时伪元素使用了两个冒号 (::) 而不是一个冒号 (:). 这是 CSS3 规范中的一部分要求,目的是为了区分伪类和伪元素 . 大多数浏览器都支持这两种表示方式.
+	 3.2 只能在一个选择器中使用一个伪元素. 伪元素必须跟在一个简单选择器语句的后面
+	      比如id名:伪元素; 类名:伪元素
+   4 兼容性
+     4.1 单冒号的兼容性
+         IE8、firefox1.0(1.0)、opera4.0、safari(weibkit)1.0(85)、chrome
+     4.2 双冒号的兼容性
+  		 IE8、firefox1.0(1.5)、opera7.0、safari(weibkit)1.0(85)、chrome
+     4.3 ::screen只能用双冒号
+         chrome1、firefox1.0、IE9、opera9.5、safari1.1
+     4.4 ::backdrop只能用双冒号
+        只有最新浏览器支持，如IE11，chorme32.0, firefox47以上版本支持, safari和opear均不支持
+  5 举例
+    var style = window.getComputedStyle(element, [pseudoElt]);
+    getComputedStyle第二个参数指定一个伪元素进行匹配。对于常规的元素来说可省略。
+	注意：在Gecko2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)之前版本，第二个参数参数pseudoElt是必要的。并不是所有的主流浏览器都需要指定此参数为null、Gecko已经更改为匹配其他浏览器的行为。
+		<style>
+			 h3:after {
+			   content: ' rocks!';
+			 }
+		</style>
+		<h3>generated content</h3> 
+		<script>
+		  	var h3  = document.querySelector('h3'), 
+		    result  = getComputedStyle(h3, ':after').content
+		  	console.log('the generated content is: ', result); // returns ' rocks!'
+		</script>
+
+五 默认情况下所有的元素的offsetParent是什么，offsetParent和parentNode之间有什么关系，什么情况下offsetParent会改变不再是body？
+   1 默认情况下所有的元素的offsetParent是body,即document.body
+   2 offsetParent和parentNode之间没有关系
+     2.1 body是最顶级的offsetParent,document.body.offsetParent为null
+     2.2 document是最顶级的parentNode,document.parentNode为null
+         docment.body.parentNode===document.documentElement;//true
+         document.documentElement.parentNode===document;//true
+         document.parentNode;//null
+     2.3 当设置parentNode对应的元素的position属性值为relative/absolute/fixed时，
+         offsetParent和parentNode相同.
+         inner.offetParent===inner.parentNode;//true
+         <body><div id="outer" style="position:relative;"><div id="inner"></div></div></body>
+   3 当前元素的parentNode不是body，且不会body的父元素设置了定位时，offsetParent会改变成设置定位的最近父元素
+     见例子2.3
+
+六 写一个兼容所有浏览器的计算元素上边框到浏览器最顶部或最左侧的offset方法？
+   见《获取到屏幕左上角的距离的兼容写法.html》
+   亲自用标尺测量inner元素{left: 234, top: 168}
+   2 在IE7浏览器中{left: 252, top: 198}
+   3 在其他浏览器总{left: 248, top: 248}
+   用老师写的错误的offset方法，观察offset(inner)输出结果是否与标尺测量结果一致。
+     <script type="text/javascript">
+	   		function getCss(curEle,attr){
+		      var val = typeof window.getComputedStyle == "function" ? getComputedStyle(curEle,null)[attr] : curEle.currentStyle[attr];
+		      if(!isNaN(parseFloat(val))) val = parseFloat(val);
+		      return val;
+		    }	
+
+	   		function offset(curEle){	   			
+	   		    //1 获取html左边框和上边框分别距离屏幕最左侧和最上方的距离 
+	   		    var bLeft= getCss(document.documentElement,"marginLeft"),bTop=getCss(document.documentElement,"marginTop");
+	   			if(curEle==document.documentElement)  return {left:bLeft,top:bTop};			  
+			    //2 获取body左边框和上边框分别距离屏幕最左侧和最上方的距离  
+			    var hLeft = getCss(document.documentElement,"marginLeft")+getCss(document.documentElement,"borderLeftWidth")+getCss(document.documentElement,"paddingLeft")+getCss(document.body,"marginLeft");
+			    var hTop = getCss(document.documentElement,"marginTop")+getCss(document.documentElement,"borderTopWidth")+getCss(document.documentElement,"paddingTop")+getCss(document.body,"marginTop");
+	   			if(curEle==document.body) return {left:hLeft,top:hTop};	
+	   			var tempPar=par = curEle.parentNode,  pos = getCss(par,"position");
+	   			tempPar.style.position="static";//将父元素统一设置为不定位		   					   			  	
+	   			var totalLeft =curEle.offsetLeft,totalTop = curEle.offsetTop;
+	   			if(/Firefox/.test(navigator.userAgent)){ 				
+	   				totalLeft+= getCss(document.documentElement,"marginLeft")-document.body.offsetLeft;
+	   				totalTop+= getCss(document.documentElement,"marginTop")-document.body.offsetTop;   				
+	   			}else if(/(MSIE\s(8.0|9.0|10.0))|(rv:\d+\.\d\)\slike Gecko)/.test(navigator.userAgent)){			    
+			    		    	
+			    }else if(/MSIE\s(5.0|6.0|7.0)/.test(navigator.userAgent)){	   		   			    		
+		   			while (par){ //直到html为止    				    		       
+						   totalLeft += par.clientLeft+par.offsetLeft;  
+						   totalTop += par.clientTop+par.offsetTop;
+						   curEle = par;
+						   par = par.offsetParent;						  
+					}	
+
+			    }else{
+			    	totalLeft +=getCss(document.documentElement,"marginLeft");
+			    	totalTop +=getCss(document.documentElement,"marginTop");
+			    }
+			    tempPar.style.position=pos;//恢复原来的样式
+				return {left:totalLeft,top:totalTop}; 		
+			}	
+	 </script>
+
+	</pre>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>伪元素的用法举例</title>
+<style type="text/css"> 
+    body{
+    	background: pink;
+    }
+    div#inner{
+    	background: yellow;
+    }
+	p:first-line{
+	   		color: blue;	   		
+	    }
+  	p.article:first-letter   {
+   		color: #FF0000;
+   		font-weight: bold;
+   		font-size: 24px
+    }
+    h1:after
+	{
+		content:"chen";
+	}
+	h1:before
+	{
+		content:"cao";
+	}
+	/* 将选中文本渲染成黑色背景白色前景 */
+	p::-moz-selection {
+	  color: white;
+	  background: black;
+	}
+	p::selection {
+	  color: white;
+	  background: black;
+	}
+	/* 遮罩层 dialog只有chorme37和opera24以上版本才支持*/
+	dialog::backdrop {    background: rgba(0,0,0, .8);}
+  </style>
+ </head>
+<body>
+	<div id="inner">
+		<h1> love </h1>
+	  <p class="article">First paragraph first Line。<br />First paragraph second Line。</p>
+	  <p>Second paragraph first Line。<br />Second paragraph second Line。</p>
+	</div>
+   
+	<dialog id="myDialog">
+	  <form method="dialog">        
+	    <menu>     
+	      <button id="submit">关闭对话框</button>
+	    </menu>
+	  </form>
+	</dialog>
+	<button id="openDialog">打开对话框</button>
+	<script>
+	  (function() {
+	    var openButton = document.getElementById('openDialog');
+	    var submitButton = document.getElementById('submit');
+	    var myDialog = document.getElementById('myDialog');
+	    // 打开对话框
+	    openButton.addEventListener('click', function() {
+	      myDialog.showModal();
+	    });
+	    // 关闭对话框
+	    submitButton.addEventListener('click', function() {
+	      myDialog.close();
+	    });
+	  })();
+	</script>
+</body>
+</html>

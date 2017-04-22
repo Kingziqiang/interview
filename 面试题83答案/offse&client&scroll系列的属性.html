@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>offse&client&scroll系列的属性</title>
+<style type="text/css">
+*{
+	margin:0px;
+	padding: 0px;
+	clear: both
+}
+html{
+	margin:7px;
+	padding:6px;	
+	border:5px gray solid;
+}
+
+body{
+	margin:12px;
+	padding:14px;
+	border:4px green solid;
+}
+div#outer{ width:300px;height:200px; margin:100px;border:10px pink dashed;padding:40px; background:yellow;}
+div#inner{ width:150px;height:100px; margin:50px;border:5px red dashed;padding:20px; background:blue;overflow: auto;}
+</style>	
+
+</head>
+<body>
+<div id="outer">
+	<div id="inner">
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+		DHTML is so cool!DHTML is so cool!DHTML is so cool!
+	</div>
+</div>
+
+</body>
+</html>
+<script>
+console.log(inner.clientWidth);//173, 20(padding-left)+150(width)+20(padding-right)-滚动条的宽度(17)
+console.log(inner.clientHeight);//140,(padding-topo)+100(height)+20(padding-bottom)
+console.log(inner.clientLeft);//5,border-left
+console.log(inner.clientTop);//5,border-right
+
+console.log(inner.offsetWidth);//200,5(border-left)+190(clientWidth)+5(boder-right)
+console.log(inner.offsetHeight);//150,5(border-top)+140(clientHeight)+5(boder-bottom)
+
+console.log(inner.scrollWidth);//173,clientWidth,容器中内容没有溢出的情况下：和我们的clientWidth/clientHeight一模一样
+console.log(inner.scrollHeight);//1012,992(真实内容的高度)+20(padding-top)
+
+console.log(inner.scrollLeft);//0,当没有溢出或没有滚动条或者滚动条在默认位置（最左侧）时值为0
+//当向右拖动滚动条时，inner.scrollLeft的值逐渐增大，最小值是0，最大值是 inner.scrollWidth - inner.clientWidth
+console.log(inner.scrollTop);//0,当没有溢出或没有滚动条或者滚动条在默认位置（最上侧）时值为0
+//当向下拖动滚动条时，inner.scrollTop的值逐渐增大，最小值是0，最大值是 inner.scrollHeight - inner.clientHeight
+
+
+
+
+//inner的父元素设置定位，则找到最接近inner的设置过定位的父元素
+//outer.style.position = "relative"; //设置定位后，outer和inner才会产生偏移量的父子关系
+console.log(outer.style.position);
+console.log(inner.offsetLeft);//90 , 40(outer的padding-left)+50(inner的margin-left)
+console.log(inner.offsetTop);//90, 40(outer的padding-top)+50(inner的margin-top),  IE7及其以下版本50
+console.log(inner.offsetParent);//outer
+console.log(outer.offsetLeft);//141, 6(html的padding-left)+5(html的border-left)+12(body的margin-left)+4(body的boder-left)+14(body的margin-left)+100(outer的margin-left)
+console.log(outer.offsetTop);//141, 6+(html的padding-top)+5(html的border-top)+12(body的margin-top)+4(body的boder-top)+14(body的margin-top)+100(outer的margin-top)
+console.log(outer.clientLeft);//10,border-left
+console.log(outer.clientTop);//10,border-top
+console.log(outer.offsetParent);//body
+console.log(document.body.offsetLeft);//0,偏移量的定义参考物是body,火狐浏览器的值为-(border-left)
+console.log(document.body.offsetTop);//0,偏移量的定义参考物是body,火狐浏览器的值为-(border-top)
+console.log(document.body.clientLeft);//4
+console.log(document.body.clientTop);//4
+console.log(document.body.offsetParent);//null
+console.log(document.body.offsetWidth);
+console.log(inner.offsetWidth);
+console.log((document.body.offsetWidth-inner.offsetWidth)/2);
+//inner的父元素没有设置定位，则找到body
+outer.style.position = "static"; 
+console.log(outer.style.position);
+console.log(inner.offsetLeft);//241  141(outer.offsetLeft)+10(outer.clientLeft)+90(直接父元素设置过定位的inner.offsetLeft值)，,  IE7及其以下版本50
+console.log(inner.offsetTop);//241 141(outer.offsetLeft)+10(outer.clientLeft)+90(直接父元素设置过定位的inner.offsettop值)，, IE7及其以下版本50
+console.log(inner.offsetParent);//outer
+console.log(outer.offsetLeft);//141, 6(html的padding-left)+5(html的border-left)+12(body的margin-left)+4(body的boder-left)+14(body的margin-left)+100(outer的margin-left)
+console.log(outer.offsetTop);//141, 6+(html的padding-top)+5(html的border-top)+12(body的margin-top)+4(body的boder-top)+14(body的margin-top)+100(outer的margin-top)Top);//134, 5+(html的padding-top)+12(body的margin-top)+3(body的boder-top)+14(body的margin-top)+100(outer的margin-top)
+console.log(outer.clientLeft);//10,border-left
+console.log(outer.clientTop);//10,border-top
+console.log(outer.offsetParent);//body
+console.log(document.body.offsetLeft);//0,偏移量的定义参考物是body
+console.log(document.body.offsetTop);//0,偏移量的定义参考物是body
+console.log(document.body.clientLeft);//3
+console.log(document.body.clientTop);//3
+console.log(document.body.offsetParent);//null
+console.log(document.body.offsetWidth);//1220
+console.log(inner.offsetWidth);//200,内容宽度加左右边框加左右padding,IE5 150(内容宽度)
+
+
+
+
+</script>

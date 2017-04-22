@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>83</title>    
+</head>
+<body>
+	<h1>83 总结ele.style，getComputedStyle(ele,null),ele.currentStyle的作用和区别？offsetWIdth/offsetHeight/offsetLeft/offsetTop/offsetParent, clientWidth/clientHeight/clientLeft/clientTop,scrollWidth/scrollHeight/scrollLeft/scrollTop之间的关系，他们是元素的属性还是样式style的属性，应该出现在console.dir(ele)列表中还是应该出现在console.dir(getComputedStyle(ele)列表中？如何判断滚动到达底部，循环滚动文字的原理？如何判断图片刚好完全显示，临时占位图片刚好完全显示时替换成真实图片的原理？不同的浏览器如何设置透明度？图片延迟加载的原理？修复《7多张张图片加载--加闭包的.html》中的bug，使得滚动页面时已经开始加载但还未加载完的图片不再重复加载？</h1>
+	<pre>	
+一 总结ele.style，getComputedStyle(ele,null),ele.currentStyle的作用和区别？
+  1 ele.style
+    1.1 第一个作用用来获取内联样式（不推荐）
+        <p id="inline" style="color: red; margin-left: 20px">This is a paragraph</p>
+        <script type="text/javascript">
+        	 var inline = document.getElementById("inline");
+        	 console.log(inline.style.color);//"red"
+        	 console.log(inline.style.marginLeft);//"red"
+        	 console.log(inline.style.fontSize);//""
+        	 console.log(inline.style.cxh);//undefined
+        </script>
+        注意：
+        1.1.1 只能获取内联样式，且内联样式中的-分隔符去掉换成驼峰命名法(第一个单词的首字母小写，其余单词的首字母大写)。
+              因为内联样式中只有color和margin-Left，所以我们只能通过sytle获取inline.style.color和inline.style.marginLeft两个样式。
+        1.1.2 内联样式中不存在，但是在style天生自带的列表集合中存在的样式，通过style获取时值为""而不是默认值。
+              虽然fontSize默认字体大小是"16px"，但是因为内联样式中没有明确出现font-size，所以通过style获取的fontSize值为""。
+        1.1.3 通过style获取的style列表集合中根本不存在的样式，则获取的值为undefined
+              因为style列表集合汇总根本不存在cxh这个样式，所以获取的值为undefined
+    1.2 第二个作用用来修改样式(修改设置样式的最常用方式)
+        <p id="inline" style="color: red; margin-left: 20px">This is a paragraph</p>
+        <script type="text/javascript">
+        	 var inline = document.getElementById("inline");
+        	 console.log(inline.style.color);//"red"
+        	 inline.style.color="blue";
+        	 console.log(inline.style.color);//"blue"
+        	 inline.style.color="cxh";
+        	 console.log(inline.style.color);//"blue"
+        	 console.log(inline.style.myName);//"undefined"
+        	 inline.style.myName="cxh";
+        	 console.log(inline.style.myName);//"undefined"
+        </script>
+        注意：
+        1.2.1 修改设置样式主要通过style.样式名=值
+             比如inline.style.color="blue";成功的将inline元素的字体颜色改为蓝色
+        1.2.2 修改设置的样式如果是style天生自带的，一定要数据复合该样式接收的范围才能修改成功，否则保持原来的值不变。
+        	 比如inline.style.color="cxh";"cxh"是不存在的颜色，所以修改失败，值任然保持最近一次的值blue不变
+        1.2.3 修改设置的样式如果style列表集合中不存在，则可以接纳任何数据，直接复制。
+             比如inline.style.myName="cxh";style原本不存在myName这个样式，这句话相当于给style添加了一个新属性myName并赋值为"cxh"
+  2  Window.getComputedStyle() //只能获取样式，不能修改样式
+     getComputedStyle()方法得出所有在应用有效的样式和分解任何可能会包含值的基础计算后的元素的CSS属性值。
+	  2.1 语法
+		var style = window.getComputedStyle(element, [pseudoElt]);
+	  2.2 参数
+	     2.2.1 element
+	 		用于计算样式的元素
+	 		<script type="text/javascript">
+		     	var oDiv = document.getElementById("div");
+				var style1 = window.getComputedStyle(elem1, null);
+				// 它等价于
+				/*
+					defaultView
+					在许多在线的演示代码中, getComputedStyle 是通过 document.defaultView 对象来调用的。 大部分情况下，这是不需要的， 因为可以直接通过window对象调用。但有一种情况，你必需要使用 defaultView,  那是在firefox3.6上访问子框架内的样式 (iframe)
+				*/
+				var style2 = document.defaultView.getComputedStyle(oDiv, null);
+				// 也等价于
+				var style3 = oDiv.style;
+	     	</script>
+		 2.2.2 pseudoElt 可选
+			指定一个伪元素进行匹配。对于常规的元素来说可省略。
+			注意：在Gecko2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)之前版本，参数pseudoElt是必要的。并不是所有的主流浏览器都需要指定此参数为null、Gecko已经更改为匹配其他浏览器的行为。
+			<style>
+				 h3:after {
+				   content: ' rocks!';
+				 }
+			</style>
+			<h3>generated content</h3> 
+			<script>
+			  	var h3  = document.querySelector('h3'), 
+			    result  = getComputedStyle(h3, ':after').content
+			  	console.log('the generated content is: ', result); // returns ' rocks!'
+			</script>
+	    2.3 返回值
+	     getComputedStyle 返回的对象跟 element 调用 style 属性返回的对象是同一种类型，可以称为 CSSStyleDeclaration. 但两个对象有不同的用处，:
+	          getComplutedSytle返回的对象是只读对象，不仅可以用于检测元素的内联，还能检测外部的样式，即浏览器计算后的样式。 
+	          oDiv.style 对象用于设置元素上的内联样式.
+	    2.4 兼容性
+		     Opera只实现基本功能，未实现第二个参数。
+		     IE9及其以上版本实现基本功能，IE11及其以上版本才开始实现第二个参数。
+		     Firefox、chrome、safari已实现全部功能
+  3 oDiv.currentStyle
+    3.1 语法
+       var style = oDiv.currentStyle;
+    3.2 返回值
+ 	   currentStyle 返回的对象跟 element 调用 style 属性返回的对象是同一种类型，可以称为 CSSStyleDeclaration. 但两个对象有不同的用处，:
+          pDiv.currentStyle返回的对象是只读对象，不仅可以用于检测元素的内联，还能检测外部的样式，即浏览器计算后的样式。 
+          oDiv.style 对象用于设置元素上的内联样式.
+
+二 offsetWIdth/offsetHeight/offsetLeft/offsetTop/offsetParent, clientWidth/clientHeight/clientLeft/clientTop,scrollWidth/scrollHeight/scrollLeft/scrollTop之间的关系，他们是元素的属性还是样式style的属性，应该出现在console.dir(ele)列表中还是应该出现在console.dir(getComputedStyle(ele)列表中？
+   详见《offse&client&scroll系列的属性.html》
+   1 offset系列、client系列、scroll系统的属性都是元素的属性，不是样式style的属性。
+     <script type="text/javascript">
+     	console.dir(inner);//展开inner的属性列表，发现存在offset系列、client系列、scroll系统的属性
+     	console.dir(inner.style);//展开style的属性列表，发现不存在offset系列、client系列、scroll系统的属性
+     </script>
+   2 
+     2.1 client系列(与是否有滚动条无关,只有IE6以下版本浏览器受内容是否溢出影响)
+        2.1.1 当没有滚动条时
+             2.1.1.1 标准浏览器、IE7及其以上版本浏览器
+                     //css盒模型表示法(inner.style的属性)
+				     clientWidth=paddingLeft+width+paddingRight;
+				     clientHeight=paddingTop+height+paddingBottom;
+			 2.1.1.2 IE6及其以下版本浏览器(没有内容溢出时)
+			         //css盒模型表示法(inner.style的属性)
+			 		 clientWidth=width-borderLeft-borderRight;
+				     clientHeight=height-borderTop-borderBottom;
+		     2.1.1.3 IE6及其以下版本浏览器(有内容溢出时，即内容的宽度大于width-borderLeft-borderRight-paddingLeft-paddingRight时)
+			         //css盒模型表示法(inner.style的属性)
+			 		 clientWidth=内容的宽度+paddingLeft+paddingRight;
+				     clientHeight=内容的高度+paddingTop+paddingBottom;
+	    2.1.2 当有滚动条时
+	         2.1.2.1 标准浏览器、IE8及其以上版本浏览器
+	         		 //css盒模型表示法(inner.style的属性)
+				     clientWidth=paddingLeft+width+paddingRight-17;//17是各种浏览器的滚动条默认宽度
+				     clientHeight=paddingTop+height+paddingBottom-17;
+		     2.1.2.2 IE7浏览器
+		              //css盒模型表示法(inner.style的属性)
+		             clientWidth=paddingLeft+width+paddingRight;
+				     clientHeight=paddingTop+height+paddingBottom;
+			 2.1.2.3 IE6及其以下版本浏览器
+			          //css盒模型表示法(inner.style的属性)
+			 		 clientWidth=width-borderLeft-borderRight;
+				     clientHeight=height-borderTop-borderBottom;
+	  2.2 offset系列(与是否有滚动条无关,只有IE6以下版本浏览器受内容是否溢出影响)
+	     2.2.1 标准浏览器、IE7及其以上版本浏览器
+	            //js盒模型表示法(inner的属性)
+			   offsetWidth=clientLeft+clientWidth+clientRight;
+			   offsetHeight=clientTop+clientHeight+clientBottom;
+			    //css盒模型表示法(inner.style的属性)
+			   offsetWidth=borderLeft+paddingLeft+width+paddingRight+borderRight;
+			   offsetHeight=borderTop+paddingTop+height+paddingBottom+borderBottom;
+		 2.2.2 IE6及其以下版本的浏览器(没有内容溢出)
+		        //css盒模型表示法(inner.style的属性)
+			   offsetWidth=width;
+			   offsetHeight=height;
+		 2.2.3 IE6及其以下版本浏览器(有内容溢出时，即内容的宽度大于width-borderLeft-borderRight-paddingLeft-paddingRight时)
+		 		//js盒模型表示法(inner的属性)
+			   offsetWidth=clientLeft+clientWidth+clientRight;
+			   offsetHeight=clientTop+clientHeight+clientBottom;
+		 		//css盒模型表示法(inner.style的属性)
+		      offsetWidth=内容的宽度+paddingLeft+paddingRight+borderLeft+borderRight;
+		      offsetHeight=内容的高度+paddingTop+paddingBottom+borderTop+borderBottom;
+	 2.3 scroll系列(与内容是否溢出有关，且受滚动条影响)
+	    2.3.1 当没有溢出时
+	          scrollWidth=clientWidth;
+	          scrollHeight=clientHeight;
+        2.3.2 当有溢出时
+              2.3.2.1 当没有滚动条时
+                      2.3.2.1.1 标准浏览器、IE7及其以上版本浏览器
+                                scrollWidth=paddingLeft+内容的宽度（包含溢出部分）
+                                sdrollHeight=paddingTop+内容的高度（包含溢出部分）
+                      2.3.2.2.2 IE6及其以下版本浏览器
+                                scrollWidth=clientWidth;
+	          					scrollHeight=clientHeight;
+	          2.3.2.2 当有滚动条时
+	                  2.3.2.1.1 当纵向滚动条不在最底部，横向滚动条不在最右侧时
+                                scrollWidth=paddingLeft+内容的宽度（包含溢出部分）+paddingRight
+                                srollHeight=paddingTop+内容的高度（包含溢出部分）+paddingBottom
+                      2.3.2.2.2 当纵向滚动条在最底部，横向滚动条在最右侧时
+                                scrollWidth=clientWidth+scrollLeft;
+	          					scrollHeight=clientHeight+scrollTop;
+        
+三 如何判断滚动到达底部，循环滚动文字的原理？
+   1 判断滚动条是否达到底部
+     1.1 方法1
+         if(inner.scrollTop==inner.scrollHeight-clientHeight){
+         	console.log("滚动条到达底部");
+         }
+     1.2 方法2
+         var bTop=inner.scrollTop;
+         ++inner.scrollTop;//自增，如果达到底部自增无效
+         if(bTop==inner.scrollTop){
+         	console.log("滚动条到达底部");
+         }
+   2 循环滚动的原理
+     1.1 方法1
+         写一个定时器，每隔一段时间使得scrollTop的值自增，当滚动条到达底部时
+         复制一份元素的内容追加到元素尾部ele.innerHTML+=ele.innerHTML;元素的内容无效复制增加，scrollTop不断增大。
+         <script>
+			var ele=document.getElementById("inner");
+			;(function (){
+				var t=ele.scrollTop;//这是累加前的
+				ele.scrollTop++//累加之后的
+				if(t==ele.scrollTop){//这一句深藏功与名：如果累加前的值和累加后的值相同，则表示scrollTop加不动了：到头了
+					ele.innerHTML+=ele.innerHTML;
+				}	
+				window.setTimeout(arguments.callee,10);
+				console.log(1);	
+			})();
+		</script>
+	1.2 方法2
+	    写一个定时器，每隔一段时间使得scrollTop的值自增，当滚动条到达底部时
+         返回元素顶部，ele.scrollTop=0;,继续从0开始进行下一轮循环累加。
+          <script>
+			var ele=document.getElementById("inner");
+			;(function (){
+				var t=ele.scrollTop;//这是累加前的
+				ele.scrollTop++//累加之后的
+				if(t==ele.scrollTop){//这一句深藏功与名：如果累加前的值和累加后的值相同，则表示scrollTop加不动了：到头了
+					ele.scrollTop=0;
+				}	
+				window.setTimeout(arguments.callee,10);
+				console.log(1);	
+			})();
+		</script>
+
+四 如何判断图片刚好完全显示，临时占位图片刚好完全显示时替换成真实图片的原理？
+    详见《单张图片延迟加载.html》
+   1 浏览器向上卷去的高度为: var dst=document.documentElement.scrollTop||document.body.scrollTop;
+     浏览器一屏可视窗口的高度为:var dch=document.documentElement.clientHeight||document.body.clientHeight
+     浏览器当前可视窗口举例浏览器最顶部初始位置的距离为：var dt=dst+dch
+     当前盒子距离浏览器最顶部初始位置的距离为：offsetTop
+     当前盒子的高度（包含内容height、padding、border)为：offsetHeight
+     当前盒子的的的边框举例浏览器最顶部初始位置的高度为：var ot=offsetTop+offetHeight
+   2 图片刚好完全显示的条件为：dt>=ot
+     其他的值都会固定不变的，只有scrollTop随着滚动条下拉逐渐增大，dt也逐渐增大。
+     当dt=ot时图片刚好完全显示。
+   3 临时占位图片刚好完全显示时替换成真实图片的原理
+     当临时占位图片刚好完全显示时，将真实图片的地址赋值给一个临时图片tempImg的src属性tempImg.src。
+     当临时图片加载完成后，将临时图片的src赋值给真实图片的src，oImg.src=tempImg.src.
+     为避免已加载过的图片重复加载，给每个图片添加一个loaded布尔属性，当图片加载时设置为true。
+     当loaded为true时直接结束方法。
+
+五 不同的浏览器如何设置透明度？
+   1 IE9及其以上版本浏览器，所有其他浏览器均支持opacity设置透明度，取值范围为0~1，值越小越透明
+     1.1 获取透明度
+         getComputedStyle(oImg).opacity;//1
+     1.2 设置透明度
+     	oImg.style.opacity="0.5";
+   2 IE8及其以下版本浏览器，使用：filter:Alpha(opacity=50) 设置透明度，取值范围为0~100，值越小越透明
+     1.1 获取透明度
+         oImg.currentStyle.filter;//1
+     1.2 设置透明度     	
+    	oImg.style.filter="Alpha(opacity=50)";
+   3 兼容的设置样式写法
+     <script type="text/javascript">
+     	var setCss=function (curEle,attr,val){
+        with(curEle){//理解with的用法，这样就把ele当前当前的作用域了，不必在写每一个CSS属性之前再写ele.了
+            switch(attr){
+                case 'float'://处理float的兼容性问题
+                        style['cssFloat']=val;               
+                        style['styleFloat']=val;
+                    break;
+                case 'opacity': //处理不透明度的兼容性问题
+            //这儿还应该处理一下，因为opacity的值是介于0和1之间的
+                        val=Math.max(0,val)&&Math.min(1,val);              
+                        style['opacity']=val;
+                        style['filter']="alpha(opacity:"+val*100+")";        
+                    break;
+                case 'width':
+                case 'height':                
+                case 'paddingLeft':
+                case 'paddingBottom':
+                case 'paddingTop':
+                case 'paddingRight':
+                case 'borderLeftWidth':
+                case 'borderRightWidth':
+                case 'borderTopWidth':
+                case 'borderBottomWidth':
+                        //这些css属性值的特点就是都不能为负数，所以会用max方法运算一下
+                        var reg=/^(-?\d+(?:\.\d+)?)(pt|px|em|in)?$/;
+                        //这个正则相对要完善一点，可以判断带小数的
+                        if(reg.test(val)){
+                            var num=RegExp.$1;//取出第一个分组
+                            var unit=RegExp.$2;//取出第二个分组：单位部分
+                            num=Math.max(0,num);//如果传进来的值是负数，则用0
+                            if(unit)//如果有单位，则加上单位，如果没有单位，则以px为默认单位
+                                val=num+unit;
+                            else
+                                val=num+'px';
+                        }
+                        style[attr]=val;
+                    break;               
+                case 'marginLeft':
+                case 'marginRight':
+                case 'marginTop':
+                case 'marginBottom':
+                case 'right':
+                case 'left':
+                case 'top':
+                case 'bottom':
+                        var reg=/^(-?\d+(?:\.\d+)?)(pt|px|em|in)?$/;
+                        //这个正则相对要完善一点，可以判断带小数的了.
+                        //这个正则可以处理象：2.5em,22px,22,3pt,-10.6in这样的css单位
+                        if(reg.test(val)){
+                            //如果符合此正则，则按以下方式处理
+                            var num=RegExp.$1;
+                            var unit=RegExp.$2;               
+                            if(unit)
+                                //如果是带单位的，则加上单位
+                                val=num+unit;
+                            else
+                                //如果不带单位，则用默认的单位px
+                                val=num+'px';
+                        }
+                        style[attr]=val;
+                    break;
+                default:
+                        style[attr]=val;
+            }       
+        }
+    };
+     </script>
+     
+六 图片延迟加载的原理？
+   1 图片延迟加载的描述
+	 按需加载，按显示顺序加载。
+	 先用一个较小的占位图片作为默认图片。
+	 先加载第一屏的真实图片，当滑动滚动条时，继续加载剩余进入可视范围的图片。
+   2 图片延迟加载的原理
+     当临时占位图片刚好完全显示时，将真实图片的地址赋值给一个临时图片tempImg的src属性tempImg.src。
+     当临时图片加载完成后，将临时图片的src赋值给真实图片的src，oImg.src=tempImg.src.
+     为避免已加载过的图片重复加载，给每个图片添加一个loaded布尔属性，当图片加载时设置为true。
+     当loaded为true时直接结束方法。
+   3 图片延迟加载的意义
+     3.1 减少对服务器的请求，降低服务器的带宽
+         按需加载，当有海量图片时，不会加载全部的图片，只加载用户阅读到的部分。
+     3.2 提升用户体验，提高首屏的加载速度
+         如果一次性加载完全部真实的图片，再一起呈现给用户会非常慢，甚至超出用户的忍耐事件。
+         如果只加载可视区域范围的图片，用户边阅读边加载，可以较快的按需加载完真实图片呈现给用户
+         
+七 修复《7多张张图片加载--加闭包的.html》中的bug，使得滚动页面时已经开始加载但还未加载完的图片不再重复加载？
+   详见附件《多张图片加载.html》
+   关键在于oImg.loaded=true;要卸载onload方法之外.
+   onload方法等到图片加载完成才会执行。
+   图片加载过程中，可能还会继续滑动滚动条多次触发方法，此时如果图片还未加载完成。onload方法还未执行。
+   当oImg.loaded=true;写在onload方法内时，这句话还没来得及执行，下次判断表示为false则会继续加载该图片，造成重复加载。
+   当oImg.loaded=true;写在onload方法内时，只要正在加载不管是否加载完成，都会执行这句话，下次判断时为false不再重复加载该图片。
+
+
+	</pre>
+  </body>
+</html>

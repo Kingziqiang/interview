@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>多张图片延迟加载</title>
+<style type="text/css">
+img{display:block; margin:20px;}
+</style>
+</head>
+
+<body style="height:3500px;">
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+<img width="300" tempAttr="abcd" realImg="http://pic1.win4000.com/pic/9/8c/0a08466924.jpg" height="300" src="default.jpg">
+<img width="300" realImg="http://pic1.win4000.com/pic/9/8c/0a08466925.jpg" height="300" src="default.jpg">
+<img width="300" realImg="http://pic1.win4000.com/pic/9/8c/0a08466926.jpg" height="300" src="default.jpg">
+<img width="300" realImg="http://pic1.win4000.com/pic/9/8c/0a08466927.jpg" height="300" src="default.jpg"><img width="300" realImg="http://pic1.win4000.com/pic/9/8c/0a08466928.jpg" height="300" src="default.jpg">
+
+</body>
+</html>
+<script type="text/javascript" src="utils.js"></script>
+<script>
+
+var oImgs=document.getElementsByTagName("img");
+for(var i=0;i<oImgs.length;i++){
+	var oImg=oImgs.item(i);
+	oImg.ot=utils.offset(oImg).top+oImg.offsetHeight;
+}
+
+window.onscroll=function(){
+	var dt=(document.documentElement.scrollTop||document.body.scrollTop)+(document.documentElement.clientHeight||document.body.clientHeight);
+	for(var i=0;i<oImgs.length;i++){
+		var oImg=oImgs.item(i);
+		
+		if(oImg.ot<dt){
+			loadImg(oImg);
+		}		
+	}
+}
+
+function loadImg(oImg){
+		if(oImg.loaded)return;
+			oImg.src="loading.gif";			
+			var tempImg=new Image;
+			tempImg.src=oImg.getAttribute("realImg")
+			//凡是自定义的、自已扩展在HTML标签上的属性，都要用getAttribute去操作。如果是W3C规定的标准属性，那我们直接ele.属性名就可以了
+            oImg.loaded=true;
+			tempImg.onload=function(){              
+				oImg.src=this.src;	
+				console.log(oImg.src);//测试图片是否有重复加载
+			}
+			//tempImg.src=oImg.getAttribute("realImg")+"?"+Math.random();
+	
+}
+
+//我们经常去计算一些元素的高或宽，在以下两种情况，你是计算不出来的
+//1、这个元素没有被添加到文档中
+//2、如果这个元素是一个图片元素，当这个元素onload没有触发之前，计算出来的结果是错的
+
+</script>

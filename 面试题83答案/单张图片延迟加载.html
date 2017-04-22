@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>单张图片延迟加载</title>
+	<style type="text/css">
+		body{background:pink;text-align: center;font-size: 28px}
+		#content{ height:300px; line-height:300px; background:black; color:orange; font-size:36px; text-align:center; }
+	</style>
+</head>
+<body style="height:3000px;">
+	<p>a</p>
+	<p>b</p><p>c</p><p>d</p><p>e</p><p>f</p><p>g</p><p>h</p><p>i</p><p>j</p><p>k</p>l<br>
+	m<br>o<br>p<br>q<br>r<br>s<br>t<br>u<br>v<br>w<br>x<br>y<br>z<br>A<br>B<br>C<br>D<br>E<br>F<br>G<br>H<br>I<br>J<br>K<br>L<p>M</p>N<br>O<br>P<br>Q<br>R<br>S<br>T<br>U<br>V<br>W<br>X<br>Y<br>Z<br>0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>
+	<img width="300" height="300" src="default.jpg">
+	<br>9<br>8<br>7<br>6<br>5<br>4<br>3<br>2<br>1<br>0
+</body>
+</html>
+<script type="text/javascript" src="utils.js"></script>
+<script>
+//默认是default.gif
+//当加载的时候是loading.gif
+//当加载完成的时候，把loading换成真成的图片
+var strImg="https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png";
+var oImg=document.getElementsByTagName("img").item(0);
+var ot=utils.offset(oImg).top+oImg.offsetHeight;//当前盒子的的的边框举例浏览器最顶部初始位置的高度
+window.onscroll=function(){	
+	if(oImg.loaded) return;
+    var dst=document.documentElement.scrollTop||document.body.scrollTop;//浏览器向上卷去的高度
+	var dch=document.documentElement.clientHeight||document.body.clientHeight;//浏览器一屏可视窗口的高度为
+	var dt=dst+dch;//浏览器当前可视窗口举例浏览器最顶部初始位置的距离
+	if(dt>=ot){
+		oImg.src="loading.gif";		
+		var strUri=strImg+"?"+Math.random();	//创建随机的url查询字符串（querystring）,人为的造出每次都不同的伪地址	
+		var tempImg=new Image;//创建一个img标签对象		
+		tempImg.src=strUri;//不必把tempImg添加到文档，只要给它的src属性赋一个真正的资源地址，则tempImg这个图片对象就会自动的去下载这个资源（图片）
+		tempImg.onload=function(){//这个事件的触发，代表着tempImg需要的图片资源已经成功的下载了
+			oImg.src=this.src;	
+			console.log(oImg.src);					
+		}
+		oImg.loaded=true;//这句话一定要写在onload方法的外面，避免重复加载。	
+	}
+}
+
+
+
+
+</script>

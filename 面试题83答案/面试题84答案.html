@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>84</title>    
+</head>
+<body>
+	<h1>84 总结DOM的兼容性问题？获得某一个元素的所有兄弟节点（返回数组）？获得某一元素的所有哥哥节点（返回的是一个数组）？获得某一元素的所有弟弟节点（返回数组）？获得某一元素唯一的哥哥节点（返回一个DOM元素）？/获得某一元素唯一的弟弟节点（返回一个DOM元素）？获得某一元素相邻的哥哥和弟弟（最多是两个，返回的数组）？获取当前元素在兄弟元素中的索引的方法？</h1>
+	<pre>	
+一 总结DOM的兼容性问题？ 
+   1、Event的问题 
+		在chrome、safari、opera、ie中我们可以直接使用event变量。
+		但是在firefox下由于event是局部变量，firefox下我们可以事件绑定到元素上 例如
+		为了同时兼容firefox和IE10及其以下版本浏览器通常在函数种通过以下代码获得事件。  
+	    <input id = "ev" type="button" value="测试event"> 
+	     <script type="text/javascript">       
+	        ev.onclick = function(e){
+	            console.log(e);//事件对象
+	            console.log(window.event);//事件对象 undefined(firefox)
+	            var theEvent = window.event||e; 
+	            console.log(theEvent.srcElement);//input元素 undefined (firefox)          
+	            console.log(theEvent.target);//input元素 undefined(IE10及其以下按)
+	            var srcElement = theEvent.srcElement? theEvent.srcElement:theEvent.target;
+	        }                 
+	    </script>   
+   2、滤镜问题 
+       Chrome1.0、Firefox 1.0、IE9.0、Opera9.0、Safari1.2
+	   2.1 IE9及其以上版本浏览器，所有其他浏览器均支持opacity设置透明度，取值范围为0~1，值越小越透明
+	       2.1.1 获取透明度
+	         getComputedStyle(oImg).opacity;//1
+	       2.1.2 设置透明度
+	     	oImg.style.opacity="0.5";
+       2.2 IE8及其以下版本浏览器，使用：filter:Alpha(opacity=50) 设置透明度，取值范围为0~100，值越小越透明
+	       2.2.1 获取透明度
+	         oImg.currentStyle.filter;//1
+	       2.2.2 设置透明度     	
+	    	oImg.style.filter="Alpha(opacity=50)";
+	    一般是来设置元素的透明度，所以我们一般通过以下代码来解决兼容问题 
+		<div id="opacity" sytle="width:200px;height:200px;background-color:red">
+		<script type="text/javascript">
+			var IE8 = /MSIE\s(8.0|7.0|6.0|5.0)/.test(navigator.userAgent);
+            if(IE8) {                 
+                 console.log("IE8及其以下浏览器中元素默认的透明度为：", opa.currentStyle.filter);//""
+                 opa.style.filter="Alpha(opacity=20)";
+                 console.log("IE8及其以下浏览器中元素修改后的透明度为：", opa.currentStyle.filter);//"Alpha(opacity=20)"
+            } 
+            else { 
+                 console.log("标准浏览器中元素默认的透明度为：", getComputedStyle(opa).opacity);//"1"
+                 opa.style.opacity="0.2";
+                 console.log("标准浏览器中元素修改后的透明度为：", getComputedStyle(opa).opacity);"0.2"
+            } 
+		</script>	
+   3、innerContent
+	  chrome1、Firefox(Gecko)2、IE9、opera9.64、safari3及其以上版本浏览器支持textContent
+	  chrome4、Firefox(Gecko)45(45)、IE6、opera9.6、safari3及其以上版本浏览器支持innerText
+	  全部版本浏览器都支持innerHTML，所以推荐用innerHTML。
+	  插入文本用innerText或textContent或innerHTML，插入元素只能用innerHTML，所以推荐用innerHTML。
+	 <div id="iText"></div> 
+	 <script type="text/javascript">
+	 	iText.innerText="插入innerText ";
+	 	iText.textContent="插入textContent "//IE8及其以下版本浏览器插入失败
+	 	iText.innerHTML="插入innerHTML "
+	 </script>
+   4、event.srcElement 
+	IE10及其下版本,event对象有srcElement属性,但是没有target属性;
+	解决方法: var srcElement = theEvent.srcElement? theEvent.srcElement:theEvent.target;
+	<input type="button" onclick="doEvent (event)">   
+	<script type="text/javascript">
+		   function doEvent(e){
+	            console.log(e);//事件对象
+	            console.log(window.event);//事件对象 undefined(firefox)
+	            var theEvent = window.event||e; 
+	            console.log(theEvent.srcElement);//input元素 undefined (firefox)          
+	            console.log(theEvent.target);//input元素 undefined(IE10及其以下按)
+	            var srcElement = theEvent.srcElement? theEvent.srcElement:theEvent.target;
+        	}     		
+	</script>
+   5、 parentNode替代parentElement 
+	在所有非firefox浏览器中我可以通过obj.parentElement获得父元素，但是firex9.0以下版本不支持 
+	因为所有浏览器都支持DOM，所有我们可以采用obj.parentNode来解决。
+	现在所有浏览器都支持obj.parentElement
+	<div id="par">父元素<div id="chi">子元素</div></div>
+    <script type="text/javascript">
+        console.log(chi.parentNode);//父元素par
+        console.log(chi.parentElement);//父元素par
+        console.log(chi.parentNode==chi.parentElement);//true
+    </script> 
+  6、集合类对象问题 
+	IE下,可以使用()或[]获取集合类对象;旧版本Firefox下,只能使用[]获取集合类对象. 
+	解决方法:统一使用[]获取集合类对象. 
+	<ul id="ul1">
+		<li id="li1">1</li>
+		<li id="li2">2</li>
+		<li id="li3">3</li>
+	</ul>
+	<script type="text/javascript">
+		var lis = ul1.getElementsByTagName("li");
+        console.log(lis.item(0));//获取第一个元素li1        
+        console.log(lis[0]);//获取第一个元素li1   
+        console.log(lis.item(0)===lis[0]); //true
+	</script>
+   7、自定义属性问题 
+		IE9及其以上版本浏览器和其他浏览器，通过.或者[]设置的自定义属性，只能通过.或者[]获取；通过setAttribute()方法设置的自定义属性只能通过getAttribute()方法获取。
+		解决方法:设置和获取自定义属性的方式尽量统一，获取属性时两种方式用||隔开。
+		var myName = attr.myName||attr.getAttribute("myName");
+ 	<input id="attr" type="text" value="自定义属性">  
+    <script type="text/javascript">
+        attr.myName="cxh";
+        attr["coo"]="ly";
+        attr.setAttribute("cfo","kn");
+        console.log(attr.value,attr["value"],attr.getAttribute("value"));//"自定义属性" "自定义属性" "自定义属性"
+        console.log(attr.myName,attr["myName"],attr.getAttribute("myName"));//"cxh" "cxh" null    IE8及其以下版本输出 "cxh" "cxh" "cxh"
+        console.log(attr.coo,attr["coo"],attr.getAttribute("coo"));//"ly" "ly" null IE8及其以下版本输出 "ly" "ly" "ly"
+        console.log(attr.cfo,attr["cfo"],attr.getAttribute("cfo"));//undefined undefined "kn" IE8及其以下版本输出 "kn" "kn" "kn"
+    </script> 
+   8、eval("idName")问题 
+	说明:IE和其他浏览器均可以使用eval("idName")或getElementById("idName")来取得id为idName的HTML对象;旧版本Firefox下只能使用getElementById("idName")来取得id为idName的HTML对象. 
+	解决方法:统一用getElementById("idName")来取得id为idName的HTML对象. 
+	<div id="evalId"></div>
+	<script type="text/javascript">
+		var ei= eval("evalId");
+		var gi = document.getElementById("evalId");
+		console.log(ei);//div元素
+		console.log(gi);//div元素
+		console.log(ei==gi);//true
+	</script>
+  9、变量名与某HTML对象ID相同的问题 
+    如果给与元素id同名的变量赋值时，IE8及其以下版本前面必须加var关键字，否则报错。
+    通过id名或者document.getElementById("idName")都能获取id为idName的元素，但是通过id名直接元素的方式低版本Firefox不支持。
+    如果与idName同名的变量赋值成功，则通过idName直接获取的值不再指向元素，所以使用idName直接获取元素不靠谱。	
+	解决方法:使用document.getElementById("idName")代替idName.最好不要取与HTML对象ID相同的变量名,以减少错误;在声明变量时,一律加上var,以避免IE8以下报错.
+	<div id="id0"></div>
+    <div id="id1"></div>
+    <div id="id2"></div>
+    <div id="id3"></div>
+    <div id="id4"></div>
+    <div id="id5"></div>
+    <div id="id6"></div>
+    <script type="text/javascript">
+        console.log(id0);//div元素id0
+        console.log(document.id0);//undefined
+        console.log(document.getElementById("id1"));//div元素id0
+        var id1 = "cxh1";
+        console.log(id1);//"cxh1"
+        console.log(document.id1);//undeinfed
+        console.log(document.getElementById("id1"));//div元素id1
+        //id2 = "cxh2"; //IE8及其以下版本报错，对象不支持此方法或属性
+        console.log(id2);//"cxh2" IE8及其以下版本输出div元素id2
+        console.log(document.id2);//undefined
+        console.log(document.getElementById("id2"));//div元素id2
+        var id3 = document.id3;
+        console.log(id3);//undefined
+        console.log(document.id3);//undefined
+        console.log(document.getElementById("id3"));//div元素id3
+        //id4 = document.id4; //IE8及其以下版本报错，对象不支持此方法或属性
+        console.log(id4);//undefined
+        console.log(document.id4);//undefined
+        console.log(document.getElementById("id4"));//div元素id4
+        var id5 = document.getElementById("id5");
+        console.log(id5);//div元素id5
+        console.log(document.id5);//undefined
+        console.log(document.getElementById("id5"));//div元素id5
+        //id6 = document.getElementById("id6"); //IE8及其以下版本报错，对象不支持此方法或属性
+        console.log(id6);//div元素id6
+        console.log(document.id6);//undefined
+        console.log(document.getElementById("id6"));//div元素id6
+    </script> 
+  10、const问题 
+     支持const的浏览器有chrome21、Edge(IE11)、firefox36、opera12、safari5.1及其一行版本浏览器。
+     说明:IE10及其以下版本不支持用const关键字来定义变量。而Edge(IE11)最新版及其他浏览器支持用const来定义变量。 
+     解决方法:统一使用var关键字来定义常量. 
+     <script type="text/javascript">
+        cxh = "cxh";
+        //const cons = "const";//IE10及其以下版本报语法错误
+        var vars = "var";
+        console.log(cxh);//"cxh" 
+        //console.log(cons);//"const" //IE10及其以下版本报语法错误
+        console.log(vars);//"varx" 
+     </script>
+	11、input.type属性问题 
+	说明:IE8及其以下版本浏览器input.type属性为只读;其他浏览器的input.type属性为读写. 
+	解决办法：try catch
+	<input id = "iptb" type="button" value="测试input.type">
+    <input id = "iptt" type="text" value="我现在是显式文本">
+    <script type="text/javascript">
+        iptb.onclick=function(){//点击按钮后，是文本框和密码框类型来回切换。  
+            try{
+            	iptt.type=iptt.type=="text"?"password":"text";//IE8及其以下版本报错，不支持修改type值
+            }catch(e){
+            	console.error("IE浏览器版本过低，修改类型失败");
+            }                 
+        }
+    </script>
+	12、event.x与event.y问题 
+	说明:IE10下,even对象有x,y属性,但是没有pageX,pageY属性;Firefox下,even对象有pageX,pageY属性,但是没有x,y属性. 
+	解决方法:使用ex = eve.x?event.x:eve.pageX来代替IE10下的event.x或者Firefox下的event.pageX. 
+    <div id="event_xy" style="background-color:red;width:300px;height:300px"></div>
+    <script type="text/javascript">
+        event_xy.onclick=function(e){
+            var eve = window.event||e;
+            console.log(eve.x,eve.y);//218 166  火狐浏览器输出 undefined undefined
+            console.log(eve.pageX,eve.pageY);//218 166 IE10及其以下版本输出 undefined undefined
+            var ex = eve.x?event.x:eve.pageX
+            var ey = eve.y?event.y:eve.pageY
+            console.log(ex,ey);//218 166
+        }
+    </script>
+	13、window.location.href问题 
+	说明:IE或者Firefox2.0.x下,可以使用window.location或window.location.href;Firefox1.5.x下,只能使用window.location. 
+	解决方法:使用window.location来代替window.location.href. 
+	<script type="text/javascript">
+		console.log(window.location);//{hash: "", host: "", hostname: "", href: "file:///E:/...", origin: "file://", pathname: "/E:/面试题/面试题...", port: "", protocol: "file:", search: ""}
+		console.log(window.location.href);//"file:///E:/面试题/面试题84答案/Dom兼容性问题举例.html"		
+		winl.onclick=function(){
+            window.location="http://www.baidu.com";//成功跳转到百度首页
+        };
+        winlf.onclick=function(){
+            window.location.href ="http://www.baidu.com";//成功跳转到百度首页，低版本Firefox不支持这种方式
+        }
+	</script>
+  14、模态和非模态窗口问题 
+	说明:IE下,可以通过showModalDialog和showModelessDialog打开模态和非模态窗口;Firefox下则不能. 
+	解决方法:直接使用window.open(pageURL,name,parameters)方式打开新窗口。如果需要将子窗口中的参数传递回父窗口,可以在子窗口中使用window.opener来访问父窗口. 例如：var parWin = window.opener; parWin.document.getElementById("Aqing").value = "Aqing"; 
+	<script type="text/javascript">
+		showModalDialog("http://www.baidu.com");
+		showModelessDialog("http://www.baidu.com")
+	</script>
+15、frame问题 
+以下面的frame为例： 
+<frame src="/xxx.html" id="frameId" name="frameName" /> 
+(1)访问frame对象: 
+IE:使用window.frameId或者window.frameName来访问这个frame对象. 
+Firefox:只能使用window.frameName来访问这个frame对象. 
+另外，在IE和Firefox中都可以使用window.document.getElementById("frameId")来访问这个frame对象. 
+(2)切换frame内容: 
+在IE和Firefox中都可以使用window.document.getElementById("testFrame").src = "xxx.html"或window.frameName.location = "xxx.html"来切换frame的内容. 
+如果需要将frame中的参数传回父窗口，可以在frme中使用parent来访问父窗口。例如：parent.document.form1.filename.value="Aqing"; 
+16、body问题 
+Firefox的body在body标签没有被浏览器完全读入之前就存在；而IE的body则必须在body标签被浏览器完全读入之后才存在. 
+例如： 
+Firefox： 
+<body> 
+<script type="text/javascript"> 
+document.body.onclick = function(evt){ 
+evt = evt || window.event; 
+alert(evt); 
+} 
+</script> 
+</body> 
+IE&Firefox： 
+<body> 
+</body> 
+<script type="text/javascript"> 
+document.body.onclick = function(evt){ 
+evt = evt || window.event; 
+alert(evt); 
+} </script> 
+17、 事件委托方法 
+IE：document.body.onload = inject; //Function inject()在这之前已被实现 
+Firefox：document.body.onload = inject(); 
+document.body.onload=new Function('inject()'); 
+18、cursor:hand 和 cursor:pointer 
+firefox不支持hand，但ie支持pointer 
+解决方法: 统一使用pointer 
+19、 FireFox中类似 obj.style.height = imgObj.height 的语句无效 
+解决方法： 
+obj.style.height = imgObj.height + 'px'; 
+20、ie,firefox以及其它浏览器对于 table 标签的操作都各不相同，在ie中不允许对table和tr的innerHTML赋值，使用js增加一个tr时，使用appendChile方法也不管用。 
+解决方法： 
+//向table追加一个空行： 
+var row = otable.insertRow(-1); 
+var cell = document.createElement("td"); 
+cell.innerHTML = " "; 
+cell.className = "XXXX"; 
+row.appendChild(cell); 
+21、 padding 问题 
+padding 5px 4px 3px 1px FireFox无法解释简写,必须改成 padding-top:5px; padding-right:4px; padding-bottom:3px; padding-left:1px; 
+22、消除ul、ol等列表的缩进时 
+样式应写成:list-style:none;margin:0px;padding:0px; 
+其中margin属性对IE有效，padding属性对FireFox有效 
+23、CSS透明 
+IE：filter:progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=60)。 
+FF：opacity:0.6。 
+24、CSS圆角 
+IE：不支持圆角。 
+FF： -moz-border-radius:4px，或者-moz-border-radius-topleft:4px;-moz-border- radius-topright:4px;-moz-border-radius-bottomleft:4px;-moz-border- radius- bottomright:4px;。 
+25、CSS双线凹凸边框 
+IE：border:2px outset;。 
+FF： -moz-border-top-colors: #d4d0c8 white;-moz-border-left-colors: #d4d0c8 white;-moz-border-right-colors:#404040 #808080;-moz-border-bottom-colors:#404040 #808080; 
+26、ie支持document.all 而firefox 不支持 
+改用下面三个tag的其中一个来代替docaument.all 
+getElementsByTagName("tagName") 可以得到得到所有标签元素的集a合 
+getElementById("idName")          可以按id得到某一元素 
+getElementsByName("Name")            可以得到按name属性得到某一元素 
+27、firefox 中使用innerHTML 的方法 
+<div id="online"></div> 
+document.all.online.innerHTML; //这种方法在IE中可以使用，但不是标准方法 
+document.getElementById("online").innerHTML; //这样firefox就能使用innerHTML了 
+28、eval()与window.execScript()执行脚本 
+IE、firerox均支持eval()，firefox不支持window.execScript() 
+解决：统一使用eval() 
+29、e.button键值有别于event.button,只有3个键值而无组合键值 
+
+30、IE和FireFox的鼠标滚轮事件 
+滚轮IE和Firefox的代码不一样： 
+IE是mousewheel事件，Firefox是DOMMouseScroll事件 
+事件属性，IE是event.wheelDelta，Firefox是event.detail 
+属性的方向值也不一样，IE向上滚 > 0，Firefox向下滚 > 0 
+//滚轮放大或缩小，基于Prototype 1.6 
+var scrollfunc = function(event) { 
+var direct = 0; 
+        if (event.wheelDelta) { 
+                direct = event.wheelDelta > 0 ? 1 : -1; 
+        } else if (event.detail) { 
+                direct = event.detail < 0 ? 1 : -1; 
+        } 
+        zoom(direct); 
+}; 
+Event.observe(document, 'mousewheel', scrollfunc); 
+Event.observe(document, 'DOMMouseScroll', scrollfunc); //firefox 
+31、attachEvent方法 
+attachEvent方法解释: 
+attachEvent有2个参数,第一个参数是事件名,第二个参数是事件触发后所响应的方法. Firefox下解决方法是 
+
+Object.prototype.attachEvent=function(method,func) 
+{ 
+if(!this[method]) 
+this[method]=func; 
+else 
+this[method]=this[method].attach(func); 
+} 
+Function.prototype.attach=function(func){ 
+var f=this; 
+return function(){ 
+f(); 
+func(); 
+} 
+} 
+32 、title替代alt 
+在firefox和ie尽力都用title,alt在firefox下不起作用 
+33、iframe中元素访问 
+IE：var d=document.getElementById("iframeName").document; 
+FF：var d=document.getElementById("iframeName").contentWindow.document; 
+在FF中IFRAME的“document”不叫document，改名叫contentDocument, "window"改
+
+二 获得某一个元素的所有兄弟节点（返回数组）
+   <script type="text/javascript">
+		DOM.siblings=function (currentEle){
+			//就是把下面两个方法合并一下
+			 return DOM.preSiblings(currentEle).concat(DOM.nextSiblings(currentEle));	
+		}
+   </script>名叫contentWindow。 
+return newNode;
+
+
+        
+三 获得某一元素的所有哥哥节点（返回的是一个数组）？
+   <script type="text/javascript">
+   		DOM.preSiblings=function (currentEle){
+			var pre=currentEle.previousSibling;
+			var a=[];
+			while(pre){
+				if(pre.nodeType===1){
+					a.unshift(pre);
+				}
+				pre=pre.previousSibling;	
+			}
+			return a;
+		}
+   </script>
+
+四 获得某一元素的所有弟弟节点（返回数组）？
+	<script type="text/javascript">
+		DOM.nextSiblings=function (currentEle){
+			var next=currentEle.nextSibling;
+			var a=[];
+			while(next){		
+				if(next.nodeType==1){
+					a.push(next);
+				}
+				next=next.nextSibling;
+			}
+			return a;	
+		}
+	</script>
+  
+五 获得某一元素相邻的哥哥（最多是1个，返回的对象或null）？
+   <script type="text/javascript">
+   		DOM.preEle=function (currentEle){
+			if(typeof currentEle.previousElementSibling =="object")			
+				return currentEle.previousElementSibling;				
+			var pre=currentEle.previousSibling;
+			while(pre){
+				if(pre.nodeType===1){
+					return pre;
+				}
+				pre=pre.previousSibling;	
+			}
+			return null;//它没有哥哥元素则返回null。			
+		}
+   </script>
+
+六 获得某一元素相邻的弟弟（最多是1个，返回的对象或null）？
+	<script type="text/javascript">
+		DOM.nextEle=function (currentEle){
+			if(typeof currentEle.nextElementSibling=="object"){
+				return 	currentEle.nextElementSibling;
+			}
+			var next=currentEle.nextSibling;
+			while(next){
+				if(next.nodeType===1){
+					return next;	
+				}
+					next=next.nextSibling;		
+			}
+			return null;	
+		}
+	</script>
+
+七 获得某一元素相邻的哥哥和弟弟（最多是两个，返回的数组）？
+   <script type="text/javascript">
+   		DOM.closet=function (currentEle){
+			var a=[];			
+			if(DOM.nextEle(currentEle)) a.push(p);
+			if(DOM.preEle(currentEle)) a.push(n);			
+			return a;	
+		}
+   </script>
+     
+八 获取当前元素在兄弟元素中的索引的方法？
+   <script type="text/javascript">
+   		DOM.getIndex=function (ele){//表示计算ele这个元素的索引号
+			var index=0;
+			var p=ele.previousSibling;
+			while(p){
+				if(p.nodeType===1){
+					index++;	
+				}
+				p=p.previousSibling;
+			}
+			return index;
+		}
+   </script>
+
+九 在一个元素之后插入一个新元素
+   <script type="text/javascript">
+   		DOM.insertAfter=function (newEle,oldEle){
+			/*	和DOM方法insertBefore对应，把newEle追加在oldEle的后面	*/
+			if(oldEle&&oldEle.nodeType===1&&newEle&&newEle.nodeType===1){
+				oldEle.nextSibling?oldEle.parentNode.insertBefore(newEle,oldEle.nextSibling):oldEle.parentNode.appendChild(newEle)
+			}else{
+				throw new Error('参数错误');
+			}
+			return newEle;
+		}
+   </script>
+
+十 给一个父元素添加第一个子节点
+   <script type="text/javascript">
+   		DOM.prepend=function(newNode,parentEle){		
+		    //此方法和appendChild方法对应，把newNode这个节点，当成第一个子节点追加给parentEle元素。			
+			var child=parentEle.firstChild;	
+				child?parentEle.insertBefore(newNode,child):parentEle.appendChild(newNode);
+			return newNode;
+		}   	
+   </script>
+  
+	</pre>
+  </body>
+</html>

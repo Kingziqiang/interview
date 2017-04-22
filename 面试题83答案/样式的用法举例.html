@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>伪元素的用法举例</title>
+<style type="text/css"> 
+    
+  </style>
+ </head>
+<body>
+	<p id="inline" style="color: red; margin-left: 20px">This is a paragraph</p>
+    <script type="text/javascript">
+        var inline = document.getElementById("inline");
+        console.log(inline.style.color);//"red"
+        console.log(inline.style.marginLeft);//"20px"
+        console.log(inline.style.fontSize);//""
+        console.log(inline.style.cxh);//undefined
+        inline.style.color="blue";
+        console.log(inline.style.color);//"blue"
+        //inline.style.color="cxh";//IE8及其以下版本浏览器会报错，提示无效的属性。标准浏览器下却可以成功添加自定义属性并赋值陈宫
+        console.log(inline.style.color);//"blue"
+        console.log(inline.style.myName);//"undefined"
+        inline.style.myName="cxh";
+        console.log(inline.style.myName);//"cxh"
+        if(window.getComputedStyle){
+        	console.log(getComputedStyle(inline).color);//"rgb(0, 0, 255)"
+	        console.log(getComputedStyle(inline).fontSize);//"16px"
+	        //getComputedStyle(inline).color="yellow";//报错，提示getComputedStyle方法获取的样式时只读的，不能修改和赋值。
+	        //NoModificationAllowedError: Failed to set the 'color' property on 'CSSStyleDeclaration': These styles are computed, and therefore the 'color' property is read-only.
+	        console.log(getComputedStyle(inline).color);//"rgb(0, 0, 255)"
+	        getComputedStyle(inline).hello="kn";//不报错
+	        console.log(getComputedStyle(inline).hello);//undefined，虽然上一行给不存在的属性赋值时没报错，但是并没有成功添加属性
+	        console.log(inline.style.hello);//undefined
+        }else{//IE8及其以下版本浏览器进入到else语句块中
+        	console.log(inline.currentStyle.color);//blue
+	        console.log(inline.currentStyle.fontSize);//12pt
+	        //inline.currentStyle.color="yellow";//报错，currentStyle获取的属性只读不可写不能赋值
+	        console.log(inline.currentStyle.color);//blue
+	        inline.currentStyle.hello="kn";//报错，currentStyle获取的属性只读不能添加自定义属性
+        }
+        
+    </script>
+   			
+</body>
+</html>

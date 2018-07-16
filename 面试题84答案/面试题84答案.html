@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>84</title>    
+</head>
+<body>
+	<h1>84 总结DOM的兼容性问题？获得某一个元素的所有兄弟节点（返回数组）？获得某一元素的所有哥哥节点（返回的是一个数组）？获得某一元素的所有弟弟节点（返回数组）？获得某一元素唯一的哥哥节点（返回一个DOM元素）？/获得某一元素唯一的弟弟节点（返回一个DOM元素）？获得某一元素相邻的哥哥和弟弟（最多是两个，返回的数组）？获取当前元素在兄弟元素中的索引的方法？</h1>
+	<pre>	
+一 总结DOM的兼容性问题？ 
+   详见《DOM兼容性问题1.html》和<DOM兼容性问题举例1.html》
+   需要验证哪个兼容性问题就去掉哪个例子的注释<!-- -->
+   为避免输出结果干扰，注释掉其他例子。
+
+二 获得某一个元素的所有兄弟节点（返回数组）
+   <script type="text/javascript">
+		DOM.siblings=function (currentEle){
+			//就是把下面两个方法合并一下
+			 return DOM.preSiblings(currentEle).concat(DOM.nextSiblings(currentEle));	
+		}
+   </script>
+
+
+        
+三 获得某一元素的所有哥哥节点（返回的是一个数组）？
+   <script type="text/javascript">
+   		DOM.preSiblings=function (currentEle){
+			var pre=currentEle.previousSibling;
+			var a=[];
+			while(pre){
+				if(pre.nodeType===1){
+					a.unshift(pre);
+				}
+				pre=pre.previousSibling;	
+			}
+			return a;
+		}
+   </script>
+
+四 获得某一元素的所有弟弟节点（返回数组）？
+	<script type="text/javascript">
+		DOM.nextSiblings=function (currentEle){
+			var next=currentEle.nextSibling;
+			var a=[];
+			while(next){		
+				if(next.nodeType==1){
+					a.push(next);
+				}
+				next=next.nextSibling;
+			}
+			return a;	
+		}
+	</script>
+  
+五 获得某一元素相邻的哥哥（最多是1个，返回的对象或null）？
+   <script type="text/javascript">
+   		DOM.preEle=function (currentEle){
+			if(typeof currentEle.previousElementSibling =="object")			
+				return currentEle.previousElementSibling;				
+			var pre=currentEle.previousSibling;
+			while(pre){
+				if(pre.nodeType===1){
+					return pre;
+				}
+				pre=pre.previousSibling;	
+			}
+			return null;//它没有哥哥元素则返回null。			
+		}
+   </script>
+
+六 获得某一元素相邻的弟弟（最多是1个，返回的对象或null）？
+	<script type="text/javascript">
+		DOM.nextEle=function (currentEle){
+			if(typeof currentEle.nextElementSibling=="object"){
+				return 	currentEle.nextElementSibling;
+			}
+			var next=currentEle.nextSibling;
+			while(next){
+				if(next.nodeType===1){
+					return next;	
+				}
+					next=next.nextSibling;		
+			}
+			return null;	
+		}
+	</script>
+
+七 获得某一元素相邻的哥哥和弟弟（最多是两个，返回的数组）？
+   <script type="text/javascript">
+   		DOM.closet=function (currentEle){
+			var a=[];			
+			if(DOM.nextEle(currentEle)) a.push(p);
+			if(DOM.preEle(currentEle)) a.push(n);			
+			return a;	
+		}
+   </script>
+     
+八 获取当前元素在兄弟元素中的索引的方法？
+   <script type="text/javascript">
+   		DOM.getIndex=function (ele){//表示计算ele这个元素的索引号
+			var index=0;
+			var p=ele.previousSibling;
+			while(p){
+				if(p.nodeType===1){
+					index++;	
+				}
+				p=p.previousSibling;
+			}
+			return index;
+		}
+   </script>
+
+九 在一个元素之后插入一个新元素
+   <script type="text/javascript">
+   		DOM.insertAfter=function (newEle,oldEle){
+			/*	和DOM方法insertBefore对应，把newEle追加在oldEle的后面	*/
+			if(oldEle&&oldEle.nodeType===1&&newEle&&newEle.nodeType===1){
+				oldEle.nextSibling?oldEle.parentNode.insertBefore(newEle,oldEle.nextSibling):oldEle.parentNode.appendChild(newEle)
+			}else{
+				throw new Error('参数错误');
+			}
+			return newEle;
+		}
+   </script>
+
+十 给一个父元素添加第一个子节点
+   <script type="text/javascript">
+   		DOM.prepend=function(newNode,parentEle){		
+		    //此方法和appendChild方法对应，把newNode这个节点，当成第一个子节点追加给parentEle元素。			
+			var child=parentEle.firstChild;	
+				child?parentEle.insertBefore(newNode,child):parentEle.appendChild(newNode);
+			return newNode;
+		}   	
+   </script>
+  
+	</pre>
+  </body>
+</html>
